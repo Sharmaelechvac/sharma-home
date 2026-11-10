@@ -1,0 +1,10 @@
+{
+  "name": "sharma-home",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Sharma Home — private app launcher for Sanjay Sharma, Sharma Electric & HVAC",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev"
+  }
+}
