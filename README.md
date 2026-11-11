@@ -14,3 +14,7 @@ WRANGLER_CACHE_DIR=/tmp/wcache npx wrangler deploy
 ```
 
 Worker name: `sharma-home`, same Cloudflare account as `sharma-crew`.
+
+## Images
+
+Icons and review screenshots are listed in `MANIFEST.md`. They live on the box and the live Worker, not in this repo.
