@@ -330,6 +330,19 @@ export default {
     }
 
     if (path === "/" || path === "/index.html") {
+      // Serve Jarvis's Sharma Home page (docs/index.html) as the live home page.
+      if (env.ASSETS) {
+        const asset = await env.ASSETS.fetch(new URL("/index.html", request.url));
+        if (asset.status !== 404) {
+          const headers = new Headers(asset.headers);
+          headers.set("content-type", "text/html;charset=utf-8");
+          headers.set("cache-control", "no-store");
+          headers.set("x-robots-tag", "noindex, nofollow");
+          headers.set("referrer-policy", "same-origin");
+          headers.set("x-content-type-options", "nosniff");
+          return new Response(asset.body, { status: asset.status, headers });
+        }
+      }
       return new Response(page(), { headers: NOINDEX });
     }
 
