@@ -52,7 +52,7 @@
     .mono.gold { background: var(--gold); color: var(--navy-dark); }
     .rt { flex: 1 1 auto; min-width: 0; }
     .rn { display: block; font-size: 16px; font-weight: 600; line-height: 1.2; }
-    .rd { display: block; font-size: 13px; color: var(--gray); line-height: 1.3; margin-top: 1px; }
+    .rd { display: block; font-size: 16px; color: var(--gray); line-height: 1.3; margin-top: 1px; }
     .arr { flex: 0 0 auto; color: var(--gray); font-size: 18px; }
 
     .folder { margin-top: 14px; background: var(--panel); border: 1px solid var(--line); border-radius: 5px; overflow: hidden; }
@@ -100,6 +100,13 @@
       <a class="row" href="https://sharmaelechvac.github.io/sharma-news/"><span class="mono">SN</span><span class="rt"><span class="rn">Sharma News</span><span class="rd">Legal + finance briefings · daily · archive</span></span><span class="arr">›</span></a>
       <a class="row" href="https://sharmaelechvac.github.io/sharma-legal-briefing/"><span class="mono">LB</span><span class="rt"><span class="rn">Legal Briefing</span><span class="rd">Daily legal news · Harvey · archive</span></span><span class="arr">›</span></a>
       <a class="row" href="https://sharmaelechvac.github.io/sanjay-hub/"><span class="mono">SH</span><span class="rt"><span class="rn">Sanjay’s Hub</span><span class="rd">Every link, job by job</span></span><span class="arr">›</span></a>
+    </div>
+
+    <h2 class="sec" id="finance-h">Finance</h2>
+    <div class="rows" id="finance">
+      <a class="row" href="https://sharmaelechvac.github.io/sharma-ar/"><span class="mono">AR</span><span class="rt"><span class="rn">Sharma AR</span><span class="rd">What builders owe us</span></span><span class="arr">›</span></a>
+      <a class="row" href="https://sharmaelechvac.github.io/sharma-pnl/"><span class="mono">PL</span><span class="rt"><span class="rn">Sharma P&amp;L</span><span class="rd">Profit and margin by job</span></span><span class="arr">›</span></a>
+      <a class="row" href="https://sharmaelechvac.github.io/sharma-ar/budget/"><span class="mono">BG</span><span class="rt"><span class="rn">Sharma Budget</span><span class="rd">Budget vs actual by job</span></span><span class="arr">›</span></a>
     </div>
 
     <div class="folder" data-folder>
@@ -196,6 +203,10 @@
       const dailyAny = [...daily.children].some((c) => !c.classList.contains("hidden"));
       daily.classList.toggle("hidden", !!needle && !dailyAny);
       document.getElementById("daily-h").classList.toggle("hidden", !!needle && !dailyAny);
+      const finance = document.getElementById("finance");
+      const financeAny = [...finance.children].some((c) => !c.classList.contains("hidden"));
+      finance.classList.toggle("hidden", !!needle && !financeAny);
+      document.getElementById("finance-h").classList.toggle("hidden", !!needle && !financeAny);
       nomatch.style.display = needle && !anyVisible ? "block" : "none";
     });
   </script>
