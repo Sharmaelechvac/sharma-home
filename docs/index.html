@@ -77,12 +77,38 @@
     footer { margin: 26px 2px 0; color: var(--gray); font-size: 12px; text-align: center; line-height: 1.5; }
     .hidden { display: none !important; }
   </style>
+<style id="lockcss">
+html.locked body > *:not(#lock){display:none!important}
+#lock{display:none}
+html.locked #lock{display:flex;position:fixed;inset:0;z-index:9999;background:#264387;align-items:center;justify-content:center;font-family:Inter,system-ui,sans-serif}
+#lock .box{background:#fff;border-radius:18px;padding:28px 22px;width:min(320px,88vw);text-align:center;border-bottom:4px solid #F0A846}
+#lock img{height:44px;margin-bottom:10px}
+#lock h2{margin:0 0 4px;color:#264387;font-size:20px}
+#lock p{margin:0 0 16px;color:#5b6478;font-size:14px}
+#lock input{width:100%;font-size:28px;letter-spacing:10px;text-align:center;padding:12px;border:2px solid #dfe4ee;border-radius:12px;outline:none;box-sizing:border-box}
+#lock input:focus{border-color:#264387}
+#lock button{margin-top:12px;width:100%;padding:13px;font-size:16px;font-weight:700;color:#fff;background:#264387;border:0;border-radius:12px}
+#lock .err{color:#c0392b;min-height:18px;margin-top:8px;font-size:13px}
+</style>
+<script>(function(){try{if(localStorage.getItem('sh_home_ok')!=='51f6a9f8a0017601ef145c7daa916d20a14646d9921090122222a12e9e39b146')document.documentElement.classList.add('locked')}catch(e){document.documentElement.classList.add('locked')}})();</script>
 </head>
 <body>
+<div id="lock"><form class="box" onsubmit="return shUnlock(event)">
+<img src="logo.png" alt="Sharma"><h2>Sharma Home</h2><p>Enter passcode</p>
+<input id="lockpin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="off" autofocus>
+<button type="submit">Open</button><div class="err" id="lockerr"></div></form></div>
+<script>
+async function shUnlock(e){e.preventDefault();var v=document.getElementById('lockpin').value.trim();
+var d=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('sharma-home:'+v));
+var x=Array.from(new Uint8Array(d)).map(function(b){return b.toString(16).padStart(2,'0')}).join('');
+if(x==='51f6a9f8a0017601ef145c7daa916d20a14646d9921090122222a12e9e39b146'){try{localStorage.setItem('sh_home_ok',x)}catch(_){}document.documentElement.classList.remove('locked')}
+else{document.getElementById('lockerr').textContent='Wrong passcode';document.getElementById('lockpin').value=''}return false}
+</script>
+
   <div class="wrap">
     <header>
       <div class="hrow">
-        <img src="logo.png" alt="Sharma Electric &amp; HVAC">
+        <img src="logo.png" alt="Sharma Electric & HVAC">
         <div>
           <h1>Sharma Home</h1>
           <p>Every Sharma app — for Sanjay only</p>
@@ -105,16 +131,16 @@
     <h2 class="sec" id="finance-h">Finance</h2>
     <div class="rows" id="finance">
       <a class="row" href="https://sharmaelechvac.github.io/sharma-ar/"><span class="mono">AR</span><span class="rt"><span class="rn">Sharma AR</span><span class="rd">What builders owe us</span></span><span class="arr">›</span></a>
-      <a class="row" href="https://sharmaelechvac.github.io/sharma-pnl/"><span class="mono">PL</span><span class="rt"><span class="rn">Sharma P&amp;L</span><span class="rd">Profit and margin by job</span></span><span class="arr">›</span></a>
+      <a class="row" href="https://sharmaelechvac.github.io/sharma-pnl/"><span class="mono">PL</span><span class="rt"><span class="rn">Sharma P&L</span><span class="rd">Profit and margin by job</span></span><span class="arr">›</span></a>
       <a class="row" href="https://sharmaelechvac.github.io/sharma-ar/budget/"><span class="mono">BG</span><span class="rt"><span class="rn">Sharma Budget</span><span class="rd">Budget vs actual by job</span></span><span class="arr">›</span></a>
     </div>
 
     <div class="folder" data-folder>
       <button type="button" aria-expanded="false"><span class="ftab"></span><span class="fname">Office</span><span class="fcount">9 apps</span><span class="fchev">›</span></button>
       <div class="rows">
-        <a class="row" href="https://sharma-permits.sharma-crew.workers.dev"><span class="mono">PT</span><span class="rt"><span class="rn">Permit Tracker</span><span class="rd">Permits &amp; licenses · Rosa</span></span><span class="arr">›</span></a>
-        <a class="row" href="https://sharma-collections.sharma-crew.workers.dev"><span class="mono">CO</span><span class="rt"><span class="rn">Collections</span><span class="rd">Invoices &amp; payments · Kevin</span></span><span class="arr">›</span></a>
-        <a class="row" href="https://sharma-bids.sharma-crew.workers.dev"><span class="mono">BT</span><span class="rt"><span class="rn">Bid Tracker</span><span class="rd">Bids &amp; deadlines · Mark Cuban</span></span><span class="arr">›</span></a>
+        <a class="row" href="https://sharma-permits.sharma-crew.workers.dev"><span class="mono">PT</span><span class="rt"><span class="rn">Permit Tracker</span><span class="rd">Permits & licenses · Rosa</span></span><span class="arr">›</span></a>
+        <a class="row" href="https://sharma-collections.sharma-crew.workers.dev"><span class="mono">CO</span><span class="rt"><span class="rn">Collections</span><span class="rd">Invoices & payments · Kevin</span></span><span class="arr">›</span></a>
+        <a class="row" href="https://sharma-bids.sharma-crew.workers.dev"><span class="mono">BT</span><span class="rt"><span class="rn">Bid Tracker</span><span class="rd">Bids & deadlines · Mark Cuban</span></span><span class="arr">›</span></a>
         <a class="row" href="https://sharma-followup.sharma-crew.workers.dev"><span class="mono">BF</span><span class="rt"><span class="rn">Builder Follow-up</span><span class="rd">Follow-ups · Mark Cuban</span></span><span class="arr">›</span></a>
         <a class="row" href="https://sharma-inspect.sharma-crew.workers.dev"><span class="mono">IP</span><span class="rt"><span class="rn">Inspection Prep</span><span class="rd">Prep checklists · Bob Myers</span></span><span class="arr">›</span></a>
         <a class="row" href="https://sharma-punch.sharma-crew.workers.dev"><span class="mono">PP</span><span class="rt"><span class="rn">Pending Projects</span><span class="rd">Punch list · Bob Myers</span></span><span class="arr">›</span></a>
@@ -127,7 +153,7 @@
     <div class="folder" data-folder>
       <button type="button" aria-expanded="false"><span class="ftab"></span><span class="fname">Field — SHARMATRACK</span><span class="fcount">8 apps</span><span class="fchev">›</span></button>
       <div class="rows">
-        <a class="row" href="https://sharmaelechvac.github.io/sharmatrack/owner/"><span class="mono gold">OE</span><span class="rt"><span class="rn">Owner Edition</span><span class="rd">All clients &amp; jobs — one page</span></span><span class="arr">›</span></a>
+        <a class="row" href="https://sharmaelechvac.github.io/sharmatrack/owner/"><span class="mono gold">OE</span><span class="rt"><span class="rn">Owner Edition</span><span class="rd">All clients & jobs — one page</span></span><span class="arr">›</span></a>
         <a class="row" href="https://sharmaelechvac.github.io/sharmatrack-crew"><span class="mono">ZB</span><span class="rt"><span class="rn">Z Brothers</span><span class="rd">Crew app · Eunice Dr houses</span></span><span class="arr">›</span></a>
         <a class="row" href="https://sharmaelechvac.github.io/exj-root-tracker"><span class="mono">EX</span><span class="rt"><span class="rn">EXJ Root Tracker</span><span class="rd">5 houses · Marion Oaks</span></span><span class="arr">›</span></a>
         <a class="row" href="https://sharmaelechvac.github.io/sharmatrack-nok/"><span class="mono">NK</span><span class="rt"><span class="rn">NOK Construction</span><span class="rd">Glaze · Antle</span></span><span class="arr">›</span></a>
@@ -156,7 +182,7 @@
       <button type="button" aria-expanded="false"><span class="ftab"></span><span class="fname">Education</span><span class="fcount">2 apps</span><span class="fchev">›</span></button>
       <div class="rows">
         <a class="row" href="https://sharmaelechvac.github.io/sharma-education/"><span class="mono">ED</span><span class="rt"><span class="rn">Education</span><span class="rd">All learning apps — one page</span></span><span class="arr">›</span></a>
-        <a class="row" href="https://sharmaelechvac.github.io/sharma-nec-code/"><span class="mono">NC</span><span class="rt"><span class="rn">NEC Code</span><span class="rd">NEC 2020 field book · lookup &amp; calcs</span></span><span class="arr">›</span></a>
+        <a class="row" href="https://sharmaelechvac.github.io/sharma-nec-code/"><span class="mono">NC</span><span class="rt"><span class="rn">NEC Code</span><span class="rd">NEC 2020 field book · lookup & calcs</span></span><span class="arr">›</span></a>
       </div>
     </div>
 
@@ -171,7 +197,7 @@
 
     <p class="nomatch" id="nomatch">No app matches that search.</p>
 
-    <footer>Sharma Electric &amp; HVAC · Lic. EC13013924 · CAC1823596<br>Kept current by Jarvis</footer>
+    <footer>Sharma Electric & HVAC · Lic. EC13013924 · CAC1823596<br>Kept current by Jarvis</footer>
   </div>
 
   <script>
