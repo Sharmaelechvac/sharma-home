@@ -53,7 +53,7 @@ const SECTIONS = [
     apps: [
       { name: "Lead Finder", desc: "Daily permit scan for active builders near Orlando, plus Lee and Charlotte", url: "https://sharma-leads.sharma-crew.workers.dev/", icon: "leads", check: true },
       { name: "Builder Follow-up", desc: "Call notes, follow-up dates, and pipeline from New to Won", url: "https://sharma-followup.sharma-crew.workers.dev/", icon: "follow", check: true },
-      { name: "Bid Tracker", desc: "Every bid sent, its status, and your win rate", url: "https://sharma-bids.sharma-crew.workers.dev/", icon: "bids", check: true },
+      { name: "Bid Boards", desc: "Commercial + residential bids, statuses, and win rate", url: "https://sharmaelechvac.github.io/sharma-bid-boards/", icon: "bids", check: true },
       { name: "Collections", desc: "Who owes you, how many days late, and when to follow up", url: "https://sharma-collections.sharma-crew.workers.dev/", icon: "collections", check: true },
       { name: "P&L 2026", desc: "Profit and loss for the year", url: "https://sharma-electric-and-hvac-p-and-l-2026-rcc6.pages.grok.bot/", icon: "chart" },
       { name: "Jarvis P&L", desc: "Jarvis P&L workspace (sign in)", url: "https://muse.ai/library/artifacts/sharma-electric-p-l", icon: "bot" },
