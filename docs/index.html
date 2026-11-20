@@ -36,6 +36,14 @@
       --ink: #1d2433; --gray: #5b6478; --line: #dfe4ee; --page: #ffffff; --panel: #ffffff;
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    /* Layout hardening (2026-11-20.18): the page must never render wider than the
+       phone or squeeze into a narrow column if the kit stylesheet is late or a
+       cached shell/kit pair mismatches. Icon base sizes mirror sharma-kit.css so
+       an SVG icon can never balloon to the 300x150 default and crush its row. */
+    html { overflow-x: clip; }
+    .sk-icon { width: 24px; height: 24px; flex: none; }
+    .sk-icon--sm { width: 18px; height: 18px; }
+    .sk-icon--lg { width: 30px; height: 30px; }
     html, body { overscroll-behavior: none; }
     .row, .folder button, header { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
     .wrap { padding-bottom: calc(30px + env(safe-area-inset-bottom, 0px)); }
