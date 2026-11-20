@@ -25,9 +25,11 @@
  * still works from the on-phone copy of the preferences.
  *
  * HOOK LANDED in docs/index.html (lean Home build, 2026-11-20): push.css is
- * linked in <head>, push.js loads before </body>, and the About sheet's
- * Install list mounts this panel via <div data-sharma-push></div>. The same
- * panel also stands alone at notifications.html. */
+ * linked in <head>, push.js loads before </body>, and the panel is mounted
+ * in the About sheet's Install list AND on the Alerts tab (re-mounted fresh
+ * on every visit) via <div data-sharma-push></div>. The panel is multi-mount
+ * safe: no element IDs, all lookups scoped to the mount root. The same panel
+ * also stands alone at notifications.html. */
 (function () {
   "use strict";
 
@@ -152,8 +154,8 @@
 
       /* identity + role */
       html += '<div class="shp-card">' +
-        '<label class="shp-label" for="shp-person">Your name</label>' +
-        '<input class="shp-input" id="shp-person" type="text" autocomplete="name" value="' + esc(state.person) + '">' +
+        '<label class="shp-label">Your name</label>' +
+        '<input class="shp-input" data-shp-person type="text" autocomplete="name" value="' + esc(state.person) + '">' +
         '<span class="shp-label">I am</span><div class="shp-roles" role="group" aria-label="Role">';
       for (var i = 0; i < ROLES.length; i++) {
         html += '<button type="button" class="shp-role" data-shp-role="' + ROLES[i].key + '" aria-pressed="' +
@@ -191,7 +193,7 @@
     }
 
     function wire() {
-      var person = root.querySelector("#shp-person");
+      var person = root.querySelector("[data-shp-person]");
       if (person) person.addEventListener("change", function () {
         state.person = person.value.trim() || state.person;
         saveLocal(); loadServerPrefs();

@@ -170,6 +170,45 @@
     html[data-scheme="dark"] .tic { background: rgba(255,255,255,0.10); color: #F2F2F7; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08); }
     html[data-scheme="dark"] .tic.gold { background: rgba(240,168,70,0.32); color: #F2F2F7; }
     html[data-scheme="dark"] .tile:active .tic { background: rgba(255,255,255,0.22); }
+
+    /* --- Tile logos (custom AI family + builder logos, 2026-11-20) --- */
+    .tic--img { background: none; box-shadow: none; overflow: hidden; padding: 0; }
+    .tic--img img { width: 100%; height: 100%; display: block; object-fit: cover; }
+    .tile:active .tic--img { background: none; }
+    html[data-scheme="dark"] .tic--img { background: none; box-shadow: none; }
+    html[data-scheme="dark"] .tile:active .tic--img { background: none; }
+
+    /* --- News tab (headlines from the Office TV news feed, 2026-11-20) --- */
+    .nhead { display: block; font-size: 18px; font-weight: 600; line-height: 1.35; }
+    .nsub { display: block; font-size: 18px; color: var(--gray); line-height: 1.35; margin-top: 2px; }
+
+    /* --- TV mode (Office TV wall board inside Home, 2026-11-20) ---
+       Display mode only: board data (schedule, inspections, to-schedule,
+       new bids, notes, news ticker). Never money, never private notes. */
+    .wrap--tv { max-width: 1240px; }
+    .tvmode { background: #0a1430; color: #f2f5fc; border-radius: 18px; padding: 22px; margin: 14px 0 0;
+      box-shadow: 0 10px 30px rgba(10,20,48,0.35); }
+    .tvhead { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .tvbrand { font-size: 15px; font-weight: 700; letter-spacing: 0.14em; color: var(--gold); text-transform: uppercase; }
+    .tvdate { font-size: 24px; font-weight: 700; margin-top: 4px; }
+    .tvclock { font-size: 40px; font-weight: 700; letter-spacing: -0.01em; line-height: 1; }
+    .tvgrid { display: grid; grid-template-columns: 1fr; gap: 0; }
+    @media (min-width: 900px) { .tvgrid { grid-template-columns: 1fr 1fr; column-gap: 16px; } }
+    .tvpanel { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); border-radius: 14px; padding: 16px 18px 10px; margin-top: 16px; }
+    .tvpanel h3 { margin: 0 0 6px; font-size: 20px; font-weight: 700; letter-spacing: 0.07em; color: var(--gold); text-transform: uppercase; }
+    .tvrow { display: flex; gap: 14px; align-items: flex-start; padding: 10px 0; border-top: 1px solid rgba(255,255,255,0.12); font-size: 20px; line-height: 1.3; }
+    .tvrow:first-of-type { border-top: none; }
+    .tvtime { flex: 0 0 104px; font-weight: 700; color: #ffd9a0; }
+    .tvbody { flex: 1 1 auto; min-width: 0; }
+    .tvtitle { display: block; font-weight: 600; }
+    .tvsub { display: block; font-size: 18px; color: #b9c4de; margin-top: 1px; }
+    .tvchip { flex: 0 0 auto; font-size: 16px; font-weight: 700; color: #0a1430; background: #6fd08c; border-radius: 999px; padding: 4px 12px; margin-top: 2px; }
+    .tvempty { font-size: 20px; color: #b9c4de; padding: 8px 0 12px; }
+    .tvticker { margin-top: 16px; background: #000; border-radius: 10px; padding: 13px 0; overflow: hidden; white-space: nowrap; }
+    .tvticker__label { display: inline-block; font-size: 18px; font-weight: 700; letter-spacing: 0.08em; color: var(--gold); padding: 0 14px; text-transform: uppercase; }
+    .tvticker__in { display: inline-block; font-size: 19px; color: #fff; padding-left: 100%; animation: tvscroll 60s linear infinite; }
+    @keyframes tvscroll { to { transform: translateX(-100%); } }
+    .tvnote { margin: 12px 2px 0; font-size: 18px; color: var(--gray); }
 </style>
 <style id="lockcss">
 html.locked body > *:not(#lock){display:none!important}
@@ -206,8 +245,11 @@ else{document.getElementById('lockerr').textContent='Wrong passcode';document.ge
 <div class="sk-offline"></div>
 <main id="app" class="sk-stackview"></main>
 <nav class="sk-tabbar" aria-label="Sections"><div class="sk-tabbar__inner">
-  <a class="sk-tab" href="#/" data-tab="apps" data-match="^#/?$"><svg class="sk-icon"><use href="#i-home"/></svg>Apps</a>
-  <a class="sk-tab" href="#/today" data-tab="today" data-match="^#/today"><svg class="sk-icon"><use href="#i-calendar"/></svg>Today</a>
+  <a class="sk-tab" href="#/" data-tab="today" data-match="^#/(today)?$"><svg class="sk-icon"><use href="#i-calendar"/></svg>Today</a>
+  <a class="sk-tab" href="#/apps" data-tab="apps" data-match="^#/(apps|office|jobs|folder)"><svg class="sk-icon"><use href="#i-home"/></svg>Apps</a>
+  <a class="sk-tab" href="#/news" data-tab="news" data-match="^#/news"><svg class="sk-icon"><use href="#i-globe"/></svg>News</a>
+  <a class="sk-tab" href="#/alerts" data-tab="alerts" data-match="^#/alerts"><svg class="sk-icon"><use href="#i-bell"/></svg>Alerts</a>
+  <a class="sk-tab" href="#/tv" data-tab="tv" data-match="^#/tv"><svg class="sk-icon"><use href="#i-tv"/></svg>TV</a>
 </div></nav>
 <section class="sk-sheet" id="about-sheet" aria-label="About Sharma Home">
   <div class="sk-sheet__grab"></div>
@@ -230,7 +272,7 @@ else{document.getElementById('lockerr').textContent='Wrong passcode';document.ge
   </div>
 </section>
 <script>
-var EMBEDDED = {"tabs": [{"id": "apps", "sections": [{"title": "Every day", "rows": [{"u": "https://sharmaelechvac.github.io/sharma-my-day/", "i": "i-calendar", "g": true, "n": "My Day", "d": "Today’s route — stops, drive times, materials"}, {"u": "https://sharmaelechvac.github.io/sharma-office-tv/", "i": "i-tv", "g": false, "n": "Office TV", "d": "Jobs / tasks · new bids · to schedule"}, {"u": "https://sharmaelechvac.github.io/sharma-news/", "i": "i-globe", "g": false, "n": "Sharma News", "d": "Legal + finance briefings · daily · archive"}, {"u": "https://sharmaelechvac.github.io/sharma-legal-briefing/", "i": "i-doc", "g": false, "n": "Legal Briefing", "d": "Daily legal news · Harvey · archive"}, {"u": "https://sharmaelechvac.github.io/sanjay-hub/", "i": "i-link", "g": false, "n": "Sanjay’s Hub", "d": "Every link, job by job"}]}, {"title": "Finance", "rows": [{"u": "https://sharmaelechvac.github.io/sharma-ar/", "i": "i-dollar", "g": false, "n": "Sharma Finance", "d": "AR · P&L · Budget · Collections"}, {"u": "https://sharmaelechvac.github.io/sharma-material-pricing/", "i": "i-list", "g": false, "n": "Material Pricing", "d": "Supplier prices — Elec · HVAC · Combined"}]}], "folders": [{"name": "Office", "count": "3 apps", "rows": [{"u": "https://sharmaelechvac.github.io/sharma-bid-boards/", "i": "i-briefcase", "g": false, "n": "Bid Boards", "d": "Commercial + residential bids · Mark Cuban"}, {"u": "https://sharmaelechvac.github.io/sharma-lead-finder/", "i": "i-search", "g": false, "n": "Lead Finder", "d": "New builder leads"}, {"u": "https://muse.ai/s/buzzdrafts-rxd6xcxyit0xtrz/4FW0cWLV2mE7J_SrrlzVtLW2pyqSUNzouYRWa2kpuPw", "i": "i-edit", "g": false, "n": "BuzzDrafts", "d": "Engineering drawings — internal"}]}, {"name": "Field — SHARMATRACK", "count": "9 apps", "rows": [{"u": "https://sharmaelechvac.github.io/sharmatrack/owner/", "i": "i-users", "g": true, "n": "Owner Edition", "d": "All clients & jobs — one page"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-crew", "i": "i-house", "g": false, "n": "Z Brothers", "d": "Crew app · Eunice Dr houses"}, {"u": "https://sharmaelechvac.github.io/exj-root-tracker", "i": "i-house", "g": false, "n": "EXJ Root Tracker", "d": "5 houses · Marion Oaks"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-nok/", "i": "i-house", "g": false, "n": "NOK Construction", "d": "Glaze · Antle"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-mrcela/", "i": "i-house", "g": false, "n": "MRCELA Custom Homes", "d": "9700 Blandford Rd"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-dnr/", "i": "i-house", "g": false, "n": "DNR Contracting", "d": "Mukherjee · Tampa"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-logan/", "i": "i-house", "g": false, "n": "Logan Construction", "d": "Bella Collina · HVAC"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-brross/", "i": "i-house", "g": false, "n": "BR Ross Construction", "d": "Fisher Loop · Electric"}, {"u": "https://sharmaelechvac.github.io/sharmatrack", "i": "i-pin", "g": false, "n": "SHARMATRACK Website", "d": "“The software is us”"}]}, {"name": "Client-facing", "count": "7 apps", "rows": [{"u": "https://sharmaelechvac.github.io/sharma-builders", "i": "i-mail", "g": false, "n": "Builders Application", "d": "The cold-email link"}, {"u": "https://sharmaelechvac.github.io/homeowner-hub", "i": "i-home", "g": false, "n": "Homeowner Hub", "d": "Homeowner start page"}, {"u": "https://sharmaelechvac.github.io/smart-home-picker", "i": "i-bolt", "g": false, "n": "Smart Home Picker", "d": "Low voltage options"}, {"u": "https://sharmaelechvac.github.io/hvac-picker", "i": "i-fan", "g": false, "n": "HVAC Picker", "d": "Change-out options"}, {"u": "https://sharmaelechvac.github.io/electrical-app", "i": "i-bolt", "g": false, "n": "Electrical Picker", "d": "Electrical options"}, {"u": "https://sharmaelechvac.github.io/sample-house-citrus-craft-homes", "i": "i-house", "g": false, "n": "Sample House — Citrus Craft", "d": "Builder showcase"}, {"u": "https://sharmaelechvac.github.io/sample-house-any-builder-template", "i": "i-house", "g": false, "n": "Sample House — Template", "d": "Any-builder version"}]}, {"name": "Education", "count": "3 apps", "rows": [{"u": "https://sharmaelechvac.github.io/sharma-education/", "i": "i-note", "g": false, "n": "Education", "d": "All learning apps — one page"}, {"u": "https://sharmaelechvac.github.io/sharma-nec-code/", "i": "i-doc", "g": false, "n": "NEC Code", "d": "NEC 2020 field book · lookup & calcs"}, {"u": "https://sharmaelechvac.github.io/sharma-rough-in-guide/", "i": "i-doc", "g": false, "n": "Rough-In Guide", "d": "Field rough-in guide · crew training"}]}, {"name": "Admin", "count": "2 apps", "rows": [{"u": "https://github.com/Sharmaelechvac", "i": "i-folder", "g": false, "n": "GitHub", "d": "All the app repos"}, {"u": "https://grok.com", "i": "i-send", "g": false, "n": "Grok — Bot Team", "d": "SuperGrok account"}]}]}, {"id": "office", "sections": [{"title": "Office apps", "rows": [{"u": "https://sharma-permits.sharma-crew.workers.dev", "i": "i-clipboard", "g": false, "n": "Permit Tracker", "d": "Permits & inspections"}, {"u": "https://sharma-collections.sharma-crew.workers.dev", "i": "i-dollar", "g": false, "n": "Collections", "d": "Invoices & payments"}, {"u": "https://sharma-bids.sharma-crew.workers.dev", "i": "i-briefcase", "g": false, "n": "Bid Tracker", "d": "Bids & deadlines"}, {"u": "https://sharma-followup.sharma-crew.workers.dev", "i": "i-users", "g": false, "n": "Builder Follow-up", "d": "Builder follow-ups & call list"}, {"u": "https://sharma-inspect.sharma-crew.workers.dev", "i": "i-check", "g": false, "n": "Inspection Prep", "d": "Inspection prep checklists"}, {"u": "https://sharma-punch.sharma-crew.workers.dev", "i": "i-list", "g": false, "n": "Pending Projects", "d": "Pending projects & punch lists"}, {"u": "https://dash.cloudflare.com", "i": "i-settings", "g": false, "n": "Cloudflare Dashboard", "d": "Workers & Pages admin"}]}]}, {"id": "jobs", "sections": [{"title": "Job pages", "rows": [{"u": "https://sharmaelechvac.github.io/sharmatrack-crew/3131/", "i": "i-house", "g": false, "n": "3131 W Eunice Dr", "d": "Job page · Dunnellon"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-crew/3262/", "i": "i-house", "g": false, "n": "3262 W Eunice Dr", "d": "Job page · Dunnellon"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-crew/3286/", "i": "i-house", "g": false, "n": "3286 W Eunice Dr", "d": "Job page · Dunnellon"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-crew/3274/", "i": "i-house", "g": false, "n": "3274 W Eunice Dr", "d": "Job page · Dunnellon"}, {"u": "https://sharmaelechvac.github.io/exj-root-tracker/212/", "i": "i-house", "g": false, "n": "212 Marion Oaks Golf Rd", "d": "Job page · EXJ"}, {"u": "https://sharmaelechvac.github.io/exj-root-tracker/17385/", "i": "i-house", "g": false, "n": "17385 SW 25th Cir", "d": "Job page · EXJ"}, {"u": "https://sharmaelechvac.github.io/exj-root-tracker/14065/", "i": "i-house", "g": false, "n": "14065 SW 48th Ave", "d": "Job page · EXJ"}, {"u": "https://sharmaelechvac.github.io/exj-root-tracker/16321/", "i": "i-house", "g": false, "n": "16321 SW 26th Terrace Rd", "d": "Job page · EXJ"}, {"u": "https://sharmaelechvac.github.io/exj-root-tracker/601/", "i": "i-house", "g": false, "n": "601 Marion Oaks Golf Rd", "d": "Job page · EXJ"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-nok/glaze/", "i": "i-house", "g": false, "n": "Glaze Residence", "d": "Job page · NOK"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-nok/109-forest-park-ct/", "i": "i-house", "g": false, "n": "109 Forest Park Ct", "d": "Job page · NOK"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-logan/lot-69/", "i": "i-house", "g": false, "n": "Lot 69 Bella Collina", "d": "Job page · Logan"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-mrcela/blandford/", "i": "i-house", "g": false, "n": "9700 Blandford Rd", "d": "Job page · MRCELA"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-dnr/mukherjee/", "i": "i-house", "g": false, "n": "Mukherjee Residence", "d": "Job page · DNR"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-brross/fisher/", "i": "i-house", "g": false, "n": "178 Fisher Loop", "d": "Job page · BR Ross"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-crew/code-of-conduct/", "i": "i-doc", "g": false, "n": "Code of Conduct", "d": "Crew rules · EN / ES"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-crew/links/", "i": "i-link", "g": false, "n": "SHARMATRACK — Links", "d": "Launcher page for the trackers"}]}]}]};
+var EMBEDDED = {"tabs": [{"id": "apps", "sections": [{"title": "Every day", "rows": [{"u": "https://sharmaelechvac.github.io/sharma-my-day/", "i": "i-calendar", "g": true, "n": "My Day", "d": "Today’s route — stops, drive times, materials"}, {"u": "#/tv", "i": "i-tv", "g": false, "n": "Office TV", "d": "Wall board — TV mode inside Home"}, {"u": "https://sharmaelechvac.github.io/sharma-news/", "i": "i-globe", "g": false, "n": "Sharma News", "d": "Legal + finance briefings · daily · archive"}, {"u": "https://sharmaelechvac.github.io/sharma-legal-briefing/", "i": "i-doc", "g": false, "n": "Legal Briefing", "d": "Daily legal news · Harvey · archive"}, {"u": "https://sharmaelechvac.github.io/sanjay-hub/", "i": "i-link", "g": false, "n": "Sanjay’s Hub", "d": "Every link, job by job"}]}, {"title": "Finance", "rows": [{"u": "https://sharmaelechvac.github.io/sharma-ar/", "i": "i-dollar", "g": false, "n": "Sharma Finance", "d": "AR · P&L · Budget · Collections"}, {"u": "https://sharmaelechvac.github.io/sharma-material-pricing/", "i": "i-list", "g": false, "n": "Material Pricing", "d": "Supplier prices — Elec · HVAC · Combined"}]}], "folders": [{"name": "Office", "count": "3 apps", "rows": [{"u": "https://sharmaelechvac.github.io/sharma-bid-boards/", "i": "i-briefcase", "g": false, "n": "Bid Boards", "d": "Commercial + residential bids · Mark Cuban"}, {"u": "https://sharmaelechvac.github.io/sharma-lead-finder/", "i": "i-search", "g": false, "n": "Lead Finder", "d": "New builder leads"}, {"u": "https://muse.ai/s/buzzdrafts-rxd6xcxyit0xtrz/4FW0cWLV2mE7J_SrrlzVtLW2pyqSUNzouYRWa2kpuPw", "i": "i-edit", "g": false, "n": "BuzzDrafts", "d": "Engineering drawings — internal"}]}, {"name": "Field — SHARMATRACK", "count": "9 apps", "rows": [{"u": "https://sharmaelechvac.github.io/sharmatrack/owner/", "i": "i-users", "g": true, "n": "Owner Edition", "d": "All clients & jobs — one page"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-crew", "i": "i-house", "g": false, "n": "Z Brothers", "d": "Crew app · Eunice Dr houses"}, {"u": "https://sharmaelechvac.github.io/exj-root-tracker", "i": "i-house", "g": false, "n": "EXJ Root Tracker", "d": "5 houses · Marion Oaks"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-nok/", "i": "i-house", "g": false, "n": "NOK Construction", "d": "Glaze · Antle"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-mrcela/", "i": "i-house", "g": false, "n": "MRCELA Custom Homes", "d": "9700 Blandford Rd"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-dnr/", "i": "i-house", "g": false, "n": "DNR Contracting", "d": "Mukherjee · Tampa"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-logan/", "i": "i-house", "g": false, "n": "Logan Construction", "d": "Bella Collina · HVAC"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-brross/", "i": "i-house", "g": false, "n": "BR Ross Construction", "d": "Fisher Loop · Electric"}, {"u": "https://sharmaelechvac.github.io/sharmatrack", "i": "i-pin", "g": false, "n": "SHARMATRACK Website", "d": "“The software is us”"}]}, {"name": "Client-facing", "count": "7 apps", "rows": [{"u": "https://sharmaelechvac.github.io/sharma-builders", "i": "i-mail", "g": false, "n": "Builders Application", "d": "The cold-email link"}, {"u": "https://sharmaelechvac.github.io/homeowner-hub", "i": "i-home", "g": false, "n": "Homeowner Hub", "d": "Homeowner start page"}, {"u": "https://sharmaelechvac.github.io/smart-home-picker", "i": "i-bolt", "g": false, "n": "Smart Home Picker", "d": "Low voltage options"}, {"u": "https://sharmaelechvac.github.io/hvac-picker", "i": "i-fan", "g": false, "n": "HVAC Picker", "d": "Change-out options"}, {"u": "https://sharmaelechvac.github.io/electrical-app", "i": "i-bolt", "g": false, "n": "Electrical Picker", "d": "Electrical options"}, {"u": "https://sharmaelechvac.github.io/sample-house-citrus-craft-homes", "i": "i-house", "g": false, "n": "Sample House — Citrus Craft", "d": "Builder showcase"}, {"u": "https://sharmaelechvac.github.io/sample-house-any-builder-template", "i": "i-house", "g": false, "n": "Sample House — Template", "d": "Any-builder version"}]}, {"name": "Education", "count": "3 apps", "rows": [{"u": "https://sharmaelechvac.github.io/sharma-education/", "i": "i-note", "g": false, "n": "Education", "d": "All learning apps — one page"}, {"u": "https://sharmaelechvac.github.io/sharma-nec-code/", "i": "i-doc", "g": false, "n": "NEC Code", "d": "NEC 2020 field book · lookup & calcs"}, {"u": "https://sharmaelechvac.github.io/sharma-rough-in-guide/", "i": "i-doc", "g": false, "n": "Rough-In Guide", "d": "Field rough-in guide · crew training"}]}, {"name": "Admin", "count": "2 apps", "rows": [{"u": "https://github.com/Sharmaelechvac", "i": "i-folder", "g": false, "n": "GitHub", "d": "All the app repos"}, {"u": "https://grok.com", "i": "i-send", "g": false, "n": "Grok — Bot Team", "d": "SuperGrok account"}]}]}, {"id": "office", "sections": [{"title": "Office apps", "rows": [{"u": "https://sharma-permits.sharma-crew.workers.dev", "i": "i-clipboard", "g": false, "n": "Permit Tracker", "d": "Permits & inspections"}, {"u": "https://sharma-collections.sharma-crew.workers.dev", "i": "i-dollar", "g": false, "n": "Collections", "d": "Invoices & payments"}, {"u": "https://sharma-bids.sharma-crew.workers.dev", "i": "i-briefcase", "g": false, "n": "Bid Tracker", "d": "Bids & deadlines"}, {"u": "https://sharma-followup.sharma-crew.workers.dev", "i": "i-users", "g": false, "n": "Builder Follow-up", "d": "Builder follow-ups & call list"}, {"u": "https://sharma-inspect.sharma-crew.workers.dev", "i": "i-check", "g": false, "n": "Inspection Prep", "d": "Inspection prep checklists"}, {"u": "https://sharma-punch.sharma-crew.workers.dev", "i": "i-list", "g": false, "n": "Pending Projects", "d": "Pending projects & punch lists"}, {"u": "https://dash.cloudflare.com", "i": "i-settings", "g": false, "n": "Cloudflare Dashboard", "d": "Workers & Pages admin"}]}]}, {"id": "jobs", "sections": [{"title": "Job pages", "rows": [{"u": "https://sharmaelechvac.github.io/sharmatrack-crew/3131/", "i": "i-house", "g": false, "n": "3131 W Eunice Dr", "d": "Job page · Dunnellon"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-crew/3262/", "i": "i-house", "g": false, "n": "3262 W Eunice Dr", "d": "Job page · Dunnellon"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-crew/3286/", "i": "i-house", "g": false, "n": "3286 W Eunice Dr", "d": "Job page · Dunnellon"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-crew/3274/", "i": "i-house", "g": false, "n": "3274 W Eunice Dr", "d": "Job page · Dunnellon"}, {"u": "https://sharmaelechvac.github.io/exj-root-tracker/212/", "i": "i-house", "g": false, "n": "212 Marion Oaks Golf Rd", "d": "Job page · EXJ"}, {"u": "https://sharmaelechvac.github.io/exj-root-tracker/17385/", "i": "i-house", "g": false, "n": "17385 SW 25th Cir", "d": "Job page · EXJ"}, {"u": "https://sharmaelechvac.github.io/exj-root-tracker/14065/", "i": "i-house", "g": false, "n": "14065 SW 48th Ave", "d": "Job page · EXJ"}, {"u": "https://sharmaelechvac.github.io/exj-root-tracker/16321/", "i": "i-house", "g": false, "n": "16321 SW 26th Terrace Rd", "d": "Job page · EXJ"}, {"u": "https://sharmaelechvac.github.io/exj-root-tracker/601/", "i": "i-house", "g": false, "n": "601 Marion Oaks Golf Rd", "d": "Job page · EXJ"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-nok/glaze/", "i": "i-house", "g": false, "n": "Glaze Residence", "d": "Job page · NOK"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-nok/109-forest-park-ct/", "i": "i-house", "g": false, "n": "109 Forest Park Ct", "d": "Job page · NOK"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-logan/lot-69/", "i": "i-house", "g": false, "n": "Lot 69 Bella Collina", "d": "Job page · Logan"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-mrcela/blandford/", "i": "i-house", "g": false, "n": "9700 Blandford Rd", "d": "Job page · MRCELA"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-dnr/mukherjee/", "i": "i-house", "g": false, "n": "Mukherjee Residence", "d": "Job page · DNR"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-brross/fisher/", "i": "i-house", "g": false, "n": "178 Fisher Loop", "d": "Job page · BR Ross"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-crew/code-of-conduct/", "i": "i-doc", "g": false, "n": "Code of Conduct", "d": "Crew rules · EN / ES"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-crew/links/", "i": "i-link", "g": false, "n": "SHARMATRACK — Links", "d": "Launcher page for the trackers"}]}]}]};
 var DATA = null, nav = null, booted = false;
 var PAGES = {};
 var LOGO_HTML = '<span class="sk-header__logo"><img src="https://sharma-kit.sharma-crew.workers.dev/assets/logo-white-header.png" alt="Sharma Electric & HVAC" width="103" height="20"></span>';
@@ -246,10 +288,57 @@ function sectionsHtml(tab){ return tab.sections.map(function(sec){ return '<h2 c
    tile on the Apps screen, grouped under quiet labels. Groups are built from
    the data itself; any folder the data adds later still gets its own group,
    so nothing can be lost when the data changes. --- */
-var SHORT_NAMES = { 'Material Pricing': 'Materials', 'Builders Application': 'Builders', 'Cloudflare Dashboard': 'Cloudflare', 'SharmaElectric.info': 'Website', 'Grok — Bot Team': 'Grok Team', 'Pending Projects': 'Pending', 'Builder Follow-up': 'Follow-up', 'EXJ Root Tracker': 'EXJ Root', 'MRCELA Custom Homes': 'MRCELA', 'SHARMATRACK Website': 'SHARMATRACK', 'SHARMATRACK — Links': 'Links', 'Sample House — Citrus Craft': 'Citrus Craft', 'Sample House — Template': 'Sample House', 'Owner Edition': 'Owner', 'Homeowner Hub': 'Homeowner', 'Smart Home Picker': 'Smart Home', 'Electrical Picker': 'Electrical', 'Code of Conduct': 'Conduct', '3131 W Eunice Dr': '3131 Eunice', '3262 W Eunice Dr': '3262 Eunice', '3286 W Eunice Dr': '3286 Eunice', '3274 W Eunice Dr': '3274 Eunice', '212 Marion Oaks Golf Rd': '212 Marion Oaks', '601 Marion Oaks Golf Rd': '601 Marion Oaks', '17385 SW 25th Cir': '17385 SW 25th', '14065 SW 48th Ave': '14065 SW 48th', '16321 SW 26th Terrace Rd': '16321 SW 26th', '109 Forest Park Ct': '109 Forest Park', 'Lot 69 Bella Collina': 'Lot 69 Bella', '9700 Blandford Rd': '9700 Blandford', 'Mukherjee Residence': 'Mukherjee', 'Glaze Residence': 'Glaze' };
+var SHORT_NAMES = { 'Material Pricing': 'Materials', 'Builders Application': 'Builders', 'Cloudflare Dashboard': 'Cloudflare', 'Grok — Bot Team': 'Grok Team', 'Pending Projects': 'Pending', 'Builder Follow-up': 'Follow-up', 'EXJ Root Tracker': 'EXJ Root', 'MRCELA Custom Homes': 'MRCELA', 'SHARMATRACK Website': 'SHARMATRACK', 'SHARMATRACK — Links': 'Links', 'Sample House — Citrus Craft': 'Citrus Craft', 'Sample House — Template': 'Sample House', 'Owner Edition': 'Owner', 'Homeowner Hub': 'Homeowner', 'Smart Home Picker': 'Smart Home', 'Electrical Picker': 'Electrical', 'Code of Conduct': 'Conduct', '3131 W Eunice Dr': '3131 Eunice', '3262 W Eunice Dr': '3262 Eunice', '3286 W Eunice Dr': '3286 Eunice', '3274 W Eunice Dr': '3274 Eunice', '212 Marion Oaks Golf Rd': '212 Marion Oaks', '601 Marion Oaks Golf Rd': '601 Marion Oaks', '17385 SW 25th Cir': '17385 SW 25th', '14065 SW 48th Ave': '14065 SW 48th', '16321 SW 26th Terrace Rd': '16321 SW 26th', '109 Forest Park Ct': '109 Forest Park', 'Lot 69 Bella Collina': 'Lot 69 Bella', '9700 Blandford Rd': '9700 Blandford', 'Mukherjee Residence': 'Mukherjee', 'Glaze Residence': 'Glaze' };
 function tileShort(n){ return SHORT_NAMES[n] || n; }
+/* --- Tile logos (2026-11-20): every app tile carries a real logo — the
+   custom AI family built on the Sharma lion+bolt mark (icons/apps/), the
+   builder's own company logo for Sharma Track editions and job pages
+   (icons/builders/, reused from the tracker repos), the Track app icon,
+   BuzzDrafts' own icon, and the real GitHub/Cloudflare marks. Keyed by the
+   row's app name; job pages key by builder via TILE_ICON_URLS below. --- */
+var TILE_ICONS = {
+  'My Day': 'icons/apps/my-day-192.png', 'Office TV': 'icons/apps/office-tv-192.png',
+  'Sharma News': 'icons/apps/news-192.png', 'Legal Briefing': 'icons/apps/legal-192.png',
+  'Sanjay’s Hub': 'icons/apps/hub-192.png',
+  'Sharma Finance': 'icons/apps/finance-192.png', 'Material Pricing': 'icons/apps/materials-192.png',
+  'Permit Tracker': 'icons/apps/permits-192.png', 'Collections': 'icons/apps/collections-192.png',
+  'Bid Tracker': 'icons/apps/bids-leads-192.png', 'Builder Follow-up': 'icons/apps/follow-up-192.png',
+  'Inspection Prep': 'icons/apps/inspection-192.png', 'Pending Projects': 'icons/apps/pending-192.png',
+  'Cloudflare Dashboard': 'icons/apps/cloudflare-192.png',
+  'Bid Boards': 'icons/apps/bid-boards-192.png', 'Lead Finder': 'icons/apps/lead-finder-192.png',
+  'BuzzDrafts': 'icons/apps/buzzdrafts-192.png',
+  'Owner Edition': 'icons/apps/track-192.png', 'SHARMATRACK Website': 'icons/apps/tracksite-192.png',
+  'SHARMATRACK — Links': 'icons/apps/track-192.png', 'Code of Conduct': 'icons/apps/track-192.png',
+  'Z Brothers': 'icons/builders/zbrothers-192.png', 'EXJ Root Tracker': 'icons/builders/exj-192.png',
+  'NOK Construction': 'icons/builders/nok-192.png', 'MRCELA Custom Homes': 'icons/builders/mrcela-192.png',
+  'Logan Construction': 'icons/builders/logan-192.png',
+  'DNR Contracting': 'icons/apps/track-192.png', 'BR Ross Construction': 'icons/apps/track-192.png',
+  'Builders Application': 'icons/apps/builders-192.png', 'Homeowner Hub': 'icons/apps/homeowner-192.png',
+  'Smart Home Picker': 'icons/apps/smart-home-192.png', 'HVAC Picker': 'icons/apps/hvac-picker-192.png',
+  'Electrical Picker': 'icons/apps/electrical-picker-192.png',
+  'Sample House — Citrus Craft': 'icons/apps/sample-house-192.png', 'Sample House — Template': 'icons/apps/sample-house-192.png',
+  'Education': 'icons/apps/education-192.png', 'NEC Code': 'icons/apps/nec-code-192.png',
+  'Rough-In Guide': 'icons/apps/rough-in-192.png',
+  'GitHub': 'icons/apps/github-192.png', 'Grok — Bot Team': 'icons/apps/grok-192.png',
+  'Glaze Residence': 'icons/builders/nok-192.png', '109 Forest Park Ct': 'icons/builders/nok-192.png',
+  'Lot 69 Bella Collina': 'icons/builders/logan-192.png', '9700 Blandford Rd': 'icons/builders/mrcela-192.png',
+  'Mukherjee Residence': 'icons/apps/track-192.png', '178 Fisher Loop': 'icons/apps/track-192.png'
+};
+var TILE_ICON_URLS = [
+  ['sharmatrack-crew/', 'icons/builders/zbrothers-192.png'],
+  ['exj-root-tracker', 'icons/builders/exj-192.png']
+];
+function tileIcon(r){
+  if (TILE_ICONS[r.n]) return TILE_ICONS[r.n];
+  for (var i = 0; i < TILE_ICON_URLS.length; i++) if ((r.u || '').indexOf(TILE_ICON_URLS[i][0]) >= 0) return TILE_ICON_URLS[i][1];
+  return null;
+}
 function tileHtml(r){
-  return '<a class="tile" href="' + r.u + '" aria-label="' + esc(r.n) + '" data-search="' + esc((r.n + ' ' + (r.d || '')).toLowerCase()) + '"><span class="tic' + (r.g ? ' gold' : '') + '"><svg class="sk-icon"><use href="#' + r.i + '"/></svg></span><span class="tname">' + esc(tileShort(r.n)) + '</span></a>';
+  var icon = tileIcon(r);
+  var face = icon
+    ? '<span class="tic tic--img"><img src="' + icon + '" alt="" loading="lazy"></span>'
+    : '<span class="tic' + (r.g ? ' gold' : '') + '"><svg class="sk-icon"><use href="#' + r.i + '"/></svg></span>';
+  return '<a class="tile" href="' + r.u + '" aria-label="' + esc(r.n) + '" data-search="' + esc((r.n + ' ' + (r.d || '')).toLowerCase()) + '">' + face + '<span class="tname">' + esc(tileShort(r.n)) + '</span></a>';
 }
 function tileGroups(){
   if (!DATA) return null;
@@ -376,16 +465,137 @@ function loadDashboard(){
   if (typeof fetch !== 'function') return;
   fetch(TV_URL, { cache: 'no-store' }).then(function(r){ if (!r.ok) throw new Error('tv ' + r.status); return r.json(); }).then(function(d){ try { localStorage.setItem(TV_CACHE_KEY, JSON.stringify(d)); } catch (e) {} renderDashboard(d); }).catch(function(){});
 }
-var BUILDERS = { apps: buildApps, today: buildToday };
+/* --- Shared Office TV data feed (Today dashboard, News, TV mode) --- */
+function fetchTv(cb){
+  var cached = null;
+  try { var raw = localStorage.getItem(TV_CACHE_KEY); if (raw) cached = JSON.parse(raw); } catch (e) {}
+  if (cached) cb(cached);
+  if (typeof fetch !== 'function') { if (!cached) cb(null); return; }
+  fetch(TV_URL, { cache: 'no-store' }).then(function(r){ if (!r.ok) throw new Error('tv ' + r.status); return r.json(); }).then(function(d){ try { localStorage.setItem(TV_CACHE_KEY, JSON.stringify(d)); } catch (e) {} cb(d); }).catch(function(){ if (!cached) cb(null); });
+}
+
+/* --- News tab: Sharma News + Legal Briefing folded in (2026-11-20).
+   The publications are static builds with no JSON feed, so the tab carries
+   their entry cards plus the live headline feed (Office TV data, refreshed
+   3x daily) — real headlines only, nothing invented. --- */
+function buildNews(page){
+  PAGES.news = page;
+  page.setHeader({ title: 'News', trail: TRAIL_BTN });
+  page.html('<div class="wrap"><div class="sk-pagehead"><div><h1 class="sk-title">News</h1><p class="sk-note">Sharma News · Legal Briefing · latest headlines</p></div></div><div id="newsBody">' + skelHtml(4) + '</div><footer>Sharma Electric &amp; HVAC · Lic. EC13013924 · CAC1823596<br>Kept current by Jarvis</footer></div>');
+  page.refreshable(function(){ repaintNews(); return loadData(); });
+  repaintNews();
+}
+function pubRow(name, desc, icon, url){
+  return '<a class="row" href="' + url + '"><span class="tic tic--img" style="width:44px;height:44px;border-radius:12px;flex:0 0 auto"><img src="' + icon + '" alt=""></span><span class="rt"><span class="rn">' + esc(name) + '</span><span class="rd">' + esc(desc) + '</span></span><span class="arr"><svg class="sk-icon"><use href="#i-chevron-right"/></svg></span></a>';
+}
+function renderNews(d){
+  var host = document.getElementById('newsBody'); if (!host) return;
+  var newsUrl = findAppUrl('Sharma News', 'https://sharmaelechvac.github.io/sharma-news/');
+  var legalUrl = findAppUrl('Legal Briefing', 'https://sharmaelechvac.github.io/sharma-legal-briefing/');
+  var html = '<h2 class="sec">Publications</h2><div class="rows">'
+    + pubRow('Sharma News', 'Daily briefing — weather, permits, industry · archive', 'icons/apps/news-192.png', newsUrl)
+    + pubRow('Legal Briefing', 'Daily legal news · Harvey · archive', 'icons/apps/legal-192.png', legalUrl)
+    + '</div>';
+  var items = (d && d.news) || [];
+  if (items.length) {
+    html += '<h2 class="sec">Latest headlines</h2><div class="dcard" style="cursor:default">' + items.map(function(n){
+      var sub = [n.source, n.date].filter(Boolean).join(' · ');
+      return '<div class="drow"><span class="dbody"><span class="nhead">' + esc(n.headline || '') + '</span>' + (sub ? '<span class="nsub">' + esc(sub) + '</span>' : '') + '</span></div>';
+    }).join('') + '</div>';
+  } else if (!d) {
+    html += '<h2 class="sec">Latest headlines</h2>' + skelHtml(3);
+  }
+  host.innerHTML = html;
+}
+function repaintNews(){ if (PAGES.news) fetchTv(renderNews); }
+
+/* --- Alerts tab: push lives in Home (2026-11-20). The panel itself is
+   push.js; it is also mounted in the About sheet. Re-mounted fresh on every
+   visit so its state (subscription, switches) is never stale. --- */
+function buildAlerts(page){
+  PAGES.alerts = page;
+  page.setHeader({ title: 'Alerts', trail: TRAIL_BTN });
+  page.html('<div class="wrap"><div class="sk-pagehead"><div><h1 class="sk-title">Alerts</h1><p class="sk-note">Push notifications for this phone</p></div></div><div id="alertsPush"></div><footer>Sharma Electric &amp; HVAC · Lic. EC13013924 · CAC1823596<br>Kept current by Jarvis</footer></div>');
+  repaintAlerts();
+}
+function repaintAlerts(){
+  var host = document.getElementById('alertsPush'); if (!host) return;
+  host.innerHTML = '<div data-sharma-push></div>';
+  if (window.SharmaPush) SharmaPush.mount(host.firstChild);
+}
+
+/* --- TV mode: the Office TV wall board as a display mode of Home
+   (2026-11-20). Same data flow as the board (Office TV data.json, Mark's
+   sections and ALL-CAPS titles, ticker labelled News). DISPLAY ONLY:
+   whitelisted fields — never money, never private notes, never phone
+   numbers. Auto-refreshes while it is the open tab. --- */
+function buildTV(page){
+  PAGES.tv = page;
+  page.setHeader({ title: 'TV Mode', trail: TRAIL_BTN });
+  page.html('<div class="wrap wrap--tv"><div class="sk-pagehead"><div><h1 class="sk-title">TV Mode</h1><p class="sk-note">Office TV board — display mode</p></div></div><div id="tvBody">' + skelHtml(4) + '</div><p class="tvnote">The Office TV wall board, inside Sharma Home. It shows schedule, inspections, to-schedule, new bids and headlines only — no money and no private notes, ever.</p><footer>Sharma Electric &amp; HVAC · Lic. EC13013924 · CAC1823596<br>Kept current by Jarvis</footer></div>');
+  page.refreshable(function(){ repaintTV(); return Promise.resolve(); });
+  repaintTV();
+}
+function tvClockText(){ try { return new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit' }).format(new Date()); } catch (e) { return ''; } }
+function tvRow(time, title, sub, chip){
+  return '<div class="tvrow">' + (time ? '<span class="tvtime">' + esc(time) + '</span>' : '') + '<span class="tvbody"><span class="tvtitle">' + esc(title || '') + '</span>' + (sub ? '<span class="tvsub">' + esc(sub) + '</span>' : '') + '</span>' + (chip ? '<span class="tvchip">' + esc(chip) + '</span>' : '') + '</div>';
+}
+function tvPanel(title, inner){ return '<section class="tvpanel"><h3>' + esc(title) + '</h3>' + inner + '</section>'; }
+function renderTV(d){
+  var host = document.getElementById('tvBody'); if (!host) return;
+  if (!d) { host.innerHTML = skelHtml(4); return; }
+  var today = nyToday();
+  var tm = new Date(Date.now() + 24 * 3600 * 1000);
+  var tomorrow = tm.getFullYear() + '-' + String(tm.getMonth() + 1).padStart(2, '0') + '-' + String(tm.getDate()).padStart(2, '0');
+  var html = '<div class="tvmode"><div class="tvhead"><div><div class="tvbrand">Sharma Live</div><div class="tvdate">' + esc(nyDateLabel()) + '</div></div><div class="tvclock" id="tvClock">' + esc(tvClockText()) + '</div></div><div class="tvgrid">';
+  var sched = (d.mySchedule || []).filter(function(x){ return x.date === today; });
+  html += tvPanel("Today's Schedule", sched.length ? sched.map(function(x){ return tvRow(x.time, x.title, x.location, ''); }).join('') : '<div class="tvempty">Nothing scheduled today.</div>');
+  var insp = [];
+  if (d.todayInspections && d.todayInspections.date === today && d.todayInspections.entries) insp = d.todayInspections.entries;
+  else if (Array.isArray(d.inspections)) insp = d.inspections.filter(function(x){ return !x.date || x.date === today; });
+  html += tvPanel("Today's Inspections", insp.length ? insp.map(function(x){ var meta = [x.type, x.number].filter(Boolean).join(' · '); return tvRow(x.time, x.title || x.name || x.address, [meta, x.inspector].filter(Boolean).join(' · '), x.status || ''); }).join('') : '<div class="tvempty">No inspections today.</div>');
+  var tasks = (d.tasks && d.tasks[today]) || [];
+  if (tasks.length) html += tvPanel("Today's Tasks", tasks.map(function(x){ return tvRow('', x.title, x.detail, ''); }).join(''));
+  var tsHtml = '';
+  (d.toScheduleGroups || []).forEach(function(g){ tsHtml += '<div class="tvrow"><span class="tvbody"><span class="tvtitle">' + esc(g.heading || '') + '</span></span></div>' + (g.items || []).map(function(it){ return tvRow('', it.title, it.detail, ''); }).join(''); });
+  (d.toSchedule || []).forEach(function(it){ tsHtml += tvRow('', it.title || it, it.detail || '', ''); });
+  if (tsHtml) html += tvPanel('To Schedule', tsHtml);
+  var bids = d.newBids || [];
+  if (bids.length) html += tvPanel('New Bids', bids.map(function(x){ return tvRow(x.received || '', x.project, x.from, ''); }).join(''));
+  var notes = d.importantNotes || d.important || null;
+  var noteItems = [];
+  if (Array.isArray(notes)) noteItems = notes.map(function(n){ return typeof n === 'string' ? n : (n.title || n.text || ''); }).filter(Boolean);
+  else if (typeof notes === 'string' && notes) noteItems = [notes];
+  if (noteItems.length) html += tvPanel('Important Notes', noteItems.map(function(n){ return tvRow('', n, '', ''); }).join(''));
+  var schedT = (d.mySchedule || []).filter(function(x){ return x.date === tomorrow; });
+  if (schedT.length) html += tvPanel("Tomorrow's Schedule", schedT.map(function(x){ return tvRow(x.time, x.title, x.location, ''); }).join(''));
+  html += '</div>';
+  var tick = [];
+  (d.news || []).forEach(function(n){ if (n.headline) tick.push(n.headline); });
+  (d.ticker || []).forEach(function(t){ if (t) tick.push(t); });
+  if (tick.length) html += '<div class="tvticker"><span class="tvticker__label">News</span><span class="tvticker__in">' + esc(tick.join('   •   ')) + '</span></div>';
+  html += '</div>';
+  host.innerHTML = html;
+}
+function repaintTV(){ if (PAGES.tv) fetchTv(renderTV); }
+
+var BUILDERS = { apps: buildApps, today: buildToday, news: buildNews, alerts: buildAlerts, tv: buildTV };
 function route(){
   if (!nav) return;
   scheduleSettle();
   var h = location.hash || '#/';
-  /* Legacy hashes (#/office, #/jobs, #/folder/N from the folder layout) all
-     land on the Apps tile grid, where those groups now live. */
-  var tab = h.indexOf('#/today') === 0 ? 'today' : 'apps';
+  /* Lean Home (2026-11-20): Today is the front door. Legacy hashes
+     (#/office, #/jobs, #/folder/N from the folder layout) land on the Apps
+     tile grid, where those groups now live. */
+  var tab = 'today';
+  if (h.indexOf('#/apps') === 0 || h.indexOf('#/office') === 0 || h.indexOf('#/jobs') === 0 || h.indexOf('#/folder') === 0) tab = 'apps';
+  else if (h.indexOf('#/news') === 0) tab = 'news';
+  else if (h.indexOf('#/alerts') === 0) tab = 'alerts';
+  else if (h.indexOf('#/tv') === 0) tab = 'tv';
   if (nav.stack[0] && nav.stack[0].key === tab) { if (nav.depth() > 1) nav.popTo(0); }
   else nav.root(tab, BUILDERS[tab]);
+  if (tab === 'alerts') repaintAlerts();
+  if (tab === 'tv') repaintTV();
 }
 /* --- transition janitor (broken-screen fix, 2026-11-20) ---
    The kit's screen transitions are fire-and-forget: cross-fades and page hides
@@ -436,6 +646,12 @@ window.__bootHome = function(){
   nav = SK.stack('#app', { lead: LOGO_HTML, title: 'Sharma Home' });
   route();
   loadData();
+  /* TV mode is a wall display: keep its clock honest and its board fresh
+     while it is the open tab. */
+  setInterval(function(){
+    var c = document.getElementById('tvClock'); if (c) c.textContent = tvClockText();
+    if (nav && nav.top) { var t = nav.top(); if (t && t.key === 'tv') repaintTV(); }
+  }, 60000);
   setTimeout(function(){ if (!DATA) { DATA = EMBEDDED; repaintApps(); repaintToday(); } }, 3000);
 };
 document.addEventListener('click', function(e){
