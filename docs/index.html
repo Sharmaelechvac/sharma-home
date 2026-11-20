@@ -302,6 +302,48 @@
     .tvticker__in { display: inline-block; font-size: 19px; color: #fff; padding-left: 100%; animation: tvscroll 60s linear infinite; }
     @keyframes tvscroll { to { transform: translateX(-100%); } }
     .tvnote { margin: 12px 2px 0; font-size: 18px; color: var(--gray); }
+
+    /* --- Launcher Apple polish (2026-11-20, Sanjay: "app launcher not
+       Apple enough"): the genuine article — depth, materials, bold type.
+       iOS Home Screen grid metrics, floating glass capsule tab bar with a
+       sliding selection pill (phone only; the macOS sidebar at >=960px
+       keeps its own treatment), first-frame press physics, large-title
+       scroll collapse (JS below), shadow-not-border depth on icon tiles.
+       The header stays a solid navy brand bar: the kit pins content below
+       it, nothing scrolls under it, so glass there would be invisible —
+       material lives where content actually passes beneath: the tab bar. --- */
+    :root { --ease-ios: cubic-bezier(0.32, 0.72, 0, 1); --spring-gentle: cubic-bezier(0.34, 1.25, 0.64, 1); --shadow-tabbar: 0 10px 32px rgba(16,24,40,0.18), 0 2px 8px rgba(16,24,40,0.10); }
+    .wrap { padding-left: 16px; padding-right: 16px; padding-bottom: calc(104px + env(safe-area-inset-bottom, 0px)); }
+    .tsec { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; text-transform: none; color: var(--navy-dark); margin: 28px 2px 12px; }
+    html[data-scheme="dark"] .tsec { color: #F2F2F7; }
+    .tgrid { gap: 24px 12px; }
+    .tic { width: 64px; height: 64px; border-radius: 15px; }
+    .tic .sk-icon { width: 30px; height: 30px; }
+    .tic--img { box-shadow: 0 3px 10px rgba(16,24,40,0.14), 0 1px 3px rgba(16,24,40,0.10); }
+    .tile .tic { transition: transform 0.22s var(--spring-gentle), background-color 0.15s ease; }
+    .tile:active .tic { transform: scale(0.92); }
+    .tile, .sk-tab { touch-action: manipulation; }
+    .dcard { border-radius: 16px; }
+    .sk-pagehead .sk-title { transform-origin: left bottom; }
+    /* Floating capsule tab bar + sliding pill — phone widths only */
+    @media (max-width: 959.98px) {
+      .sk .sk-tabbar { left: 12px; right: 12px; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); padding: 0; border-top: none; border-radius: 999px; background: rgba(255,255,255,0.78); -webkit-backdrop-filter: blur(20px) saturate(180%); backdrop-filter: blur(20px) saturate(180%); box-shadow: var(--shadow-tabbar), inset 0 1px 0 rgba(255,255,255,0.55); }
+      .sk .sk-tabbar__inner { height: 56px; position: relative; }
+      html[data-scheme="dark"] .sk .sk-tabbar { background: rgba(28,28,30,0.75); box-shadow: var(--shadow-tabbar), inset 0 1px 0 rgba(255,255,255,0.14); }
+      @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+        .sk .sk-tabbar { background: #fff; }
+        html[data-scheme="dark"] .sk .sk-tabbar { background: #1C1C1E; }
+      }
+      @media (prefers-reduced-transparency: reduce) {
+        .sk .sk-tabbar { background: #fff; -webkit-backdrop-filter: none; backdrop-filter: none; }
+        html[data-scheme="dark"] .sk .sk-tabbar { background: #1C1C1E; }
+      }
+    }
+    .tab-pill { position: absolute; top: 6px; bottom: 6px; left: 0; width: 0; border-radius: 999px; background: rgba(38,67,135,0.10); opacity: 0; z-index: 0; transition: transform 0.32s var(--spring-gentle), width 0.32s var(--spring-gentle), opacity 0.2s ease; pointer-events: none; }
+    html[data-scheme="dark"] .tab-pill { background: rgba(255,255,255,0.14); }
+    .sk-tab { position: relative; z-index: 1; }
+    @media (min-width: 960px) { .tab-pill { display: none; } }
+    @media (prefers-reduced-motion: reduce) { .tile .tic, .tab-pill { transition: none; } }
 </style>
 <style id="lockcss">
 html.locked body > *:not(#lock){display:none!important}
@@ -338,6 +380,7 @@ else{document.getElementById('lockerr').textContent='Wrong passcode';document.ge
 <div class="sk-offline"></div>
 <main id="app" class="sk-stackview"></main>
 <nav class="sk-tabbar" aria-label="Sections"><div class="sk-tabbar__inner">
+  <span class="tab-pill" aria-hidden="true"></span>
   <a class="sk-tab" href="#/" data-tab="today" data-match="^#/(today)?$"><svg class="sk-icon"><use href="#i-calendar"/></svg>Today</a>
   <a class="sk-tab" href="#/apps" data-tab="apps" data-match="^#/(apps|office|jobs|folder)"><svg class="sk-icon"><use href="#i-home"/></svg>Apps</a>
   <a class="sk-tab" href="#/news" data-tab="news" data-match="^#/news"><svg class="sk-icon"><use href="#i-globe"/></svg>News</a>
@@ -494,7 +537,7 @@ function buildApps(page){
   page.setHeader({ title: 'Sharma Home', trail: TRAIL_BTN });
   page.html('<div class="wrap wrap--tiles"><div class="sk-pagehead"><div><h1 class="sk-title">Sharma Home</h1><p class="sk-note">Every Sharma app — for Sanjay only</p></div></div>'
     + '<label class="sk-search"><svg class="sk-icon"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Search apps…" autocomplete="off"><button type="button" class="sk-search__clear" aria-label="Clear"><svg class="sk-icon"><use href="#i-close"/></svg></button></label>'
-    + '<div id="appsHome">' + tilesHtml() + '</div><p class="nomatch" id="appsNomatch">No app matches that search.</p>'
+    + '<div id="appsHome">' + tilesHtml() + '</div><div class="sk-empty hidden" id="appsNomatch"><div class="sk-empty__icon"><svg class="sk-icon"><use href="#i-search"/></svg></div><p class="sk-empty__title">No Results</p><p class="sk-empty__text" id="appsNomatchText">No app matches that search.</p></div>'
     + '<footer>Sharma Electric &amp; HVAC · Lic. EC13013924 · CAC1823596<br>Kept current by Jarvis</footer></div>');
   page.refreshable(function(){ return loadData().then(function(){ repaintApps(); }); });
   var q = page.body.querySelector('#q');
@@ -512,7 +555,11 @@ function paintSearch(page, value){
     if (vis) anyVisible = true;
   });
   var nm = page.body.querySelector('#appsNomatch');
-  if (nm) nm.style.display = needle && !anyVisible ? 'block' : 'none';
+  if (nm) {
+    nm.classList.toggle('hidden', !(needle && !anyVisible));
+    var nt = page.body.querySelector('#appsNomatchText');
+    if (nt && needle) nt.textContent = 'No results for \u201C' + (value || '').trim() + '\u201D \u2014 try a shorter word, or clear the search to see every app.';
+  }
 }
 function repaintApps(){ var p = PAGES.apps; if (!p) return; var home = p.body.querySelector('#appsHome'); if (home) home.innerHTML = tilesHtml(); var q = p.body.querySelector('#q'); if (q && q.value) paintSearch(p, q.value); }
 /* --- Jobs screen: every tracker + job page as full rows, pushed over the
@@ -1038,5 +1085,61 @@ else window.__bootHome();
 <script src="refresh.js"></script>
 <script src="push.js" defer></script>
 <script>if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) { addEventListener("load", function(){ navigator.serviceWorker.register("sw.js?kit=https://sharma-kit.sharma-crew.workers.dev", { scope: "/sharma-home/" }).catch(function(){}); }); }</script>
+<script>
+/* Launcher Apple polish (2026-11-20): sliding tab-bar selection pill +
+   large-title scroll collapse. Self-contained; reads only kit-set state. */
+(function(){
+  var inner = document.querySelector('.sk-tabbar__inner');
+  var pill = inner ? inner.querySelector('.tab-pill') : null;
+  if (inner && pill) {
+    var tabs = Array.prototype.slice.call(inner.querySelectorAll('.sk-tab'));
+    function activeTab(){
+      for (var i = 0; i < tabs.length; i++) if (tabs[i].getAttribute('aria-current') === 'page' || tabs[i].classList.contains('is-on')) return tabs[i];
+      return tabs[0];
+    }
+    function place(animate){
+      if (window.innerWidth >= 960 || !inner.clientWidth) { pill.style.opacity = '0'; return; }
+      var t = activeTab(); if (!t) return;
+      var w = t.offsetWidth - 8; if (w <= 0) { pill.style.opacity = '0'; return; }
+      if (!animate) pill.style.transition = 'none';
+      pill.style.width = w + 'px';
+      pill.style.transform = 'translateX(' + (t.offsetLeft + 4) + 'px)';
+      pill.style.opacity = '1';
+      if (!animate) { void pill.offsetWidth; pill.style.transition = ''; }
+    }
+    if (window.MutationObserver) {
+      var mo = new MutationObserver(function(){ place(true); });
+      tabs.forEach(function(t){
+        mo.observe(t, { attributes: true, attributeFilter: ['aria-current', 'class'] });
+        t.addEventListener('click', function(){ setTimeout(function(){ place(true); }, 30); });
+      });
+    }
+    window.addEventListener('resize', function(){ place(false); });
+    window.addEventListener('hashchange', function(){ setTimeout(function(){ place(true); }, 30); });
+    place(false);
+    setTimeout(function(){ place(false); }, 400);
+    setTimeout(function(){ place(true); }, 1200);
+  }
+  var ticking = false, lastPage = null, lastK = -1;
+  function collapse(){
+    ticking = false;
+    var page = lastPage; if (!page) return;
+    var head = page.querySelector('.sk-pagehead'); if (!head) return;
+    var k = Math.max(0, Math.min(56, page.scrollTop)) / 56;
+    if (Math.abs(k - lastK) < 0.004) return;
+    lastK = k;
+    if (head.getAttribute('data-basepad') === null) head.setAttribute('data-basepad', parseFloat(getComputedStyle(head).paddingTop) || 0);
+    var base = parseFloat(head.getAttribute('data-basepad')) || 0;
+    head.style.paddingTop = Math.max(0, base - 12 * k) + 'px';
+    var title = head.querySelector('.sk-title');
+    if (title) title.style.transform = 'scale(' + (1 - 0.13 * k).toFixed(3) + ')';
+    head.querySelectorAll('.sk-note, .nw-stamp').forEach(function(el){ el.style.opacity = String(1 - k); });
+  }
+  document.addEventListener('scroll', function(e){
+    var t = e.target;
+    if (t && t.classList && t.classList.contains('sk-page')) { lastPage = t; if (!ticking) { ticking = true; requestAnimationFrame(collapse); } }
+  }, true);
+})();
+</script>
 </body>
 </html>
