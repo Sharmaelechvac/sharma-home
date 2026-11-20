@@ -69,3 +69,46 @@ self.addEventListener("fetch", function (e) {
     return; /* /login, /api/*, everything else: straight to the network, never saved here */
   }
 });
+
+/* --- Web push (added 2026-11-20 for the Sharma Home notifications panel) ---
+   Purely additive: everything above is the kit shell worker, unchanged, and
+   the cache VERSION is deliberately left as-is so the refresh-on-open and
+   cache-purge behavior is untouched (a changed sw.js file is picked up by
+   the browser's own service-worker update check). The push server
+   (sharma-push.sharma-crew.workers.dev) sends a JSON payload:
+   { "title": "...", "body": "...", "url": "/sharma-home/...", "tag": "..." }.
+   Clicking a notification focuses the open app (navigating it to the
+   target) or opens the target URL in a new window. */
+self.addEventListener("push", function (e) {
+  var d = {};
+  if (e.data) {
+    try { d = e.data.json(); } catch (err) { try { d = { body: e.data.text() }; } catch (err2) { d = {}; } }
+  }
+  var icon = self.registration.scope + "icons/icon-192.png";
+  var opts = {
+    body: d.body || "",
+    icon: d.icon || icon,
+    badge: icon,
+    data: { url: d.url || "/sharma-home/" }
+  };
+  if (d.tag) opts.tag = d.tag;
+  e.waitUntil(self.registration.showNotification(d.title || "Sharma Home", opts));
+});
+
+self.addEventListener("notificationclick", function (e) {
+  e.notification.close();
+  var target = (e.notification.data && e.notification.data.url) || "/sharma-home/";
+  var targetUrl = new URL(target, self.location.origin).href;
+  e.waitUntil(self.clients.matchAll({ type: "window", includeUncontrolled: true }).then(function (list) {
+    for (var i = 0; i < list.length; i++) {
+      var c = list[i];
+      if (c.url.indexOf(self.registration.scope) === 0 && "focus" in c) {
+        if (c.url !== targetUrl && "navigate" in c) {
+          return c.navigate(targetUrl).then(function (nc) { return (nc || c).focus(); });
+        }
+        return c.focus();
+      }
+    }
+    if (self.clients.openWindow) return self.clients.openWindow(targetUrl);
+  }));
+});

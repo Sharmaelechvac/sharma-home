@@ -1,0 +1,81 @@
+/*! Sharma Home — notifications panel styles (companion to push.js).
+   Self-contained: every rule is scoped under .shp so it cannot collide with
+   the design kit or the app's own styles. Design rules: navy #264387 /
+   gold #F0A846, 18px minimum type, big tap targets, light theme, no emoji. */
+.shp {
+  --shp-navy: #264387; --shp-navy-dark: #1a2f61; --shp-gold: #F0A846;
+  --shp-ink: #1d2433; --shp-gray: #5b6478; --shp-line: #dfe4ee;
+  --shp-panel: #ffffff; --shp-ok: #1e7a34; --shp-bad: #b3261e;
+  font-size: 18px; line-height: 1.45; color: var(--shp-ink);
+  font-family: -apple-system, "SF Pro Text", Inter, ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.shp * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+.shp-card {
+  background: var(--shp-panel); border: 1px solid var(--shp-line);
+  border-radius: 14px; padding: 18px; margin: 0 0 16px;
+}
+.shp-card--tip { border-left: 6px solid var(--shp-gold); }
+.shp-title { margin: 0 0 6px; font-size: 22px; font-weight: 700; color: var(--shp-navy-dark); }
+.shp-sub { margin: 0 0 14px; color: var(--shp-gray); font-size: 18px; }
+.shp-status { margin: 0; font-size: 18px; font-weight: 600; }
+.shp-status--on { color: var(--shp-ok); }
+.shp-status--off { color: var(--shp-gray); }
+.shp-note { margin: 10px 0 0; color: var(--shp-gray); font-size: 18px; }
+.shp-err { margin: 10px 0 0; color: var(--shp-bad); font-size: 18px; font-weight: 600; }
+.shp-label {
+  display: block; margin: 0 0 8px; font-size: 18px; font-weight: 700; color: var(--shp-navy-dark);
+}
+.shp-input {
+  width: 100%; min-height: 56px; padding: 12px 14px; margin: 0 0 16px;
+  font: inherit; font-size: 18px; color: var(--shp-ink);
+  background: #fff; border: 1px solid var(--shp-line); border-radius: 10px; outline: none;
+}
+.shp-input:focus { border-color: var(--shp-navy); }
+.shp-roles { display: flex; gap: 8px; margin: 0 0 6px; }
+.shp-role {
+  flex: 1 1 0; min-height: 56px; padding: 10px 6px; cursor: pointer;
+  font: inherit; font-size: 18px; font-weight: 600; color: var(--shp-navy);
+  background: #fff; border: 2px solid var(--shp-navy); border-radius: 10px;
+}
+.shp-role[aria-pressed="true"] {
+  background: var(--shp-navy); color: #fff;
+  box-shadow: inset 0 -4px 0 var(--shp-gold);
+}
+.shp-btn {
+  display: block; width: 100%; min-height: 56px; padding: 14px 18px; margin: 0 0 12px;
+  cursor: pointer; font: inherit; font-size: 19px; font-weight: 700; text-align: center;
+  color: #fff; background: var(--shp-navy); border: none; border-radius: 12px;
+  box-shadow: inset 0 -4px 0 var(--shp-gold);
+}
+.shp-btn:active { background: var(--shp-navy-dark); }
+.shp-btn[disabled] { opacity: 0.55; cursor: default; }
+.shp-btn--ghost {
+  color: var(--shp-navy); background: #fff; border: 2px solid var(--shp-navy); box-shadow: none;
+}
+.shp-row {
+  display: flex; align-items: center; gap: 14px; width: 100%;
+  min-height: 64px; padding: 10px 2px; cursor: pointer;
+  border-bottom: 1px solid var(--shp-line);
+}
+.shp-row:last-child { border-bottom: none; }
+.shp-row__body { flex: 1 1 auto; }
+.shp-row__title { display: block; font-size: 18px; font-weight: 600; }
+.shp-row__sub { display: block; font-size: 16px; color: var(--shp-gray); margin-top: 2px; }
+.shp-switch { position: relative; flex: 0 0 auto; width: 62px; height: 36px; }
+.shp-switch input {
+  position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer;
+}
+.shp-track {
+  position: absolute; inset: 0; border-radius: 999px; background: #c9d2e4;
+  transition: background 0.15s ease;
+}
+.shp-track::after {
+  content: ""; position: absolute; top: 3px; left: 3px; width: 30px; height: 30px;
+  border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(20, 30, 60, 0.35);
+  transition: left 0.15s ease;
+}
+.shp-switch input:checked + .shp-track { background: var(--shp-navy); }
+.shp-switch input:checked + .shp-track::after { left: 29px; background: var(--shp-gold); }
+.shp-switch input:focus-visible + .shp-track { outline: 3px solid var(--shp-gold); outline-offset: 2px; }
+.shp-switch input[disabled] + .shp-track { opacity: 0.5; }
