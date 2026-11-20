@@ -273,7 +273,9 @@ function buildJobs(page){
   page.refreshable(function(){ return loadData().then(function(){ repaintJobs(); }); });
 }
 function repaintJobs(){ var p = PAGES.jobs; if (!p) return; var t = tabData('jobs'); if (t) p.html('<div class="wrap"><div class="sk-pagehead"><div><h1 class="sk-title">Job pages</h1><p class="sk-note">Every house, job by job</p></div></div>' + sectionsHtml(t) + '</div>'); }
+function repaintFolder(){ var pf = PAGES.folder; if (!pf || !nav || nav.top() !== pf.page) return; if (!tabData('apps')) return; buildFolder(pf.page, pf.idx); }
 function buildFolder(page, idx){
+  PAGES.folder = { page: page, idx: idx };
   var t = tabData('apps'); if (!t || !t.folders || !t.folders[idx]) { page.html('<div class="wrap">' + skelHtml(4) + '</div>'); return; }
   var f = t.folders[idx];
   page.setHeader({ lead: '<a class="sk-header__btn sk-header__back" href="#/" data-back><svg class="sk-icon"><use href="#i-chevron-left"/></svg>Apps</a>', title: '', trail: TRAIL_BTN, backHref: '#/' });
@@ -350,6 +352,7 @@ function loadDashboard(){
 var BUILDERS = { apps: buildApps, office: buildOffice, jobs: buildJobs };
 function route(){
   if (!nav) return;
+  scheduleSettle();
   var h = location.hash || '#/';
   var m = h.match(/^#\/folder\/(\d+)$/);
   if (m) {
@@ -364,11 +367,39 @@ function route(){
   if (nav.stack[0] && nav.stack[0].key === tab) { if (nav.depth() > 1) nav.popTo(0); }
   else nav.root(tab, BUILDERS[tab]);
 }
+/* --- transition janitor (broken-screen fix, 2026-11-20) ---
+   The kit's screen transitions are fire-and-forget: cross-fades and page hides
+   run on animations/timers that, when interrupted (the app is backgrounded
+   mid-transition, the auto-refresh reloads, tabs are tapped in quick
+   succession), can leave a displaced page visible or the header stuck
+   mid-fade — and nothing ever re-checks the end state. This settle pass runs
+   ~0.5s after the last navigation (and on return to the foreground) and
+   enforces the kit's own finished state: top page fully visible, every other
+   page hidden, stray pushed pages removed, header fade classes cleared. */
+var settleTimer = null;
+function settleStack(){
+  if (!nav || !nav.top) return;
+  var top = nav.top(); if (!top) return;
+  var bar = document.querySelector('.sk-header__bar'); if (bar) bar.classList.remove('sk-hfade');
+  var ttl = document.querySelector('.sk-header__title'); if (ttl) ttl.classList.remove('sk-tfade');
+  var pages = document.querySelectorAll('.sk-page');
+  for (var i = 0; i < pages.length; i++) {
+    var el = pages[i], inStack = false, isTop = el === top.el;
+    for (var j = 0; j < nav.stack.length; j++) if (nav.stack[j].el === el) inStack = true;
+    el.classList.remove('is-fade');
+    if (isTop) { el.classList.remove('is-hidden'); el.style.transform = ''; el.style.transition = ''; }
+    else if (inStack) el.classList.add('is-hidden');
+    else if (nav.roots && nav.roots[el.getAttribute('data-key')]) el.classList.add('is-hidden');
+    else el.remove();
+  }
+  if (nav.dim) nav.dim.style.opacity = nav.depth() > 1 ? '1' : '0';
+}
+function scheduleSettle(){ if (settleTimer) clearTimeout(settleTimer); settleTimer = setTimeout(settleStack, 500); }
 function loadData(){
   if (window.SK && SK.data) {
-    return SK.data('apps.json', function(d){ DATA = d; repaintApps(); repaintOffice(); repaintJobs(); }).catch(function(){ if (!DATA) { DATA = EMBEDDED; repaintApps(); repaintOffice(); repaintJobs(); } });
+    return SK.data('apps.json', function(d){ DATA = d; repaintApps(); repaintOffice(); repaintJobs(); repaintFolder(); }).catch(function(){ if (!DATA) { DATA = EMBEDDED; repaintApps(); repaintOffice(); repaintJobs(); repaintFolder(); } });
   }
-  DATA = EMBEDDED; repaintApps(); repaintOffice(); repaintJobs();
+  DATA = EMBEDDED; repaintApps(); repaintOffice(); repaintJobs(); repaintFolder();
   return Promise.resolve();
 }
 function fallbackRender(){
@@ -385,7 +416,7 @@ window.__bootHome = function(){
   nav = SK.stack('#app', { lead: LOGO_HTML, title: 'Sharma Home' });
   route();
   loadData();
-  setTimeout(function(){ if (!DATA) { DATA = EMBEDDED; repaintApps(); repaintOffice(); repaintJobs(); } }, 3000);
+  setTimeout(function(){ if (!DATA) { DATA = EMBEDDED; repaintApps(); repaintOffice(); repaintJobs(); repaintFolder(); } }, 3000);
 };
 document.addEventListener('click', function(e){
   var bt = e.target.closest && e.target.closest('[data-bids-toggle]');
@@ -407,6 +438,8 @@ document.addEventListener('click', function(e){
   }
 });
 window.addEventListener('hashchange', route);
+document.addEventListener('visibilitychange', function(){ if (document.visibilityState === 'visible') scheduleSettle(); });
+window.addEventListener('pageshow', scheduleSettle);
 if (document.documentElement.classList.contains('locked')) { if (window.SK && SK.dataClear) SK.dataClear(); }
 else if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', window.__bootHome);
 else window.__bootHome();
