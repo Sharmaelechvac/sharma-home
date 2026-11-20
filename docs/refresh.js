@@ -19,7 +19,7 @@
  * drift, phones either never update or refresh on every open. */
 (function () {
   "use strict";
-  var APP_VERSION = "2026-11-20.20";
+  var APP_VERSION = "2026-11-20.21";
   var GUARD_KEY = "sharma-refresh-at";    // sessionStorage: last purge stamp
   var CHECK_KEY = "sharma-vercheck-at";   // sessionStorage: last version check
   var DONE_KEY = "sharma-vercheck-done";  // sessionStorage: stamp already refreshed onto
@@ -42,6 +42,17 @@
       if (reg && reg.update) return reg.update().then(function () {}, function () {});
     }).then(function () {}, function () {});
   }
+  /* .21 hardening: also UNREGISTER the worker during a repair refresh. A
+     still-registered worker controls the repair reload itself and can
+     re-serve (or re-save) the old shell mid-repair; unregistering takes it
+     out of the loop. The fresh page re-registers the current worker on
+     boot, so nothing is lost. */
+  function dropWorker() {
+    if (!("serviceWorker" in navigator) || !navigator.serviceWorker.getRegistrations) return Promise.resolve();
+    return navigator.serviceWorker.getRegistrations().then(function (regs) {
+      return Promise.all(regs.map(function (r) { return r.unregister().then(function () {}, function () {}); }));
+    }).then(function () {}, function () {});
+  }
   function markUpdating(btn) {
     if (!btn) return;
     btn.disabled = true;
@@ -57,7 +68,7 @@
     var done = false;
     function go() { if (!done) { done = true; location.reload(); } }
     var slow = setTimeout(go, 3500); // a hung purge must never dead-end the button
-    Promise.all([purgeCaches(), updateWorker()]).then(function () { clearTimeout(slow); go(); }, function () { clearTimeout(slow); go(); });
+    Promise.all([purgeCaches(), updateWorker(), dropWorker()]).then(function () { clearTimeout(slow); go(); }, function () { clearTimeout(slow); go(); });
   }
   function checkVersion() {
     var last = parseInt(sget(CHECK_KEY) || "0", 10) || 0;
@@ -69,8 +80,15 @@
       return r.json();
     }).then(function (d) {
       if (!d || !d.v || d.v === APP_VERSION) return;
-      if (sget(DONE_KEY) === d.v) return; // already refreshed onto this stamp this session
-      sset(DONE_KEY, d.v);
+      /* DONE_KEY carries a timestamp (stamp@ms). .21: a stamp recorded more
+         than 5 minutes ago no longer blocks a retry — the old behaviour let
+         one failed repair (old shell re-served during the reload) suppress
+         every later check for the whole session, and an installed app's
+         session can live for days. */
+      var doneRaw = sget(DONE_KEY) || "";
+      var doneAt = parseInt(doneRaw.split("@")[1] || "0", 10) || 0;
+      if (doneRaw.split("@")[0] === d.v && now() - doneAt < 300000) return; // already refreshed onto this stamp, recently
+      sset(DONE_KEY, d.v + "@" + now());
       hardRefresh(null);
     }).catch(function () { /* offline or no version file: open as-is, never reload */ });
   }
