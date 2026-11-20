@@ -183,17 +183,20 @@
     html[data-scheme="dark"] .tic--img { background: none; box-shadow: none; }
     html[data-scheme="dark"] .tile:active .tic--img { background: none; }
 
-    /* --- News tab v2 (2026-11-20): a real front page. Sharma News and the
-       Legal Briefing publish no JSON feed, so the tab assembles its front
-       page from the News hub's own front-page story blocks (kicker / photo /
-       headline / byline, parsed client-side) and uses the Office TV feed
-       for what it is good at: the LIVE strip and the Latest river.
-       Flat cards, hairlines, zero shadows (news design spec). --- */
+    /* --- News tab v3 (2026-11-20, Sanjay's direction): RICH and VISUAL.
+       Apple News magazine feel, not a flat list — imagery dominates:
+       full-bleed hero photo with scrim + oversized headline, large layered
+       photo cards, editions presented as magazine covers with their lead
+       photo. Depth, overlays and color are welcome on this tab. Data layer
+       as v2: front page assembled from the News hub's story blocks (real
+       photos from the cited articles, every card opens the story's own
+       page), Office TV feed for the LIVE strip + Latest river, last-good
+       caching for both sources. --- */
     .nw-stamp { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; color: var(--navy); white-space: nowrap; padding-bottom: 6px; }
     .nw-stamp::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex: 0 0 auto; }
     .nw-banner { margin-top: 14px; background: #FFF4E0; color: #7A4A00; border-radius: 10px; padding: 10px 14px; font-size: 15px; font-weight: 600; line-height: 1.35; }
-    /* LIVE strip (Office TV feed) */
-    .nw-live { display: flex; align-items: center; gap: 10px; margin-top: 16px; background: var(--navy); border-radius: 12px; padding: 0 14px; height: 44px; }
+    /* LIVE strip (Office TV feed): navy gradient band */
+    .nw-live { display: flex; align-items: center; gap: 10px; margin-top: 16px; background: linear-gradient(135deg, #1a2f61, #264387 55%, #2f529e); border-radius: 14px; padding: 0 14px; height: 46px; box-shadow: 0 8px 20px rgba(26,47,97,0.28); }
     .nw-live__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex: 0 0 auto; animation: nw-pulse 1.6s ease-in-out infinite; }
     @keyframes nw-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
     .nw-live__tag { font-size: 13px; font-weight: 800; letter-spacing: 0.08em; color: var(--gold); flex: 0 0 auto; }
@@ -202,57 +205,75 @@
     /* Topic chips: sticky rail, filter in place */
     .nw-chips { position: sticky; top: 0; z-index: 5; display: flex; gap: 8px; overflow-x: auto; padding: 14px 2px 10px; margin: 0 -2px; background: var(--page); scrollbar-width: none; -webkit-mask-image: linear-gradient(90deg, #000 92%, transparent); mask-image: linear-gradient(90deg, #000 92%, transparent); }
     .nw-chips::-webkit-scrollbar { display: none; }
-    .nw-chip { flex: 0 0 auto; height: 36px; padding: 0 16px; border-radius: 999px; border: 1px solid #D8DCE6; background: #fff; color: var(--navy); font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; touch-action: manipulation; }
-    .nw-chip[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: #fff; }
+    .nw-chip { flex: 0 0 auto; height: 36px; padding: 0 16px; border-radius: 999px; border: 1px solid #D8DCE6; background: #fff; color: var(--navy); font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; touch-action: manipulation; box-shadow: 0 1px 4px rgba(16,24,40,0.06); }
+    .nw-chip[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: #fff; box-shadow: 0 4px 12px rgba(26,47,97,0.30); }
     .nw-chip[aria-pressed="true"]::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--gold); margin-right: 7px; }
     /* Sections */
-    .nw-sec { margin-top: 30px; }
-    .nw-sechead { font-size: 22px; font-weight: 800; letter-spacing: -0.01em; color: var(--navy); margin: 0 2px 6px; }
-    .nw-sechead::after { content: ""; display: block; width: 24px; height: 3px; border-radius: 2px; background: var(--gold); margin-top: 6px; }
-    /* Story cards: flat, hairline-separated, whole card is the tap target */
+    .nw-sec { margin-top: 32px; }
+    .nw-sechead { font-size: 24px; font-weight: 800; letter-spacing: -0.015em; color: var(--navy); margin: 0 2px 6px; }
+    .nw-sechead::after { content: ""; display: block; width: 32px; height: 4px; border-radius: 2px; background: var(--gold); margin-top: 7px; }
     .nw-kicker { font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--navy); }
-    .nw-toptag { font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #9A6200; }
+    .nw-kickpill { display: inline-flex; align-items: center; background: var(--gold); color: #1a2f61; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 10px; border-radius: 999px; }
+    .nw-kickpill--ghost { background: rgba(8,14,32,0.45); color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.35); }
     .nw-meta { font-size: 13px; font-weight: 600; color: #6B7280; }
     .nw-meta b { color: var(--navy); font-weight: 700; }
-    .nw-hero, .nw-std { display: block; text-decoration: none; color: inherit; padding: 14px 0 20px; border-bottom: 1px solid #E3E6EC; }
-    .nw-hero__img, .nw-std__img { display: block; width: 100%; object-fit: cover; background: #EDF0F5; }
-    .nw-hero__img { aspect-ratio: 4 / 3; border-radius: 16px; }
-    .nw-std__img { aspect-ratio: 16 / 9; border-radius: 12px; }
-    .nw-hero__kick { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 12px; }
-    .nw-std__kick { margin-top: 10px; }
-    .nw-hero h3 { font-size: 26px; font-weight: 800; line-height: 1.15; letter-spacing: -0.01em; color: var(--ink); margin: 8px 0 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-    .nw-std h3 { font-size: 20px; font-weight: 700; line-height: 1.25; color: var(--ink); margin: 6px 0 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .nw-cardmeta { display: block; margin-top: 12px; }
+    /* HERO: full-bleed photo, scrim, oversized overlaid headline */
+    .nw-hero { position: relative; display: block; border-radius: 22px; overflow: hidden; text-decoration: none; color: #fff; margin-top: 14px; background: var(--navy); box-shadow: 0 16px 36px rgba(16,24,40,0.30); transition: transform 0.18s cubic-bezier(0.34,1.25,0.64,1); }
+    .nw-hero:active { transform: scale(0.985); }
+    .nw-hero__img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+    .nw-hero__coverart { display: block; aspect-ratio: 4 / 3; background: radial-gradient(110% 85% at 85% -5%, rgba(240,168,70,0.55), rgba(240,168,70,0) 55%), linear-gradient(150deg, #2f529e, #1a2f61 72%); }
+    .nw-hero--cover::after { content: attr(data-initial); position: absolute; right: 2px; top: -38px; font-size: 200px; font-weight: 800; line-height: 1; color: rgba(240,168,70,0.20); }
+    .nw-hero__scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,14,32,0.16) 0%, rgba(8,14,32,0) 32%, rgba(8,14,32,0.52) 60%, rgba(8,14,32,0.90) 100%); }
+    .nw-hero__body { position: absolute; left: 0; right: 0; bottom: 0; display: block; padding: 18px; }
+    .nw-hero__kick { display: flex; align-items: center; gap: 8px; }
+    .nw-hero h3 { font-size: 29px; font-weight: 800; line-height: 1.12; letter-spacing: -0.015em; color: #fff; margin: 10px 0 0; text-shadow: 0 1px 12px rgba(0,0,0,0.30); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .nw-hero__dek { font-size: 18px; line-height: 1.4; color: rgba(255,255,255,0.88); margin: 8px 0 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .nw-hero__meta { display: block; margin-top: 10px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.75); }
+    .nw-hero__meta b { color: var(--gold); font-weight: 700; }
+    /* STANDARD cards: large photo, layered magazine card */
+    .nw-std { display: block; background: #fff; border-radius: 20px; overflow: hidden; text-decoration: none; color: inherit; margin-top: 20px; box-shadow: 0 10px 26px rgba(16,24,40,0.13), 0 1px 3px rgba(16,24,40,0.08); transition: transform 0.18s cubic-bezier(0.34,1.25,0.64,1); }
+    .nw-std:active { transform: scale(0.985); }
+    .nw-std__img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: #EDF0F5; }
+    .nw-std__body { display: block; padding: 16px 18px 18px; }
+    .nw-std h3 { font-size: 23px; font-weight: 800; line-height: 1.18; letter-spacing: -0.01em; color: var(--ink); margin: 8px 0 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
     .nw-dek { font-size: 18px; line-height: 1.45; color: #3A4356; margin: 8px 0 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .nw-cardmeta { margin-top: 10px; }
-    /* Latest river: time-first rows, monogram thumb (wire items have no photo) */
+    /* Latest river: time-first rows under the visual stories */
     .nw-row { display: flex; gap: 12px; align-items: flex-start; padding: 16px 0; border-bottom: 1px solid #E3E6EC; }
     .nw-row:last-child { border-bottom: none; }
-    .nw-thumb { flex: 0 0 auto; width: 96px; height: 96px; border-radius: 10px; background: var(--navy); color: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 800; letter-spacing: 0.02em; }
+    .nw-thumb { flex: 0 0 auto; width: 96px; height: 96px; border-radius: 12px; background: linear-gradient(150deg, #2f529e, #1a2f61); box-shadow: inset 0 0 0 1px rgba(240,168,70,0.35); color: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 800; letter-spacing: 0.02em; }
     .nw-row__body { flex: 1 1 auto; min-width: 0; }
-    .nw-row h3 { font-size: 18px; font-weight: 700; line-height: 1.3; color: var(--ink); margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .nw-row h3 { font-size: 19px; font-weight: 700; line-height: 1.3; color: var(--ink); margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .nw-row__meta { margin-top: 6px; }
-    /* Edition entry cards */
-    .nw-ed { display: flex; align-items: center; gap: 12px; background: var(--navy); border-radius: 16px; padding: 16px; margin-top: 12px; text-decoration: none; }
-    .nw-ed__body { flex: 1 1 auto; min-width: 0; }
-    .nw-ed__name { display: block; font-size: 20px; font-weight: 800; color: #fff; line-height: 1.2; }
-    .nw-ed__head { display: block; font-size: 15px; color: rgba(255,255,255,0.85); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 3px; }
-    .nw-ed__stamp { display: block; font-size: 13px; font-weight: 600; color: var(--gold); margin-top: 5px; }
-    .nw-ed .arr { color: var(--gold); }
-    .nw-caught { margin-top: 30px; padding-top: 18px; border-top: 1px solid #E3E6EC; text-align: center; font-size: 15px; color: #6B7280; }
+    /* EDITIONS as magazine covers: lead photo, scrim, big name */
+    .nw-ed { position: relative; display: block; border-radius: 20px; overflow: hidden; margin-top: 16px; text-decoration: none; color: #fff; background: var(--navy); box-shadow: 0 12px 28px rgba(16,24,40,0.22); transition: transform 0.18s cubic-bezier(0.34,1.25,0.64,1); }
+    .nw-ed:active { transform: scale(0.985); }
+    .nw-ed__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .nw-ed__scrim { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(26,47,97,0.45), rgba(26,47,97,0) 62%), linear-gradient(200deg, rgba(8,14,32,0.04) 38%, rgba(8,14,32,0.85) 88%); }
+    .nw-ed--cover { background: radial-gradient(110% 90% at 88% -10%, rgba(240,168,70,0.50), rgba(240,168,70,0) 55%), linear-gradient(150deg, #2f529e, #1a2f61 72%); }
+    .nw-ed__body { position: relative; display: flex; flex-direction: column; min-height: 172px; padding: 16px 18px 18px; }
+    .nw-ed__top { margin-bottom: auto; }
+    .nw-ed__name { display: block; font-size: 27px; font-weight: 800; letter-spacing: -0.01em; color: #fff; line-height: 1.1; margin-top: 22px; text-shadow: 0 1px 10px rgba(0,0,0,0.30); }
+    .nw-ed__head { display: block; font-size: 16px; line-height: 1.35; color: rgba(255,255,255,0.88); margin-top: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .nw-ed__stamp { display: block; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; color: var(--gold); margin-top: 8px; }
+    .nw-ed .arr { position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; border-radius: 50%; background: rgba(8,14,32,0.38); color: #fff; display: flex; align-items: center; justify-content: center; }
+    .nw-caught { margin-top: 32px; padding-top: 18px; border-top: 1px solid #E3E6EC; text-align: center; font-size: 15px; color: #6B7280; }
     /* Skeleton: same geometry as the real cards, so swap-in never shifts */
     .nw-skel { background: #EDF0F5; border-radius: 8px; }
-    .nw-skel--hero { aspect-ratio: 4 / 3; border-radius: 16px; }
-    @media (prefers-reduced-motion: reduce) { .nw-live__dot { animation: none; } .nw-live__text { transition: none; } }
+    .nw-skel--hero { aspect-ratio: 4 / 3; border-radius: 22px; }
+    @media (prefers-reduced-motion: reduce) { .nw-live__dot { animation: none; } .nw-live__text { transition: none; } .nw-hero, .nw-std, .nw-ed { transition: none; } }
     html[data-scheme="dark"] .nw-sechead, html[data-scheme="dark"] .nw-kicker, html[data-scheme="dark"] .nw-meta b { color: #F2F2F7; }
-    html[data-scheme="dark"] .nw-hero h3, html[data-scheme="dark"] .nw-std h3, html[data-scheme="dark"] .nw-row h3 { color: #F2F2F7; }
+    html[data-scheme="dark"] .nw-std { background: #1C1C1E; box-shadow: 0 10px 26px rgba(0,0,0,0.45); }
+    html[data-scheme="dark"] .nw-std h3, html[data-scheme="dark"] .nw-row h3 { color: #F2F2F7; }
     html[data-scheme="dark"] .nw-dek { color: #C7CBD4; }
     html[data-scheme="dark"] .nw-meta, html[data-scheme="dark"] .nw-caught { color: #AEAEB2; }
-    html[data-scheme="dark"] .nw-hero, html[data-scheme="dark"] .nw-std, html[data-scheme="dark"] .nw-row, html[data-scheme="dark"] .nw-caught { border-color: rgba(84,84,88,0.55); }
+    html[data-scheme="dark"] .nw-row, html[data-scheme="dark"] .nw-caught { border-color: rgba(84,84,88,0.55); }
     html[data-scheme="dark"] .nw-chip { background: #1C1C1E; border-color: rgba(255,255,255,0.20); color: #F2F2F7; }
     html[data-scheme="dark"] .nw-chip[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: #fff; }
     html[data-scheme="dark"] .nw-skel { background: #1C1C1E; }
     html[data-scheme="dark"] .nw-banner { background: #3A2C07; color: #FFD9A0; }
     html[data-scheme="dark"] .nw-stamp { color: #F2F2F7; }
+
 
     /* --- TV mode (Office TV wall board inside Home, 2026-11-20) ---
        Display mode only: board data (schedule, inspections, to-schedule,
@@ -344,7 +365,7 @@ else{document.getElementById('lockerr').textContent='Wrong passcode';document.ge
   </div>
 </section>
 <script>
-var EMBEDDED = {"tabs": [{"id": "apps", "sections": [{"title": "Every day", "rows": [{"u": "https://sharmaelechvac.github.io/sharma-my-day/", "i": "i-calendar", "g": true, "n": "My Day", "d": "Today’s route — stops, drive times, materials"}, {"u": "#/tv", "i": "i-tv", "g": false, "n": "Office TV", "d": "Wall board — TV mode inside Home"}, {"u": "https://sharmaelechvac.github.io/sharma-news/", "i": "i-globe", "g": false, "n": "Sharma News", "d": "Legal + finance briefings · daily · archive"}, {"u": "https://sharmaelechvac.github.io/sharma-legal-briefing/", "i": "i-doc", "g": false, "n": "Legal Briefing", "d": "Daily legal news · Harvey · archive"}, {"u": "https://sharmaelechvac.github.io/sanjay-hub/", "i": "i-link", "g": false, "n": "Sanjay’s Hub", "d": "Every link, job by job"}]}, {"title": "Finance", "rows": [{"u": "https://sharmaelechvac.github.io/sharma-ar/", "i": "i-dollar", "g": false, "n": "Sharma Finance", "d": "AR · P&L · Budget · Collections"}, {"u": "https://sharmaelechvac.github.io/sharma-material-pricing/", "i": "i-list", "g": false, "n": "Material Pricing", "d": "Supplier prices — Elec · HVAC · Combined"}]}], "folders": [{"name": "Office", "count": "3 apps", "rows": [{"u": "https://sharmaelechvac.github.io/sharma-bid-boards/", "i": "i-briefcase", "g": false, "n": "Bid Boards", "d": "Commercial + residential bids · Mark Cuban"}, {"u": "https://sharmaelechvac.github.io/sharma-lead-finder/", "i": "i-search", "g": false, "n": "Lead Finder", "d": "New builder leads"}, {"u": "https://muse.ai/s/buzzdrafts-rxd6xcxyit0xtrz/4FW0cWLV2mE7J_SrrlzVtLW2pyqSUNzouYRWa2kpuPw", "i": "i-edit", "g": false, "n": "BuzzDrafts", "d": "Engineering drawings — internal"}]}, {"name": "Field — SHARMATRACK", "count": "10 apps", "rows": [{"u": "https://sharmaelechvac.github.io/sharmatrack/owner/", "i": "i-users", "g": true, "n": "Owner Edition", "d": "All clients & jobs — one page"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-crew", "i": "i-house", "g": false, "n": "Z Brothers", "d": "Crew app · Dunnellon"}, {"u": "https://sharmaelechvac.github.io/exj-root-tracker", "i": "i-house", "g": false, "n": "EXJ Root Tracker", "d": "5 houses · Marion Oaks"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-nok/", "i": "i-house", "g": false, "n": "NOK Construction", "d": "Glaze · Antle"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-mrcela/", "i": "i-house", "g": false, "n": "MRCELA Custom Homes", "d": "Electrical Trim"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-dnr/", "i": "i-house", "g": false, "n": "DNR Contracting", "d": "Mukherjee · Tampa"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-logan/", "i": "i-house", "g": false, "n": "Logan Construction", "d": "Bella Collina · HVAC"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-brross/", "i": "i-house", "g": false, "n": "BR Ross Construction", "d": "Fisher Loop · Electric"}, {"u": "https://sharmaelechvac.github.io/sharmatrack", "i": "i-pin", "g": false, "n": "SHARMATRACK Website", "d": "“The software is us”"}, {"u": "https://sharmaelechvac.github.io/sample-house-citrus-craft-homes", "i": "i-house", "g": false, "n": "Sample House — Citrus Craft", "d": "Builder showcase"}]}, {"name": "Client-facing", "count": "6 apps", "rows": [{"u": "https://sharmaelechvac.github.io/sharma-builders", "i": "i-mail", "g": false, "n": "Builders Application", "d": "The cold-email link"}, {"u": "https://sharmaelechvac.github.io/homeowner-hub", "i": "i-home", "g": false, "n": "Homeowner Hub", "d": "Homeowner start page"}, {"u": "https://sharmaelechvac.github.io/smart-home-picker", "i": "i-bolt", "g": false, "n": "Smart Home Picker", "d": "Low voltage options"}, {"u": "https://sharmaelechvac.github.io/hvac-picker", "i": "i-fan", "g": false, "n": "HVAC Picker", "d": "Change-out options"}, {"u": "https://sharmaelechvac.github.io/electrical-app", "i": "i-bolt", "g": false, "n": "Electrical Picker", "d": "Electrical options"}, {"u": "https://sharmaelechvac.github.io/sample-house-any-builder-template", "i": "i-house", "g": false, "n": "Sample House — Template", "d": "Any-builder version"}]}, {"name": "Education", "count": "3 apps", "rows": [{"u": "https://sharmaelechvac.github.io/sharma-education/", "i": "i-note", "g": false, "n": "Education", "d": "All learning apps — one page"}, {"u": "https://sharmaelechvac.github.io/sharma-nec-code/", "i": "i-doc", "g": false, "n": "NEC Code", "d": "NEC 2020 field book · lookup & calcs"}, {"u": "https://sharmaelechvac.github.io/sharma-rough-in-guide/", "i": "i-doc", "g": false, "n": "Rough-In Guide", "d": "Field rough-in guide · crew training"}]}, {"name": "Admin", "count": "2 apps", "rows": [{"u": "https://github.com/Sharmaelechvac", "i": "i-folder", "g": false, "n": "GitHub", "d": "All the app repos"}, {"u": "https://grok.com", "i": "i-send", "g": false, "n": "Grok — Bot Team", "d": "SuperGrok account"}]}]}, {"id": "office", "sections": [{"title": "Office apps", "rows": [{"u": "https://sharma-permits.sharma-crew.workers.dev", "i": "i-clipboard", "g": false, "n": "Permit Tracker", "d": "Permits & inspections"}, {"u": "https://sharma-collections.sharma-crew.workers.dev", "i": "i-dollar", "g": false, "n": "Collections", "d": "Invoices & payments"}, {"u": "https://sharma-bids.sharma-crew.workers.dev", "i": "i-briefcase", "g": false, "n": "Bid Tracker", "d": "Bids & deadlines"}, {"u": "https://sharma-followup.sharma-crew.workers.dev", "i": "i-users", "g": false, "n": "Builder Follow-up", "d": "Builder follow-ups & call list"}, {"u": "https://sharma-inspect.sharma-crew.workers.dev", "i": "i-check", "g": false, "n": "Inspection Prep", "d": "Inspection prep checklists"}, {"u": "https://sharma-punch.sharma-crew.workers.dev", "i": "i-list", "g": false, "n": "Pending Projects", "d": "Pending projects & punch lists"}, {"u": "https://dash.cloudflare.com", "i": "i-settings", "g": false, "n": "Cloudflare Dashboard", "d": "Workers & Pages admin"}]}]}, {"id": "jobs", "sections": [{"title": "Job pages", "rows": [{"u": "https://sharmaelechvac.github.io/sharmatrack-crew/3131/", "i": "i-house", "g": false, "n": "Eunice · House 1", "d": "Z Brothers · Dunnellon"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-crew/3262/", "i": "i-house", "g": false, "n": "Eunice · House 2", "d": "Z Brothers · Dunnellon"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-crew/3286/", "i": "i-house", "g": false, "n": "Eunice · House 3", "d": "Z Brothers · Dunnellon"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-crew/3274/", "i": "i-house", "g": false, "n": "Eunice · House 4", "d": "Z Brothers · Dunnellon"}, {"u": "https://sharmaelechvac.github.io/exj-root-tracker/212/", "i": "i-house", "g": false, "n": "Marion Oaks · Lot 11", "d": "EXJ Root"}, {"u": "https://sharmaelechvac.github.io/exj-root-tracker/17385/", "i": "i-house", "g": false, "n": "Marion Oaks · Lot 6", "d": "EXJ Root"}, {"u": "https://sharmaelechvac.github.io/exj-root-tracker/14065/", "i": "i-house", "g": false, "n": "Marion Oaks · Lot 4", "d": "EXJ Root"}, {"u": "https://sharmaelechvac.github.io/exj-root-tracker/16321/", "i": "i-house", "g": false, "n": "Marion Oaks · Lot 45", "d": "EXJ Root"}, {"u": "https://sharmaelechvac.github.io/exj-root-tracker/601/", "i": "i-house", "g": false, "n": "Marion Oaks · Lot 35", "d": "EXJ Root"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-nok/glaze/", "i": "i-house", "g": false, "n": "Glaze Residence", "d": "NOK Construction"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-nok/109-forest-park-ct/", "i": "i-house", "g": false, "n": "Forest Park", "d": "NOK Construction"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-logan/lot-69/", "i": "i-house", "g": false, "n": "Bella Collina · Lot 69", "d": "Logan Construction · HVAC"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-mrcela/blandford/", "i": "i-house", "g": false, "n": "Blandford Residence", "d": "MRCELA Custom Homes"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-dnr/mukherjee/", "i": "i-house", "g": false, "n": "Mukherjee Residence", "d": "DNR Contracting"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-brross/fisher/", "i": "i-house", "g": false, "n": "Fisher Loop", "d": "BR Ross Construction"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-crew/code-of-conduct/", "i": "i-doc", "g": false, "n": "Code of Conduct", "d": "Crew rules · EN / ES"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-crew/links/", "i": "i-link", "g": false, "n": "SHARMATRACK — Links", "d": "Launcher page for the trackers"}]}]}]};
+var EMBEDDED = {"tabs": [{"id": "apps", "sections": [{"title": "Every day", "rows": [{"u": "https://sharmaelechvac.github.io/sharma-my-day/", "i": "i-calendar", "g": true, "n": "My Day", "d": "Today’s route — stops, drive times, materials"}, {"u": "#/tv", "i": "i-tv", "g": false, "n": "Office TV", "d": "Wall board — TV mode inside Home"}, {"u": "https://sharmaelechvac.github.io/sharma-news/", "i": "i-globe", "g": false, "n": "Sharma News", "d": "Legal + finance briefings · daily · archive"}, {"u": "https://sharmaelechvac.github.io/sharma-legal-briefing/", "i": "i-doc", "g": false, "n": "Legal Briefing", "d": "Daily legal news · Harvey · archive"}, {"u": "https://sharmaelechvac.github.io/sanjay-hub/", "i": "i-link", "g": false, "n": "Sanjay’s Hub", "d": "Every link, job by job"}]}, {"title": "Finance", "rows": [{"u": "https://sharmaelechvac.github.io/sharma-ar/", "i": "i-dollar", "g": false, "n": "Sharma Finance", "d": "AR · P&L · Budget · Collections"}, {"u": "https://sharmaelechvac.github.io/sharma-material-pricing/", "i": "i-list", "g": false, "n": "Material Pricing", "d": "Supplier prices — Elec · HVAC · Combined"}]}], "folders": [{"name": "Office", "count": "3 apps", "rows": [{"u": "https://sharma-bids.sharma-crew.workers.dev", "i": "i-briefcase", "g": false, "n": "Bids", "d": "Commercial + residential bids · Mark Cuban"}, {"u": "https://sharmaelechvac.github.io/sharma-lead-finder/", "i": "i-search", "g": false, "n": "Lead Finder", "d": "New builder leads"}, {"u": "https://muse.ai/s/buzzdrafts-rxd6xcxyit0xtrz/4FW0cWLV2mE7J_SrrlzVtLW2pyqSUNzouYRWa2kpuPw", "i": "i-edit", "g": false, "n": "BuzzDrafts", "d": "Engineering drawings — internal"}]}, {"name": "Field — SHARMATRACK", "count": "10 apps", "rows": [{"u": "https://sharmaelechvac.github.io/sharmatrack/owner/", "i": "i-users", "g": true, "n": "Owner Edition", "d": "All clients & jobs — one page"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-crew", "i": "i-house", "g": false, "n": "Z Brothers", "d": "Crew app · Dunnellon"}, {"u": "https://sharmaelechvac.github.io/exj-root-tracker", "i": "i-house", "g": false, "n": "EXJ Root Tracker", "d": "5 houses · Marion Oaks"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-nok/", "i": "i-house", "g": false, "n": "NOK Construction", "d": "Glaze · Antle"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-mrcela/", "i": "i-house", "g": false, "n": "MRCELA Custom Homes", "d": "Electrical Trim"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-dnr/", "i": "i-house", "g": false, "n": "DNR Contracting", "d": "Mukherjee · Tampa"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-logan/", "i": "i-house", "g": false, "n": "Logan Construction", "d": "Bella Collina · HVAC"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-brross/", "i": "i-house", "g": false, "n": "BR Ross Construction", "d": "Fisher Loop · Electric"}, {"u": "https://sharmaelechvac.github.io/sharmatrack", "i": "i-pin", "g": false, "n": "SHARMATRACK Website", "d": "“The software is us”"}, {"u": "https://sharmaelechvac.github.io/sample-house-citrus-craft-homes", "i": "i-house", "g": false, "n": "Sample House — Citrus Craft", "d": "Builder showcase"}]}, {"name": "Client-facing", "count": "6 apps", "rows": [{"u": "https://sharmaelechvac.github.io/sharma-builders", "i": "i-mail", "g": false, "n": "Builders Application", "d": "The cold-email link"}, {"u": "https://sharmaelechvac.github.io/homeowner-hub", "i": "i-home", "g": false, "n": "Homeowner Hub", "d": "Homeowner start page"}, {"u": "https://sharmaelechvac.github.io/smart-home-picker", "i": "i-bolt", "g": false, "n": "Smart Home Picker", "d": "Low voltage options"}, {"u": "https://sharmaelechvac.github.io/hvac-picker", "i": "i-fan", "g": false, "n": "HVAC Picker", "d": "Change-out options"}, {"u": "https://sharmaelechvac.github.io/electrical-app", "i": "i-bolt", "g": false, "n": "Electrical Picker", "d": "Electrical options"}, {"u": "https://sharmaelechvac.github.io/sample-house-any-builder-template", "i": "i-house", "g": false, "n": "Sample House — Template", "d": "Any-builder version"}]}, {"name": "Education", "count": "3 apps", "rows": [{"u": "https://sharmaelechvac.github.io/sharma-education/", "i": "i-note", "g": false, "n": "Education", "d": "All learning apps — one page"}, {"u": "https://sharmaelechvac.github.io/sharma-nec-code/", "i": "i-doc", "g": false, "n": "NEC Code", "d": "NEC 2020 field book · lookup & calcs"}, {"u": "https://sharmaelechvac.github.io/sharma-rough-in-guide/", "i": "i-doc", "g": false, "n": "Rough-In Guide", "d": "Field rough-in guide · crew training"}]}, {"name": "Admin", "count": "2 apps", "rows": [{"u": "https://github.com/Sharmaelechvac", "i": "i-folder", "g": false, "n": "GitHub", "d": "All the app repos"}, {"u": "https://grok.com", "i": "i-send", "g": false, "n": "Grok — Bot Team", "d": "SuperGrok account"}]}]}, {"id": "office", "sections": [{"title": "Office apps", "rows": [{"u": "https://sharma-permits.sharma-crew.workers.dev", "i": "i-clipboard", "g": false, "n": "Permit Tracker", "d": "Permits & inspections"}, {"u": "https://sharma-collections.sharma-crew.workers.dev", "i": "i-dollar", "g": false, "n": "Collections", "d": "Invoices & payments"}, {"u": "https://sharma-followup.sharma-crew.workers.dev", "i": "i-users", "g": false, "n": "Builder Follow-up", "d": "Builder follow-ups & call list"}, {"u": "https://sharma-inspect.sharma-crew.workers.dev", "i": "i-check", "g": false, "n": "Inspection Prep", "d": "Inspection prep checklists"}, {"u": "https://sharma-punch.sharma-crew.workers.dev", "i": "i-list", "g": false, "n": "Pending Projects", "d": "Pending projects & punch lists"}, {"u": "https://dash.cloudflare.com", "i": "i-settings", "g": false, "n": "Cloudflare Dashboard", "d": "Workers & Pages admin"}]}]}, {"id": "jobs", "sections": [{"title": "Job pages", "rows": [{"u": "https://sharmaelechvac.github.io/sharmatrack-crew/3131/", "i": "i-house", "g": false, "n": "Eunice · House 1", "d": "Z Brothers · Dunnellon"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-crew/3262/", "i": "i-house", "g": false, "n": "Eunice · House 2", "d": "Z Brothers · Dunnellon"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-crew/3286/", "i": "i-house", "g": false, "n": "Eunice · House 3", "d": "Z Brothers · Dunnellon"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-crew/3274/", "i": "i-house", "g": false, "n": "Eunice · House 4", "d": "Z Brothers · Dunnellon"}, {"u": "https://sharmaelechvac.github.io/exj-root-tracker/212/", "i": "i-house", "g": false, "n": "Marion Oaks · Lot 11", "d": "EXJ Root"}, {"u": "https://sharmaelechvac.github.io/exj-root-tracker/17385/", "i": "i-house", "g": false, "n": "Marion Oaks · Lot 6", "d": "EXJ Root"}, {"u": "https://sharmaelechvac.github.io/exj-root-tracker/14065/", "i": "i-house", "g": false, "n": "Marion Oaks · Lot 4", "d": "EXJ Root"}, {"u": "https://sharmaelechvac.github.io/exj-root-tracker/16321/", "i": "i-house", "g": false, "n": "Marion Oaks · Lot 45", "d": "EXJ Root"}, {"u": "https://sharmaelechvac.github.io/exj-root-tracker/601/", "i": "i-house", "g": false, "n": "Marion Oaks · Lot 35", "d": "EXJ Root"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-nok/glaze/", "i": "i-house", "g": false, "n": "Glaze Residence", "d": "NOK Construction"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-nok/109-forest-park-ct/", "i": "i-house", "g": false, "n": "Forest Park", "d": "NOK Construction"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-logan/lot-69/", "i": "i-house", "g": false, "n": "Bella Collina · Lot 69", "d": "Logan Construction · HVAC"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-mrcela/blandford/", "i": "i-house", "g": false, "n": "Blandford Residence", "d": "MRCELA Custom Homes"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-dnr/mukherjee/", "i": "i-house", "g": false, "n": "Mukherjee Residence", "d": "DNR Contracting"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-brross/fisher/", "i": "i-house", "g": false, "n": "Fisher Loop", "d": "BR Ross Construction"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-crew/code-of-conduct/", "i": "i-doc", "g": false, "n": "Code of Conduct", "d": "Crew rules · EN / ES"}, {"u": "https://sharmaelechvac.github.io/sharmatrack-crew/links/", "i": "i-link", "g": false, "n": "SHARMATRACK — Links", "d": "Launcher page for the trackers"}]}]}]};
 var DATA = null, nav = null, booted = false;
 var PAGES = {};
 var LOGO_HTML = '<span class="sk-header__logo"><img src="https://sharma-kit.sharma-crew.workers.dev/assets/logo-white-header.png" alt="Sharma Electric & HVAC" width="103" height="20"></span>';
@@ -617,10 +638,10 @@ var newsChip = 'all';
 var newsLiveTimer = null;
 var NW_CHIPS = [['all', 'All'], ['top', 'Top'], ['finance', 'Finance'], ['tech', 'Tech'], ['legal', 'Legal'], ['florida', 'Florida'], ['construction', 'Construction']];
 var NW_EDITIONS = [
-  { topic: 'finance', name: 'Finance', url: NEWS_URL + 'finance/' },
-  { topic: 'tech', name: 'Tech', url: NEWS_URL + 'tech/' },
-  { topic: 'legal', name: 'Legal Briefing', url: 'https://sharmaelechvac.github.io/sharma-legal-briefing/' },
-  { topic: 'construction', name: 'Permit News', url: NEWS_URL + 'permits/' }
+  { topic: 'finance', name: 'Finance', pill: 'Finance Briefing', url: NEWS_URL + 'finance/' },
+  { topic: 'tech', name: 'Tech', pill: 'Sharma Tech', url: NEWS_URL + 'tech/' },
+  { topic: 'legal', name: 'Legal Briefing', pill: 'Legal Briefing', url: 'https://sharmaelechvac.github.io/sharma-legal-briefing/' },
+  { topic: 'construction', name: 'Permit News', pill: 'Permit News', url: NEWS_URL + 'permits/' }
 ];
 function newsTopicOf(s){
   var k = ((s.kicker || '') + ' ' + (s.url || '')).toLowerCase();
@@ -728,19 +749,22 @@ function buildNews(page){
   repaintNews();
 }
 function nwHeroHtml(s){
-  return '<a class="nw-hero nfilter" data-topics="' + newsTopicOf(s) + '" href="' + esc(s.url) + '">'
-    + (s.img ? '<img class="nw-hero__img" src="' + esc(s.img) + '" alt="' + esc(s.alt) + '" fetchpriority="high">' : '')
-    + '<span class="nw-hero__kick"><span class="nw-kicker">' + esc(s.kicker || 'Sharma News') + '</span><span class="nw-toptag">Top story</span></span>'
+  var longHead = (s.headline || '').length > 150;
+  return '<a class="nw-hero nfilter' + (s.img ? '' : ' nw-hero--cover') + '" data-topics="' + newsTopicOf(s) + '" data-initial="' + esc((s.kicker || 'S').charAt(0).toUpperCase()) + '" href="' + esc(s.url) + '">'
+    + (s.img ? '<img class="nw-hero__img" src="' + esc(s.img) + '" alt="' + esc(s.alt) + '" fetchpriority="high"><span class="nw-hero__scrim"></span>'
+             : '<span class="nw-hero__coverart"></span>')
+    + '<span class="nw-hero__body"><span class="nw-hero__kick"><span class="nw-kickpill">' + esc(s.kicker || 'Sharma News') + '</span><span class="nw-kickpill nw-kickpill--ghost">Top story</span></span>'
     + '<h3>' + esc(s.headline) + '</h3>'
-    + (s.dek ? '<p class="nw-dek">' + esc(s.dek) + '</p>' : '')
-    + '<div class="nw-meta nw-cardmeta"><b>' + esc(s.kicker || 'Sharma News') + '</b>' + (s.edition ? ' · ' + esc(s.edition) : '') + '</div></a>';
+    + (s.dek && !longHead ? '<p class="nw-hero__dek">' + esc(s.dek) + '</p>' : '')
+    + '<span class="nw-hero__meta"><b>' + esc(s.kicker || 'Sharma News') + '</b>' + (s.edition ? ' · Edition of ' + esc(s.edition) : '') + '</span></span></a>';
 }
 function nwStdHtml(s){
   return '<a class="nw-std nfilter" data-topics="' + newsTopicOf(s) + '" href="' + esc(s.url) + '">'
     + (s.img ? '<img class="nw-std__img" src="' + esc(s.img) + '" alt="' + esc(s.alt) + '" loading="lazy">' : '')
-    + '<div class="nw-kicker nw-std__kick">' + esc(s.kicker || 'Sharma News') + '</div>'
+    + '<span class="nw-std__body"><span class="nw-kicker">' + esc(s.kicker || 'Sharma News') + '</span>'
     + '<h3>' + esc(s.headline) + '</h3>'
-    + '<div class="nw-meta nw-cardmeta"><b>' + esc(s.kicker || 'Sharma News') + '</b>' + (s.edition ? ' · ' + esc(s.edition) : '') + '</div></a>';
+    + (s.dek ? '<p class="nw-dek">' + esc(s.dek) + '</p>' : '')
+    + '<span class="nw-meta nw-cardmeta"><b>' + esc(s.kicker || 'Sharma News') + '</b>' + (s.edition ? ' · ' + esc(s.edition) : '') + '</span></span></a>';
 }
 function nwRowHtml(n){
   return '<div class="nw-row nfilter" data-topics="' + newsTopicsFor(n) + '"><span class="nw-thumb" aria-hidden="true">' + esc(newsMonogram(n.source)) + '</span><span class="nw-row__body"><h3>' + esc(n.headline || '') + '</h3><div class="nw-meta nw-row__meta"><b>' + esc(newsDateLabel(n.date)) + '</b>' + (n.source ? ' · ' + esc(n.source) : '') + '</div></span></div>';
@@ -750,7 +774,13 @@ function nwEditionsHtml(front){
   if (front) front.stories.forEach(function(s){ var t = newsTopicOf(s); if (!byTopic[t]) byTopic[t] = s; });
   return NW_EDITIONS.map(function(ed){
     var s = byTopic[ed.topic];
-    return '<a class="nw-ed nfilter" data-topics="' + ed.topic + '" href="' + esc(ed.url) + '"><span class="nw-ed__body"><span class="nw-ed__name">' + esc(ed.name) + '</span>'
+    var cover = s && s.img
+      ? '<img class="nw-ed__img" src="' + esc(s.img) + '" alt="" loading="lazy"><span class="nw-ed__scrim"></span>'
+      : '';
+    return '<a class="nw-ed nfilter' + (cover ? '' : ' nw-ed--cover') + '" data-topics="' + ed.topic + '" href="' + esc(ed.url) + '">'
+      + cover
+      + '<span class="nw-ed__body"><span class="nw-ed__top"><span class="nw-kickpill">' + esc(ed.pill) + '</span></span>'
+      + '<span class="nw-ed__name">' + esc(ed.name) + '</span>'
       + '<span class="nw-ed__head">' + esc(s ? s.headline : 'Today\'s edition') + '</span>'
       + '<span class="nw-ed__stamp">' + esc(s && s.stamp ? s.stamp : 'New edition daily') + '</span></span>'
       + '<span class="arr"><svg class="sk-icon"><use href="#i-chevron-right"/></svg></span></a>';
