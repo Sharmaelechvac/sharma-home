@@ -8,7 +8,7 @@
   <meta name="color-scheme" content="light">
   <script>(function(){try{if(localStorage.getItem("sk-scheme")==="dark"){var d=document.documentElement;d.setAttribute("data-scheme","dark");var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=d.getAttribute("data-theme")==="track"?"#1C1C1E":"#1a2f61"}}catch(e){}})()</script>
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="Sharma Home">
+  <meta name="apple-mobile-web-app-title" content="SHARMA360">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="mobile-web-app-capable" content="yes">
   <link rel="manifest" href="manifest.webmanifest">
@@ -29,7 +29,7 @@
   <link rel="stylesheet" href="macos.css">
   <link rel="stylesheet" href="push.css">
   <script src="https://sharma-kit.sharma-crew.workers.dev/sharma-kit.js" defer></script>
-  <title>Sharma Home</title>
+  <title>SHARMA360</title>
     <style>
     :root {
       --navy: #264387; --navy-dark: #1a2f61; --gold: #F0A846;
@@ -384,7 +384,7 @@ html.locked #lock{display:flex;position:fixed;inset:0;z-index:9999;background:#2
 </head>
 <body class="sk">
 <div id="lock"><form class="box" onsubmit="return shUnlock(event)">
-<img src="https://sharma-kit.sharma-crew.workers.dev/assets/logo.png" alt="Sharma Electric &amp; HVAC"><h2>Sharma Home</h2><p>Enter passcode</p>
+<img src="assets/sharma360-logo.png" alt="SHARMA360 Electric &amp; HVAC"><h2>SHARMA360</h2><p>Enter passcode</p>
 <input id="lockpin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="off" autofocus>
 <button type="submit">Open</button><div class="err" id="lockerr"></div></form></div>
 <script>
@@ -396,7 +396,7 @@ else{document.getElementById('lockerr').textContent='Wrong passcode';document.ge
 </script>
 <header class="sk-header"><div class="sk-header__bar">
   <div class="sk-header__lead"><span class="sk-header__logo"><img src="https://sharma-kit.sharma-crew.workers.dev/assets/logo-white-header.png" alt="Sharma Electric &amp; HVAC" width="103" height="20"></span></div>
-  <div class="sk-header__title">Sharma Home</div>
+  <div class="sk-header__title">SHARMA360</div>
   <div class="sk-header__trail"></div>
 </div></header>
 <div class="sk-offline"></div>
@@ -409,14 +409,14 @@ else{document.getElementById('lockerr').textContent='Wrong passcode';document.ge
   <a class="sk-tab" href="#/alerts" data-tab="alerts" data-match="^#/alerts"><svg class="sk-icon"><use href="#i-bell"/></svg>Alerts</a>
   <a class="sk-tab" href="#/tv" data-tab="tv" data-match="^#/tv"><svg class="sk-icon"><use href="#i-tv"/></svg>TV</a>
 </div></nav>
-<section class="sk-sheet" id="about-sheet" aria-label="About Sharma Home">
+<section class="sk-sheet" id="about-sheet" aria-label="About SHARMA360">
   <div class="sk-sheet__grab"></div>
   <div class="sk-sheet__head"><button type="button" class="sk-btn sk-btn--text" data-sheet-close>Close</button><div class="sk-sheet__title">About</div><span></span></div>
   <div class="sk-sheet__body">
     <div class="<redacted>"><span>Display</span></div>
     <div class="sk-list" id="appearance"></div>
     <div class="sk-list">
-      <div class="sk-row"><div class="sk-row__body"><div class="sk-row__title">Sharma Home</div><div class="sk-row__sub">Every Sharma app — for Sanjay only</div></div></div>
+      <div class="sk-row"><div class="sk-row__body"><div class="sk-row__title">SHARMA360</div><div class="sk-row__sub">Every Sharma app — for Sanjay only</div></div></div>
       <div class="sk-row"><div class="sk-row__body"><div class="sk-row__title">Licenses</div><div class="sk-row__sub">EC13013924 · CAC1823596</div></div></div>
       <div class="sk-row"><div class="sk-row__body"><div class="sk-row__title">Kept current by Jarvis</div><div class="sk-row__sub">Sita Ram · Personal — do not share</div></div></div>
     </div>
@@ -424,7 +424,7 @@ else{document.getElementById('lockerr').textContent='Wrong passcode';document.ge
     <div class="sk-list">
       <div class="sk-row"><div class="sk-row__body"><div class="sk-row__title">Add to Home Screen</div><div class="sk-row__sub">Open in Safari, tap Share, then Add to Home Screen — opens full-screen, like an app</div></div></div>
       <div data-sharma-push></div>
-      <button type="button" class="sk-row" data-refresh aria-label="Refresh — get the newest copy of Sharma Home"><span class="sk-row__body"><span class="sk-row__title refresh-label" style="display:block">Refresh</span><span class="sk-row__sub" style="display:block;white-space:normal">Get the newest copy now — clears the saved offline copy and reloads. Settings stay.</span></span><svg class="sk-icon"><use href="#i-refresh"/></svg></button>
+      <button type="button" class="sk-row" data-refresh aria-label="Refresh — get the newest copy of SHARMA360"><span class="sk-row__body"><span class="sk-row__title refresh-label" style="display:block">Refresh</span><span class="sk-row__sub" style="display:block;white-space:normal">Get the newest copy now — clears the saved offline copy and reloads. Settings stay.</span></span><svg class="sk-icon"><use href="#i-refresh"/></svg></button>
     </div>
     <p style="margin:16px 0"><button type="button" class="sk-btn sk-btn--danger" id="lockAppBtn">Lock app</button></p>
   </div>
@@ -434,8 +434,8 @@ var EMBEDDED = {"tabs": [{"id": "apps", "sections": [{"title": "Every day", "row
 var DATA = null, nav = null, booted = false;
 var PAGES = {};
 var LOGO_HTML = '<span class="sk-header__logo"><img src="https://sharma-kit.sharma-crew.workers.dev/assets/logo-white-header.png" alt="Sharma Electric & HVAC" width="103" height="20"></span>';
-var INFO_BTN = '<button class="sk-header__btn js-about" aria-label="About Sharma Home"><svg class="sk-icon"><use href="#i-info"/></svg></button>';
-var REFRESH_BTN = '<button type="button" class="sk-header__btn refresh-btn" data-refresh aria-label="Refresh — get the newest copy of Sharma Home"><svg class="sk-icon"><use href="#i-refresh"/></svg><span class="refresh-label">Refresh</span></button>';
+var INFO_BTN = '<button class="sk-header__btn js-about" aria-label="About SHARMA360"><svg class="sk-icon"><use href="#i-info"/></svg></button>';
+var REFRESH_BTN = '<button type="button" class="sk-header__btn refresh-btn" data-refresh aria-label="Refresh — get the newest copy of SHARMA360"><svg class="sk-icon"><use href="#i-refresh"/></svg><span class="refresh-label">Refresh</span></button>';
 var TRAIL_BTN = REFRESH_BTN + INFO_BTN;
 function esc(t){ return String(t == null ? "" : t).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
 function rowHtml(r){ return '<a class="row" href="' + r.u + '"><span class="mono' + (r.g ? ' gold' : '') + '"><svg class="sk-icon"><use href="#' + r.i + '"/></svg></span><span class="rt"><span class="rn">' + esc(r.n) + '</span><span class="rd">' + esc(r.d) + '</span></span><span class="arr"><svg class="sk-icon"><use href="#i-chevron-right"/></svg></span></a>'; }
@@ -556,8 +556,8 @@ function allRows(){ var out = []; if (!DATA) return out; DATA.tabs.forEach(funct
 
 function buildApps(page){
   PAGES.apps = page;
-  page.setHeader({ title: 'Sharma Home', trail: TRAIL_BTN });
-  page.html('<div class="wrap wrap--tiles"><div class="sk-pagehead"><div><h1 class="sk-title">Sharma Home</h1><p class="sk-note">Every Sharma app — for Sanjay only</p></div></div>'
+  page.setHeader({ title: 'SHARMA360', trail: TRAIL_BTN });
+  page.html('<div class="wrap wrap--tiles"><div class="sk-pagehead"><div><h1 class="sk-title">SHARMA360</h1><p class="sk-note">Every Sharma app — for Sanjay only</p></div></div>'
     + '<label class="sk-search"><svg class="sk-icon"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Search apps…" autocomplete="off"><button type="button" class="sk-search__clear" aria-label="Clear"><svg class="sk-icon"><use href="#i-close"/></svg></button></label>'
     + '<div id="appsHome">' + tilesHtml() + '</div><div class="sk-empty hidden" id="appsNomatch"><div class="sk-empty__icon"><svg class="sk-icon"><use href="#i-search"/></svg></div><p class="sk-empty__title">No Results</p><p class="sk-empty__text" id="appsNomatchText">No app matches that search.</p></div>'
     + '<footer>Sharma Electric &amp; HVAC · Lic. EC13013924 · CAC1823596<br>Kept current by Jarvis</footer></div>');
@@ -954,7 +954,7 @@ function repaintAlerts(){
 function buildTV(page){
   PAGES.tv = page;
   page.setHeader({ title: 'TV Mode', trail: TRAIL_BTN });
-  page.html('<div class="wrap wrap--tv"><div class="sk-pagehead"><div><h1 class="sk-title">TV Mode</h1><p class="sk-note">Office TV board — display mode</p></div></div><div id="tvBody">' + skelHtml(4) + '</div><p class="tvnote">The Office TV wall board, inside Sharma Home. It shows schedule, inspections, to-schedule, new bids and headlines only — no money and no private notes, ever.</p><footer>Sharma Electric &amp; HVAC · Lic. EC13013924 · CAC1823596<br>Kept current by Jarvis</footer></div>');
+  page.html('<div class="wrap wrap--tv"><div class="sk-pagehead"><div><h1 class="sk-title">TV Mode</h1><p class="sk-note">Office TV board — display mode</p></div></div><div id="tvBody">' + skelHtml(4) + '</div><p class="tvnote">The Office TV wall board, inside SHARMA360. It shows schedule, inspections, to-schedule, new bids and headlines only — no money and no private notes, ever.</p><footer>Sharma Electric &amp; HVAC · Lic. EC13013924 · CAC1823596<br>Kept current by Jarvis</footer></div>');
   page.refreshable(function(){ repaintTV(); return Promise.resolve(); });
   repaintTV();
 }
@@ -1059,7 +1059,7 @@ function loadData(){
 function fallbackRender(){
   DATA = EMBEDDED;
   var t = tabData('apps');
-  document.getElementById('app').innerHTML = '<div class="wrap"><div class="sk-pagehead"><div><h1 class="sk-title">Sharma Home</h1></div></div><div id="dash"></div>' + sectionsHtml(t) + (tabData('office') ? sectionsHtml(tabData('office')) : '') + (tabData('jobs') ? sectionsHtml(tabData('jobs')) : '') + '</div>';
+  document.getElementById('app').innerHTML = '<div class="wrap"><div class="sk-pagehead"><div><h1 class="sk-title">SHARMA360</h1></div></div><div id="dash"></div>' + sectionsHtml(t) + (tabData('office') ? sectionsHtml(tabData('office')) : '') + (tabData('jobs') ? sectionsHtml(tabData('jobs')) : '') + '</div>';
   loadDashboard();
   var tb = document.querySelector('.sk-tabbar'); if (tb) tb.style.display = 'none';
 }
@@ -1067,7 +1067,7 @@ window.__bootHome = function(){
   if (booted) return; booted = true;
   if (window.SK && SK.scheme) { var ap = document.getElementById('appearance'); if (ap) SK.scheme.mountToggle(ap); }
   if (!window.SK || !SK.stack) { fallbackRender(); return; }
-  nav = SK.stack('#app', { lead: LOGO_HTML, title: 'Sharma Home' });
+  nav = SK.stack('#app', { lead: LOGO_HTML, title: 'SHARMA360' });
   route();
   loadData();
   /* TV mode is a wall display: keep its clock honest and its board fresh
