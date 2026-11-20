@@ -104,6 +104,39 @@
     .search { min-height: 48px; font-size: 17px; }
     #lock input, #lock button { font-family: -apple-system, "SF Pro Text", Inter, sans-serif; }
     footer { font-size: 13px; }
+
+    /* --- Dashboard + Apple-grade redesign (Sanjay 2026-11-19) --- */
+    .sk-pagehead { padding: 22px 0 2px; }
+    .sk-pagehead .sk-title { font-size: 34px; letter-spacing: -0.02em; color: var(--navy-dark); }
+    .dash__head { margin: 16px 2px 2px; }
+    .dash__date { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray); }
+    .dash__greet { font-size: 24px; font-weight: 700; letter-spacing: -0.01em; color: var(--navy-dark); margin-top: 3px; line-height: 1.15; }
+    .dash__asof { margin: 10px 2px 0; font-size: 12px; color: var(--gray); }
+    .dcard { display: block; background: var(--panel); border-radius: 18px; padding: 15px 16px 7px; margin: 14px 0 0;
+      box-shadow: 0 1px 2px rgba(26,47,97,0.07), 0 10px 26px rgba(26,47,97,0.07); color: var(--ink); text-decoration: none; }
+    .dcard:active { background: #eef2fa; }
+    .dcard__label { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; color: var(--navy); text-transform: uppercase; }
+    .dcard__label::after { content: ""; display: block; width: 26px; height: 2px; background: var(--gold); margin-top: 5px; border-radius: 2px; }
+    .drow { display: flex; align-items: flex-start; gap: 12px; padding: 11px 0; border-top: 1px solid var(--line); }
+    .dcard__label + .drow { border-top: none; }
+    .dtime { flex: 0 0 62px; font-size: 15px; font-weight: 700; color: var(--navy); padding-top: 1px; }
+    .dbody { flex: 1 1 auto; min-width: 0; }
+    .dtitle { display: block; font-size: 16px; font-weight: 600; line-height: 1.3; }
+    .dsub { display: block; font-size: 14px; color: var(--gray); line-height: 1.35; margin-top: 1px; }
+    .chip { flex: 0 0 auto; font-size: 13px; font-weight: 700; color: #176B32; background: rgba(23,107,50,0.12);
+      border-radius: 999px; padding: 4px 11px; margin-top: 1px; }
+    .rows { border: none; border-radius: 16px; box-shadow: 0 1px 2px rgba(26,47,97,0.06), 0 8px 22px rgba(26,47,97,0.05); }
+    a.row { min-height: 60px; padding: 11px 14px; }
+    .mono { width: 44px; height: 44px; border-radius: 12px; }
+    h2.sec { font-size: 21px; margin: 26px 2px 10px; }
+    .folder { border: none; border-radius: 16px; box-shadow: 0 1px 2px rgba(26,47,97,0.06), 0 8px 22px rgba(26,47,97,0.05); margin-top: 12px; }
+    .folder > button { min-height: 60px; padding: 12px 14px; }
+    .sk-search { margin-top: 16px; }
+    html[data-scheme="dark"] { --panel: #1C1C1E; --page: #000000; --ink: #F2F2F7; --line: rgba(84,84,88,0.55); --gray: #AEAEB2; }
+    html[data-scheme="dark"] .sk-pagehead .sk-title, html[data-scheme="dark"] .dash__greet,
+    html[data-scheme="dark"] h2.sec, html[data-scheme="dark"] .fname { color: #F2F2F7; }
+    html[data-scheme="dark"] .dcard:active, html[data-scheme="dark"] a.row:active, html[data-scheme="dark"] .folder > button:active { background: #2C2C2E; }
+    html[data-scheme="dark"] .chip { color: #6FD08C; background: rgba(111,208,140,0.16); }
 </style>
 <style id="lockcss">
 html.locked body > *:not(#lock){display:none!important}
@@ -182,13 +215,15 @@ function buildApps(page){
   PAGES.apps = page;
   page.setHeader({ title: 'Sharma Home', trail: INFO_BTN });
   page.html('<div class="wrap"><div class="sk-pagehead"><div><h1 class="sk-title">Sharma Home</h1><p class="sk-note">Every Sharma app — for Sanjay only</p></div></div>'
+    + '<div id="dash"></div>'
     + '<label class="sk-search"><svg class="sk-icon"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Search apps…" autocomplete="off"><button type="button" class="sk-search__clear" aria-label="Clear"><svg class="sk-icon"><use href="#i-close"/></svg></button></label>'
     + '<div id="appsHome">' + appsHomeHtml() + '</div><div id="appsResults"></div>'
     + '<footer>Sharma Electric &amp; HVAC · Lic. EC13013924 · CAC1823596<br>Kept current by Jarvis</footer></div>');
-  page.refreshable(function(){ return loadData().then(function(){ repaintApps(); }); });
+  page.refreshable(function(){ loadDashboard(); return loadData().then(function(){ repaintApps(); }); });
   var q = page.body.querySelector('#q');
   q.addEventListener('input', function(){ paintSearch(page, q.value); });
   page.body.querySelector('.sk-search__clear').addEventListener('click', function(){ q.value = ''; paintSearch(page, ''); q.focus(); });
+  loadDashboard();
 }
 function paintSearch(page, value){
   var home = page.body.querySelector('#appsHome'), res = page.body.querySelector('#appsResults');
@@ -225,6 +260,50 @@ function buildFolder(page, idx){
   page.html('<div class="wrap"><div class="sk-pagehead"><div><h1 class="sk-title">' + esc(f.name) + '</h1><p class="sk-note">' + esc(f.count) + '</p></div></div><div class="rows">' + f.rows.map(rowHtml).join('') + '</div></div>');
   page.refreshable(function(){ return loadData().then(function(){ buildFolder(page, idx); }); });
 }
+var TV_URL = 'https://sharmaelechvac.github.io/sharma-office-tv/data.json';
+var TV_CACHE_KEY = 'sh_home_tv_v1';
+function nyToday(){ try { return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()); } catch (e) { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); } }
+function nyHour(){ try { return parseInt(new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: 'numeric', hour12: false }).format(new Date()), 10); } catch (e) { return new Date().getHours(); } }
+function nyDateLabel(){ try { return new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }).format(new Date()); } catch (e) { return ''; } }
+function findAppUrl(name, fallback){ if (DATA) { var rows = allRows(); for (var i = 0; i < rows.length; i++) if (rows[i].r.n === name) return rows[i].r.u; } return fallback; }
+function tvStale(d){ if (!d || !d.updatedAt) return true; var t = Date.parse(d.updatedAt); if (isNaN(t)) return true; return (Date.now() - t) > 36 * 3600 * 1000; }
+function dashCard(label, inner, href){ return '<a class="dcard" href="' + href + '"><div class="dcard__label">' + esc(label) + '</div>' + inner + '</a>'; }
+function renderDashboard(d){
+  var host = document.getElementById('dash'); if (!host) return;
+  var today = nyToday(); var hr = nyHour();
+  var greet = hr < 12 ? 'Good morning' : hr < 18 ? 'Good afternoon' : 'Good evening';
+  var head = '<div class="dash__head"><div class="dash__date">' + esc(nyDateLabel()) + '</div><div class="dash__greet">' + greet + ', Sanjay</div></div>';
+  if (!d || tvStale(d)) { host.innerHTML = head; return; }
+  var myDayUrl = findAppUrl('My Day', 'https://sharmaelechvac.github.io/sharma-my-day/');
+  var bidsUrl = findAppUrl('Bid Boards', 'https://sharmaelechvac.github.io/sharma-bid-boards/');
+  var tvUrl = findAppUrl('Office TV', 'https://sharmaelechvac.github.io/sharma-office-tv/');
+  var cards = '';
+  var sched = (d.mySchedule || []).filter(function(x){ return x.date === today; });
+  if (sched.length) cards += dashCard("TODAY'S SCHEDULE", sched.map(function(x){ return '<div class="drow"><span class="dtime">' + esc(x.time || '') + '</span><span class="dbody"><span class="dtitle">' + esc(x.title || '') + '</span>' + (x.location ? '<span class="dsub">' + esc(x.location) + '</span>' : '') + '</span></div>'; }).join(''), myDayUrl);
+  var insp = [];
+  if (d.todayInspections && d.todayInspections.date === today && d.todayInspections.entries) insp = d.todayInspections.entries;
+  else if (Array.isArray(d.inspections)) insp = d.inspections.filter(function(x){ return !x.date || x.date === today; });
+  if (insp.length) cards += dashCard("TODAY'S INSPECTIONS", insp.map(function(x){ var name = x.title || x.name || x.address || ''; var meta = [x.type, x.number, x.time].filter(Boolean).join(' · '); return '<div class="drow"><span class="dbody"><span class="dtitle">' + esc(name) + '</span>' + (meta ? '<span class="dsub">' + esc(meta) + '</span>' : '') + (x.inspector ? '<span class="dsub">' + esc(x.inspector) + '</span>' : '') + '</span>' + (x.status ? '<span class="chip">' + esc(x.status) + '</span>' : '') + '</div>'; }).join(''), myDayUrl);
+  var bids = (d.newBids || []).filter(function(x){ return x.date === today; });
+  if (bids.length) cards += dashCard('NEW BIDS', bids.map(function(x){ var sub = [x.from, x.received || x.due || ''].filter(Boolean).join(' · '); return '<div class="drow"><span class="dbody"><span class="dtitle">' + esc(x.project || '') + '</span>' + (sub ? '<span class="dsub">' + esc(sub) + '</span>' : '') + '</span><span class="arr"><svg class="sk-icon"><use href="#i-chevron-right"/></svg></span></div>'; }).join(''), bidsUrl);
+  var notes = d.importantNotes || d.important || d.notes || null;
+  var noteItems = [];
+  if (Array.isArray(notes)) noteItems = notes.map(function(n){ return typeof n === 'string' ? n : (n.title || n.text || ''); }).filter(Boolean);
+  else if (typeof notes === 'string' && notes) noteItems = [notes];
+  if (noteItems.length) cards += dashCard('IMPORTANT NOTES', noteItems.map(function(n){ return '<div class="drow"><span class="dbody"><span class="dtitle">' + esc(n) + '</span></span></div>'; }).join(''), tvUrl);
+  var asof = '';
+  if (d.updatedAt) { var ud = new Date(d.updatedAt); if (!isNaN(ud)) asof = '<div class="dash__asof">Office TV data as of ' + esc(ud.toLocaleString('en-US', { timeZone: 'America/New_York', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })) + '</div>'; }
+  host.innerHTML = head + cards + asof;
+}
+function loadDashboard(){
+  var host = document.getElementById('dash'); if (!host) return;
+  renderDashboard(null);
+  var cached = null;
+  try { var raw = localStorage.getItem(TV_CACHE_KEY); if (raw) cached = JSON.parse(raw); } catch (e) {}
+  if (cached) renderDashboard(cached);
+  if (typeof fetch !== 'function') return;
+  fetch(TV_URL, { cache: 'no-store' }).then(function(r){ if (!r.ok) throw new Error('tv ' + r.status); return r.json(); }).then(function(d){ try { localStorage.setItem(TV_CACHE_KEY, JSON.stringify(d)); } catch (e) {} renderDashboard(d); }).catch(function(){});
+}
 var BUILDERS = { apps: buildApps, office: buildOffice, jobs: buildJobs };
 function route(){
   if (!nav) return;
@@ -252,7 +331,8 @@ function loadData(){
 function fallbackRender(){
   DATA = EMBEDDED;
   var t = tabData('apps');
-  document.getElementById('app').innerHTML = '<div class="wrap"><div class="sk-pagehead"><div><h1 class="sk-title">Sharma Home</h1></div></div>' + sectionsHtml(t) + (tabData('office') ? sectionsHtml(tabData('office')) : '') + (tabData('jobs') ? sectionsHtml(tabData('jobs')) : '') + '</div>';
+  document.getElementById('app').innerHTML = '<div class="wrap"><div class="sk-pagehead"><div><h1 class="sk-title">Sharma Home</h1></div></div><div id="dash"></div>' + sectionsHtml(t) + (tabData('office') ? sectionsHtml(tabData('office')) : '') + (tabData('jobs') ? sectionsHtml(tabData('jobs')) : '') + '</div>';
+  loadDashboard();
   var tb = document.querySelector('.sk-tabbar'); if (tb) tb.style.display = 'none';
 }
 window.__bootHome = function(){
