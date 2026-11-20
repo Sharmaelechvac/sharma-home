@@ -371,7 +371,7 @@ html.locked body > *:not(#lock){display:none!important}
 #lock{display:none}
 html.locked #lock{display:flex;position:fixed;inset:0;z-index:9999;background:#264387;align-items:center;justify-content:center;font-family:Inter,system-ui,sans-serif}
 #lock .box{background:#fff;border-radius:18px;padding:28px 22px;width:min(320px,88vw);text-align:center;border-bottom:4px solid #F0A846}
-#lock img{height:44px;margin-bottom:10px}
+#lock img{width:238px;max-width:80%;height:auto;margin-bottom:12px}
 #lock h2{margin:0 0 4px;color:#264387;font-size:20px}
 #lock p{margin:0 0 16px;color:#5b6478;font-size:14px}
 #lock input{width:100%;font-size:28px;letter-spacing:10px;text-align:center;padding:12px;border:2px solid #dfe4ee;border-radius:12px;outline:none;box-sizing:border-box}
@@ -394,7 +394,7 @@ if(x==='51f6a9f8a0017601ef145c7daa916d20a14646d9921090122222a12e9e39b146'){try{l
 else{document.getElementById('lockerr').textContent='Wrong passcode';document.getElementById('lockpin').value=''}return false}
 </script>
 <header class="sk-header"><div class="sk-header__bar">
-  <div class="sk-header__lead"><span class="sk-header__logo"><img src="icons/icon-192.png" alt="SHARMA360" width="34" height="34" style="border-radius:8px;display:block"></span></div>
+  <div class="sk-header__lead"><span class="sk-header__logo"><span style="background:#fff;border-radius:8px;padding:4px 9px;display:inline-flex;align-items:center"><img src="assets/sharma360-logo.png" alt="SHARMA360" style="height:30px;width:auto;display:block"></span></span></div>
   <div class="sk-header__title">SHARMA360</div>
   <div class="sk-header__trail"></div>
 </div></header>
@@ -604,7 +604,7 @@ function repaintJobs(){ var p = PAGES.jobsPage; if (p) p.html(jobsPageHtml()); }
 function buildToday(page){
   PAGES.today = page;
   page.setHeader({ title: 'Today', trail: TRAIL_BTN });
-  page.html('<div class="wrap"><div class="sk-pagehead"><div><h1 class="sk-title">Today</h1><p class="sk-note">Schedule · inspections · new bids</p></div></div><div id="dash"></div><footer>Sharma Electric &amp; HVAC · Lic. EC13013924 · CAC1823596<br>Kept current by Jarvis</footer></div>');
+  page.html('<div class="wrap"><div style="background:#fff;border-radius:16px;padding:16px 18px;margin-top:14px;box-shadow:0 3px 10px rgba(16,24,40,0.08)"><img src="assets/sharma360-logo.png" alt="SHARMA360 Electric &amp; HVAC" style="width:100%;max-width:340px;height:auto;display:block;margin:0 auto"></div><div class="sk-pagehead"><div><h1 class="sk-title">Today</h1><p class="sk-note">Schedule · inspections · new bids</p></div></div><div id="dash"></div><footer>Sharma Electric &amp; HVAC · Lic. EC13013924 · CAC1823596<br>Kept current by Jarvis</footer></div>');
   page.refreshable(function(){ loadDashboard(); return loadData(); });
   loadDashboard();
 }
