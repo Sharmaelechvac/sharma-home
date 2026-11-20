@@ -93,7 +93,7 @@
     },
     {
      "name": "Field \u2014 SHARMATRACK",
-     "count": "9 apps",
+     "count": "10 apps",
      "rows": [
       {
        "u": "https://sharmaelechvac.github.io/sharmatrack/owner/",
@@ -157,12 +157,19 @@
        "g": false,
        "n": "SHARMATRACK Website",
        "d": "\u201cThe software is us\u201d"
+      },
+      {
+       "u": "https://sharmaelechvac.github.io/sample-house-citrus-craft-homes",
+       "i": "i-house",
+       "g": false,
+       "n": "Sample House \u2014 Citrus Craft",
+       "d": "Builder showcase"
       }
      ]
     },
     {
      "name": "Client-facing",
-     "count": "7 apps",
+     "count": "6 apps",
      "rows": [
       {
        "u": "https://sharmaelechvac.github.io/sharma-builders",
@@ -198,13 +205,6 @@
        "g": false,
        "n": "Electrical Picker",
        "d": "Electrical options"
-      },
-      {
-       "u": "https://sharmaelechvac.github.io/sample-house-citrus-craft-homes",
-       "i": "i-house",
-       "g": false,
-       "n": "Sample House \u2014 Citrus Craft",
-       "d": "Builder showcase"
       },
       {
        "u": "https://sharmaelechvac.github.io/sample-house-any-builder-template",
