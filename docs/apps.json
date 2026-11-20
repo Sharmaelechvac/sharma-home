@@ -162,7 +162,7 @@
     },
     {
      "name": "Client-facing",
-     "count": "8 apps",
+     "count": "7 apps",
      "rows": [
       {
        "u": "https://sharmaelechvac.github.io/sharma-builders",
@@ -212,13 +212,6 @@
        "g": false,
        "n": "Sample House \u2014 Template",
        "d": "Any-builder version"
-      },
-      {
-       "u": "https://sharmaelectric.info",
-       "i": "i-globe",
-       "g": false,
-       "n": "SharmaElectric.info",
-       "d": "Company website"
       }
      ]
     },
