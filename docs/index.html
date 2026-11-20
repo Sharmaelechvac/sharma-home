@@ -49,7 +49,7 @@
        is late, cached stale, or missing. Values mirror sharma-kit.css through
        the same variables, so when the kit loads nothing changes; when it
        doesn't, the fallbacks paint the navy bar with the gold rule. */
-    .sk-header { position: sticky; top: 0; z-index: 40;
+    .sk-header { position: sticky; top: 0; z-index: 40; margin: 0;
       background: var(--sk-header-bg, #264387); color: var(--sk-header-fg, #fff);
       border-bottom: 3px solid var(--sk-header-rule, #F0A846);
       padding-top: env(safe-area-inset-top, 0px); }
@@ -418,6 +418,23 @@ html[data-scheme="dark"] .lrows { background: rgba(255,255,255,0.06); box-shadow
 html[data-scheme="dark"] .lrow { border-top-color: rgba(255,255,255,0.09); }
 html[data-scheme="dark"] button.lrow { border-top-color: rgba(255,255,255,0.09); }
 html[data-scheme="dark"] .lrow .ltic { box-shadow: inset 0 0 0 1px rgba(255,255,255,0.14); }
+/* End-to-end phone layout (2026-11-20.20, Sanjay: the lists are "too small,
+   need to be end to end"): on phone widths the centered 560px column goes
+   away — content runs the full width of the screen. List groups and cards
+   sit flush to the edges; titles, notes and the footer keep a 16px text
+   inset; the icon grid keeps a small 6px gutter so labels never clip the
+   edge (and the tiles get bigger). Wider screens keep the centered column. */
+@media (max-width: 700px) {
+  .wrap { max-width: none; margin: 0; padding: 0 0 30px; }
+  .sk-main.sk-page__body { padding-left: 0; padding-right: 0; }
+  .sk-pagehead { padding-left: 16px; padding-right: 16px; }
+  h2.sec { margin-left: 16px; margin-right: 16px; }
+  .tsec { margin-left: 16px; margin-right: 16px; }
+  .rows, .lrows { border-radius: 0; }
+  .dcard { border-radius: 0; }
+  .tgrid { padding-left: 6px; padding-right: 6px; }
+  footer { margin-left: 16px; margin-right: 16px; }
+}
 </style>
 <style id="lockcss">
 html.locked body > *:not(#lock){display:none!important}
