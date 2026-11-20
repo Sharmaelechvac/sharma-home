@@ -183,9 +183,76 @@
     html[data-scheme="dark"] .tic--img { background: none; box-shadow: none; }
     html[data-scheme="dark"] .tile:active .tic--img { background: none; }
 
-    /* --- News tab (headlines from the Office TV news feed, 2026-11-20) --- */
-    .nhead { display: block; font-size: 18px; font-weight: 600; line-height: 1.35; }
-    .nsub { display: block; font-size: 18px; color: var(--gray); line-height: 1.35; margin-top: 2px; }
+    /* --- News tab v2 (2026-11-20): a real front page. Sharma News and the
+       Legal Briefing publish no JSON feed, so the tab assembles its front
+       page from the News hub's own front-page story blocks (kicker / photo /
+       headline / byline, parsed client-side) and uses the Office TV feed
+       for what it is good at: the LIVE strip and the Latest river.
+       Flat cards, hairlines, zero shadows (news design spec). --- */
+    .nw-stamp { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; color: var(--navy); white-space: nowrap; padding-bottom: 6px; }
+    .nw-stamp::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex: 0 0 auto; }
+    .nw-banner { margin-top: 14px; background: #FFF4E0; color: #7A4A00; border-radius: 10px; padding: 10px 14px; font-size: 15px; font-weight: 600; line-height: 1.35; }
+    /* LIVE strip (Office TV feed) */
+    .nw-live { display: flex; align-items: center; gap: 10px; margin-top: 16px; background: var(--navy); border-radius: 12px; padding: 0 14px; height: 44px; }
+    .nw-live__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex: 0 0 auto; animation: nw-pulse 1.6s ease-in-out infinite; }
+    @keyframes nw-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+    .nw-live__tag { font-size: 13px; font-weight: 800; letter-spacing: 0.08em; color: var(--gold); flex: 0 0 auto; }
+    .nw-live__text { font-size: 15px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity 0.35s ease; }
+    .nw-live__text.is-fading { opacity: 0; }
+    /* Topic chips: sticky rail, filter in place */
+    .nw-chips { position: sticky; top: 0; z-index: 5; display: flex; gap: 8px; overflow-x: auto; padding: 14px 2px 10px; margin: 0 -2px; background: var(--page); scrollbar-width: none; -webkit-mask-image: linear-gradient(90deg, #000 92%, transparent); mask-image: linear-gradient(90deg, #000 92%, transparent); }
+    .nw-chips::-webkit-scrollbar { display: none; }
+    .nw-chip { flex: 0 0 auto; height: 36px; padding: 0 16px; border-radius: 999px; border: 1px solid #D8DCE6; background: #fff; color: var(--navy); font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; touch-action: manipulation; }
+    .nw-chip[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: #fff; }
+    .nw-chip[aria-pressed="true"]::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--gold); margin-right: 7px; }
+    /* Sections */
+    .nw-sec { margin-top: 30px; }
+    .nw-sechead { font-size: 22px; font-weight: 800; letter-spacing: -0.01em; color: var(--navy); margin: 0 2px 6px; }
+    .nw-sechead::after { content: ""; display: block; width: 24px; height: 3px; border-radius: 2px; background: var(--gold); margin-top: 6px; }
+    /* Story cards: flat, hairline-separated, whole card is the tap target */
+    .nw-kicker { font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--navy); }
+    .nw-toptag { font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #9A6200; }
+    .nw-meta { font-size: 13px; font-weight: 600; color: #6B7280; }
+    .nw-meta b { color: var(--navy); font-weight: 700; }
+    .nw-hero, .nw-std { display: block; text-decoration: none; color: inherit; padding: 14px 0 20px; border-bottom: 1px solid #E3E6EC; }
+    .nw-hero__img, .nw-std__img { display: block; width: 100%; object-fit: cover; background: #EDF0F5; }
+    .nw-hero__img { aspect-ratio: 4 / 3; border-radius: 16px; }
+    .nw-std__img { aspect-ratio: 16 / 9; border-radius: 12px; }
+    .nw-hero__kick { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 12px; }
+    .nw-std__kick { margin-top: 10px; }
+    .nw-hero h3 { font-size: 26px; font-weight: 800; line-height: 1.15; letter-spacing: -0.01em; color: var(--ink); margin: 8px 0 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .nw-std h3 { font-size: 20px; font-weight: 700; line-height: 1.25; color: var(--ink); margin: 6px 0 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .nw-dek { font-size: 18px; line-height: 1.45; color: #3A4356; margin: 8px 0 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .nw-cardmeta { margin-top: 10px; }
+    /* Latest river: time-first rows, monogram thumb (wire items have no photo) */
+    .nw-row { display: flex; gap: 12px; align-items: flex-start; padding: 16px 0; border-bottom: 1px solid #E3E6EC; }
+    .nw-row:last-child { border-bottom: none; }
+    .nw-thumb { flex: 0 0 auto; width: 96px; height: 96px; border-radius: 10px; background: var(--navy); color: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 800; letter-spacing: 0.02em; }
+    .nw-row__body { flex: 1 1 auto; min-width: 0; }
+    .nw-row h3 { font-size: 18px; font-weight: 700; line-height: 1.3; color: var(--ink); margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .nw-row__meta { margin-top: 6px; }
+    /* Edition entry cards */
+    .nw-ed { display: flex; align-items: center; gap: 12px; background: var(--navy); border-radius: 16px; padding: 16px; margin-top: 12px; text-decoration: none; }
+    .nw-ed__body { flex: 1 1 auto; min-width: 0; }
+    .nw-ed__name { display: block; font-size: 20px; font-weight: 800; color: #fff; line-height: 1.2; }
+    .nw-ed__head { display: block; font-size: 15px; color: rgba(255,255,255,0.85); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 3px; }
+    .nw-ed__stamp { display: block; font-size: 13px; font-weight: 600; color: var(--gold); margin-top: 5px; }
+    .nw-ed .arr { color: var(--gold); }
+    .nw-caught { margin-top: 30px; padding-top: 18px; border-top: 1px solid #E3E6EC; text-align: center; font-size: 15px; color: #6B7280; }
+    /* Skeleton: same geometry as the real cards, so swap-in never shifts */
+    .nw-skel { background: #EDF0F5; border-radius: 8px; }
+    .nw-skel--hero { aspect-ratio: 4 / 3; border-radius: 16px; }
+    @media (prefers-reduced-motion: reduce) { .nw-live__dot { animation: none; } .nw-live__text { transition: none; } }
+    html[data-scheme="dark"] .nw-sechead, html[data-scheme="dark"] .nw-kicker, html[data-scheme="dark"] .nw-meta b { color: #F2F2F7; }
+    html[data-scheme="dark"] .nw-hero h3, html[data-scheme="dark"] .nw-std h3, html[data-scheme="dark"] .nw-row h3 { color: #F2F2F7; }
+    html[data-scheme="dark"] .nw-dek { color: #C7CBD4; }
+    html[data-scheme="dark"] .nw-meta, html[data-scheme="dark"] .nw-caught { color: #AEAEB2; }
+    html[data-scheme="dark"] .nw-hero, html[data-scheme="dark"] .nw-std, html[data-scheme="dark"] .nw-row, html[data-scheme="dark"] .nw-caught { border-color: rgba(84,84,88,0.55); }
+    html[data-scheme="dark"] .nw-chip { background: #1C1C1E; border-color: rgba(255,255,255,0.20); color: #F2F2F7; }
+    html[data-scheme="dark"] .nw-chip[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: #fff; }
+    html[data-scheme="dark"] .nw-skel { background: #1C1C1E; }
+    html[data-scheme="dark"] .nw-banner { background: #3A2C07; color: #FFD9A0; }
+    html[data-scheme="dark"] .nw-stamp { color: #F2F2F7; }
 
     /* --- TV mode (Office TV wall board inside Home, 2026-11-20) ---
        Display mode only: board data (schedule, inspections, to-schedule,
@@ -529,40 +596,241 @@ function fetchTv(cb){
   fetch(TV_URL, { cache: 'no-store' }).then(function(r){ if (!r.ok) throw new Error('tv ' + r.status); return r.json(); }).then(function(d){ try { localStorage.setItem(TV_CACHE_KEY, JSON.stringify(d)); } catch (e) {} cb(d); }).catch(function(){ if (!cached) cb(null); });
 }
 
-/* --- News tab: Sharma News + Legal Briefing folded in (2026-11-20).
-   The publications are static builds with no JSON feed, so the tab carries
-   their entry cards plus the live headline feed (Office TV data, refreshed
-   3x daily) — real headlines only, nothing invented. --- */
+/* --- News tab v2 (2026-11-20): a real front page, not a ticker dump.
+   Diagnosis of the old tab: it rendered two link rows plus the Office TV
+   ticker feed verbatim — a wall of unlinked, photo-less wire copy, because
+   the publications are static builds with no JSON feed to render stories
+   from. Fix: assemble the front page from the publications themselves.
+   The Sharma News hub's front page carries stable generator markup
+   (.front .story and .techfeature blocks: kicker / photo / headline /
+   byline) and GitHub Pages serves it CORS-open, so the tab fetches and
+   parses it client-side for Top Stories + Editions (real photos from the
+   cited articles, every card opening the story's own page), and uses the
+   Office TV feed for the LIVE strip + Latest river. Both sources are
+   cached (localStorage) and rendered last-good-first, so a failed refresh
+   never blanks the tab. --- */
+var NEWS_URL = 'https://sharmaelechvac.github.io/sharma-news/';
+var NEWS_CACHE_KEY = 'sh_home_newsfront_v1';
+var NEWS_FRONT = null;        /* parsed hub front page { stories, editionDate } */
+var NEWS_TV = undefined;      /* Office TV data; undefined = still loading, null = failed, no cache */
+var newsChip = 'all';
+var newsLiveTimer = null;
+var NW_CHIPS = [['all', 'All'], ['top', 'Top'], ['finance', 'Finance'], ['tech', 'Tech'], ['legal', 'Legal'], ['florida', 'Florida'], ['construction', 'Construction']];
+var NW_EDITIONS = [
+  { topic: 'finance', name: 'Finance', url: NEWS_URL + 'finance/' },
+  { topic: 'tech', name: 'Tech', url: NEWS_URL + 'tech/' },
+  { topic: 'legal', name: 'Legal Briefing', url: 'https://sharmaelechvac.github.io/sharma-legal-briefing/' },
+  { topic: 'construction', name: 'Permit News', url: NEWS_URL + 'permits/' }
+];
+function newsTopicOf(s){
+  var k = ((s.kicker || '') + ' ' + (s.url || '')).toLowerCase();
+  if (k.indexOf('legal') >= 0) return 'legal';
+  if (k.indexOf('finance') >= 0) return 'finance';
+  if (k.indexOf('tech') >= 0) return 'tech';
+  if (k.indexOf('permit') >= 0) return 'construction';
+  return 'top';
+}
+function parseNewsFront(html){
+  if (!window.DOMParser) return null;
+  var doc = new DOMParser().parseFromString(html, 'text/html');
+  var blocks = doc.querySelectorAll('.front .story, .techfeature');
+  var stories = [], editionDate = '';
+  blocks.forEach(function(b){
+    var kick = b.querySelector('.kicker');
+    var headA = b.querySelector('.headline a') || b.querySelector('h2 a');
+    var photoA = b.querySelector('a.photolink');
+    var img = b.querySelector('figure img');
+    var cap = b.querySelector('figcaption');
+    var byline = b.querySelector('.byline');
+    var capText = '';
+    if (cap) { var c2 = cap.cloneNode(true); var cr = c2.querySelector('.credit'); if (cr) cr.remove(); capText = c2.textContent.trim(); }
+    var bylineText = byline ? byline.textContent.trim() : '';
+    var em = bylineText.match(/Edition of (.+)$/);
+    var asof = bylineText.match(/as of (.+)$/i);
+    if (em && !editionDate) editionDate = em[1].trim();
+    var rawUrl = (photoA && photoA.getAttribute('href')) || (headA && headA.getAttribute('href')) || '';
+    stories.push({
+      kicker: kick ? kick.textContent.trim() : '',
+      headline: headA ? headA.textContent.trim() : '',
+      url: rawUrl ? new URL(rawUrl, NEWS_URL).href : '',
+      img: img ? new URL(img.getAttribute('src'), NEWS_URL).href : '',
+      alt: img ? (img.getAttribute('alt') || '') : '',
+      dek: capText,
+      edition: em ? em[1].trim() : '',
+      stamp: em ? 'Edition of ' + em[1].trim() : (asof ? 'Data as of ' + asof[1].trim() : '')
+    });
+  });
+  stories = stories.filter(function(s){ return s.headline && s.url; });
+  return stories.length ? { stories: stories, editionDate: editionDate } : null;
+}
+function fetchNewsFront(cb){
+  var cached = null;
+  try { var raw = localStorage.getItem(NEWS_CACHE_KEY); if (raw) cached = JSON.parse(raw); } catch (e) {}
+  if (cached) cb(cached);
+  if (typeof fetch !== 'function') { if (!cached) cb(null); return; }
+  fetch(NEWS_URL, { cache: 'no-store' }).then(function(r){ if (!r.ok) throw new Error('news ' + r.status); return r.text(); }).then(function(html){
+    var front = parseNewsFront(html);
+    if (front) { try { localStorage.setItem(NEWS_CACHE_KEY, JSON.stringify(front)); } catch (e) {} cb(front); }
+    else if (!cached) cb(null);
+  }).catch(function(){ if (!cached) cb(null); });
+}
+function newsStampText(iso){
+  try {
+    var dt = new Date(iso);
+    var day = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).format(dt);
+    var time = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit' }).format(dt);
+    return (day === nyToday() ? '' : new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'short' }).format(dt) + ' ') + time;
+  } catch (e) { return ''; }
+}
+function newsDateLabel(ds){
+  if (!ds) return '';
+  if (ds === nyToday()) return 'Today';
+  try {
+    var yd = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(Date.now() - 86400000));
+    if (ds === yd) return 'Yesterday';
+    return new Intl.DateTimeFormat('en-US', { weekday: 'short', month: 'short', day: 'numeric' }).format(new Date(ds + 'T12:00:00'));
+  } catch (e) { return ds; }
+}
+function newsTopicsFor(item){
+  var t = ((item.headline || '') + ' ' + (item.source || '')).toLowerCase(), out = [];
+  if (/court|osha|workers'? comp|senate|lawsuit|e-?verify|department of labor|\bdol\b|building code|regulation|rule\b/.test(t)) out.push('legal');
+  if (/fed\b|fomc|mortgage|treasury|stocks|markets|copper|diesel|interest rate/.test(t)) out.push('finance');
+  if (/housing starts|building permits|builders|build costs|lumber|construction|home builders/.test(t)) out.push('construction');
+  if (/florida|orlando|brevard|osceola|seminole|orange county|flood|nws|melbourne/.test(t)) out.push('florida');
+  if (/\bai\b|tech|software|app\b/.test(t)) out.push('tech');
+  return out.join(' ');
+}
+function newsMonogram(source){
+  var words = String(source || 'Sharma News').replace(/[^A-Za-z ]/g, ' ').split(/\s+/).filter(Boolean);
+  if (!words.length) return 'SN';
+  return (words[0].charAt(0) + (words.length > 1 ? words[1].charAt(0) : words[0].charAt(1) || '')).toUpperCase();
+}
+function nextUpdateLabel(){
+  var h = nyHour();
+  if (h < 7) return '7:00 AM';
+  if (h < 12) return '12:00 PM';
+  if (h < 16) return '4:00 PM';
+  return '7:00 AM';
+}
+function newsSkelHtml(){
+  return '<div style="margin-top:16px"><div class="nw-skel nw-skel--hero"></div>'
+    + '<div class="nw-skel" style="height:14px;width:38%;margin-top:14px"></div>'
+    + '<div class="nw-skel" style="height:24px;width:92%;margin-top:10px"></div>'
+    + '<div class="nw-skel" style="height:24px;width:70%;margin-top:8px"></div>'
+    + '<div class="nw-skel" style="height:96px;margin-top:26px"></div>'
+    + '<div class="nw-skel" style="height:96px;margin-top:12px"></div></div>';
+}
 function buildNews(page){
   PAGES.news = page;
   page.setHeader({ title: 'News', trail: TRAIL_BTN });
-  page.html('<div class="wrap"><div class="sk-pagehead"><div><h1 class="sk-title">News</h1><p class="sk-note">Sharma News · Legal Briefing · latest headlines</p></div></div><div id="newsBody">' + skelHtml(4) + '</div><footer>Sharma Electric &amp; HVAC · Lic. EC13013924 · CAC1823596<br>Kept current by Jarvis</footer></div>');
+  page.html('<div class="wrap"><div class="sk-pagehead"><div><h1 class="sk-title">News</h1><p class="sk-note">' + esc(nyDateLabel()) + '</p></div><div class="nw-stamp" id="newsStamp" style="display:none"></div></div><div id="newsBody">' + newsSkelHtml() + '</div><footer>Sharma Electric &amp; HVAC · Lic. EC13013924 · CAC1823596<br>Kept current by Jarvis</footer></div>');
   page.refreshable(function(){ repaintNews(); return loadData(); });
   repaintNews();
 }
-function pubRow(name, desc, icon, url){
-  return '<a class="row" href="' + url + '"><span class="tic tic--img" style="width:44px;height:44px;border-radius:12px;flex:0 0 auto"><img src="' + icon + '" alt=""></span><span class="rt"><span class="rn">' + esc(name) + '</span><span class="rd">' + esc(desc) + '</span></span><span class="arr"><svg class="sk-icon"><use href="#i-chevron-right"/></svg></span></a>';
+function nwHeroHtml(s){
+  return '<a class="nw-hero nfilter" data-topics="' + newsTopicOf(s) + '" href="' + esc(s.url) + '">'
+    + (s.img ? '<img class="nw-hero__img" src="' + esc(s.img) + '" alt="' + esc(s.alt) + '" fetchpriority="high">' : '')
+    + '<span class="nw-hero__kick"><span class="nw-kicker">' + esc(s.kicker || 'Sharma News') + '</span><span class="nw-toptag">Top story</span></span>'
+    + '<h3>' + esc(s.headline) + '</h3>'
+    + (s.dek ? '<p class="nw-dek">' + esc(s.dek) + '</p>' : '')
+    + '<div class="nw-meta nw-cardmeta"><b>' + esc(s.kicker || 'Sharma News') + '</b>' + (s.edition ? ' · ' + esc(s.edition) : '') + '</div></a>';
 }
-function renderNews(d){
+function nwStdHtml(s){
+  return '<a class="nw-std nfilter" data-topics="' + newsTopicOf(s) + '" href="' + esc(s.url) + '">'
+    + (s.img ? '<img class="nw-std__img" src="' + esc(s.img) + '" alt="' + esc(s.alt) + '" loading="lazy">' : '')
+    + '<div class="nw-kicker nw-std__kick">' + esc(s.kicker || 'Sharma News') + '</div>'
+    + '<h3>' + esc(s.headline) + '</h3>'
+    + '<div class="nw-meta nw-cardmeta"><b>' + esc(s.kicker || 'Sharma News') + '</b>' + (s.edition ? ' · ' + esc(s.edition) : '') + '</div></a>';
+}
+function nwRowHtml(n){
+  return '<div class="nw-row nfilter" data-topics="' + newsTopicsFor(n) + '"><span class="nw-thumb" aria-hidden="true">' + esc(newsMonogram(n.source)) + '</span><span class="nw-row__body"><h3>' + esc(n.headline || '') + '</h3><div class="nw-meta nw-row__meta"><b>' + esc(newsDateLabel(n.date)) + '</b>' + (n.source ? ' · ' + esc(n.source) : '') + '</div></span></div>';
+}
+function nwEditionsHtml(front){
+  var byTopic = {};
+  if (front) front.stories.forEach(function(s){ var t = newsTopicOf(s); if (!byTopic[t]) byTopic[t] = s; });
+  return NW_EDITIONS.map(function(ed){
+    var s = byTopic[ed.topic];
+    return '<a class="nw-ed nfilter" data-topics="' + ed.topic + '" href="' + esc(ed.url) + '"><span class="nw-ed__body"><span class="nw-ed__name">' + esc(ed.name) + '</span>'
+      + '<span class="nw-ed__head">' + esc(s ? s.headline : 'Today\'s edition') + '</span>'
+      + '<span class="nw-ed__stamp">' + esc(s && s.stamp ? s.stamp : 'New edition daily') + '</span></span>'
+      + '<span class="arr"><svg class="sk-icon"><use href="#i-chevron-right"/></svg></span></a>';
+  }).join('');
+}
+function startNewsLive(items){
+  if (newsLiveTimer) { clearInterval(newsLiveTimer); newsLiveTimer = null; }
+  if (!items || items.length < 2) return;
+  var reduce = false;
+  try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  if (reduce) return;
+  var idx = 0;
+  newsLiveTimer = setInterval(function(){
+    var el = document.getElementById('nwLiveText');
+    if (!el) { clearInterval(newsLiveTimer); newsLiveTimer = null; return; }
+    idx = (idx + 1) % items.length;
+    el.classList.add('is-fading');
+    setTimeout(function(){
+      var el2 = document.getElementById('nwLiveText');
+      if (el2) { el2.textContent = items[idx].headline || ''; el2.classList.remove('is-fading'); }
+    }, 360);
+  }, 6000);
+}
+function applyNewsChip(){
   var host = document.getElementById('newsBody'); if (!host) return;
-  var newsUrl = findAppUrl('Sharma News', 'https://sharmaelechvac.github.io/sharma-news/');
-  var legalUrl = findAppUrl('Legal Briefing', 'https://sharmaelechvac.github.io/sharma-legal-briefing/');
-  var html = '<h2 class="sec">Publications</h2><div class="rows">'
-    + pubRow('Sharma News', 'Daily briefing — weather, permits, industry · archive', 'icons/apps/news-192.png', newsUrl)
-    + pubRow('Legal Briefing', 'Daily legal news · Harvey · archive', 'icons/apps/legal-192.png', legalUrl)
-    + '</div>';
-  var items = (d && d.news) || [];
-  if (items.length) {
-    html += '<h2 class="sec">Latest headlines</h2><div class="dcard" style="cursor:default">' + items.map(function(n){
-      var sub = [n.source, n.date].filter(Boolean).join(' · ');
-      return '<div class="drow"><span class="dbody"><span class="nhead">' + esc(n.headline || '') + '</span>' + (sub ? '<span class="nsub">' + esc(sub) + '</span>' : '') + '</span></div>';
-    }).join('') + '</div>';
-  } else if (!d) {
-    html += '<h2 class="sec">Latest headlines</h2>' + skelHtml(3);
-  }
-  host.innerHTML = html;
+  host.querySelectorAll('.nw-chip').forEach(function(c){ c.setAttribute('aria-pressed', c.getAttribute('data-chip') === newsChip ? 'true' : 'false'); });
+  host.querySelectorAll('.nfilter').forEach(function(el){
+    var show;
+    if (newsChip === 'all') show = true;
+    else if (newsChip === 'top') show = !el.classList.contains('nw-row');
+    else show = (' ' + (el.getAttribute('data-topics') || '') + ' ').indexOf(' ' + newsChip + ' ') >= 0;
+    el.classList.toggle('hidden', !show);
+  });
+  host.querySelectorAll('.nw-sec').forEach(function(sec){
+    var any = false;
+    sec.querySelectorAll('.nfilter').forEach(function(el){ if (!el.classList.contains('hidden')) any = true; });
+    sec.classList.toggle('hidden', !any);
+  });
 }
-function repaintNews(){ if (PAGES.news) fetchTv(renderNews); }
+function renderNewsTab(){
+  var host = document.getElementById('newsBody'); if (!host) return;
+  var stamp = document.getElementById('newsStamp');
+  var front = NEWS_FRONT, d = NEWS_TV;
+  if (stamp) {
+    var st = '';
+    if (d && d.updatedAt) st = 'Updated ' + newsStampText(d.updatedAt);
+    else if (front && front.editionDate) st = 'Edition of ' + front.editionDate;
+    stamp.textContent = st;
+    stamp.style.display = st ? '' : 'none';
+  }
+  if (!front && d === undefined) return; /* still loading: geometry-true skeleton stays */
+  if (!front && !d) {
+    host.innerHTML = '<div class="sk-empty"><div class="sk-empty__icon"><svg class="sk-icon"><use href="#i-globe"/></svg></div><p class="sk-empty__title">Couldn\'t load the news</p><p class="sk-empty__text">Check your connection, then pull down to refresh — the latest editions will appear here.</p></div>';
+    return;
+  }
+  var items = (d && d.news) || [];
+  var html = '';
+  if (front && d === null) html += '<div class="nw-banner">Couldn\'t refresh the headline wire — showing today\'s editions.</div>';
+  if (items.length) html += '<div class="nw-live"><span class="nw-live__dot"></span><span class="nw-live__tag">Live</span><span class="nw-live__text" id="nwLiveText">' + esc(items[0].headline || '') + '</span></div>';
+  html += '<div class="nw-chips" role="group" aria-label="Filter news by topic">' + NW_CHIPS.map(function(c){ return '<button type="button" class="nw-chip" data-chip="' + c[0] + '" aria-pressed="' + (newsChip === c[0] ? 'true' : 'false') + '">' + c[1] + '</button>'; }).join('') + '</div>';
+  var stories = front ? front.stories : [];
+  if (stories.length) html += '<section class="nw-sec" data-sec="top"><h2 class="nw-sechead">Top Stories</h2>' + nwHeroHtml(stories[0]) + stories.slice(1, 3).map(nwStdHtml).join('') + '</section>';
+  if (items.length) {
+    var sorted = items.slice().sort(function(a, b){ return String(b.date || '') < String(a.date || '') ? -1 : (String(b.date || '') > String(a.date || '') ? 1 : 0); });
+    html += '<section class="nw-sec" data-sec="latest"><h2 class="nw-sechead">Latest</h2>' + sorted.slice(0, 7).map(nwRowHtml).join('') + '</section>';
+  }
+  html += '<section class="nw-sec" data-sec="editions"><h2 class="nw-sechead">Editions</h2>' + nwEditionsHtml(front) + '</section>';
+  html += '<p class="nw-caught">You\'re all caught up · Next update ~' + nextUpdateLabel() + '</p>';
+  host.innerHTML = html;
+  host.querySelectorAll('.nw-chip').forEach(function(c){
+    c.addEventListener('click', function(){ newsChip = c.getAttribute('data-chip'); applyNewsChip(); });
+  });
+  startNewsLive(items);
+  applyNewsChip();
+}
+function repaintNews(){
+  if (!PAGES.news) return;
+  fetchNewsFront(function(f){ if (f) NEWS_FRONT = f; renderNewsTab(); });
+  fetchTv(function(d){ NEWS_TV = d; renderNewsTab(); });
+}
 
 /* --- Alerts tab: push lives in Home (2026-11-20). The panel itself is
    push.js; it is also mounted in the About sheet. Re-mounted fresh on every
