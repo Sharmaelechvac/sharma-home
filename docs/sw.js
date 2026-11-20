@@ -92,7 +92,7 @@ self.addEventListener("push", function (e) {
     data: { url: d.url || "/sharma-home/" }
   };
   if (d.tag) opts.tag = d.tag;
-  e.waitUntil(self.registration.showNotification(d.title || "Sharma Home", opts));
+  e.waitUntil(self.registration.showNotification(d.title || "SHARMA360", opts));
 });
 
 self.addEventListener("notificationclick", function (e) {

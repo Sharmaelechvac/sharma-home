@@ -1,4 +1,4 @@
-/*! Sharma Home — notifications panel (self-contained module, no kit changes).
+/*! SHARMA360 — notifications panel (self-contained module, no kit changes).
  *
  * What it does: renders the whole notifications enable experience into any
  * element with [data-sharma-push] (or call SharmaPush.mount(el)):
@@ -59,7 +59,7 @@
     { key: "office", label: "Office" },
     { key: "crew", label: "Crew" }
   ];
-  var IOS_TIP = "On iPhone, notifications only work after you add Sharma Home to your Home Screen: tap Share, then \u2018Add to Home Screen\u2019, open it from there, and come back to this switch.";
+  var IOS_TIP = "On iPhone, notifications only work after you add SHARMA360 to your Home Screen: tap Share, then \u2018Add to Home Screen\u2019, open it from there, and come back to this switch.";
 
   function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
@@ -130,13 +130,13 @@
 
       if (!supported()) {
         html += '<p class="shp-status shp-status--off">This browser cannot receive notifications.</p>' +
-          '<p class="shp-note">On iPhone, open Sharma Home in Safari and add it to your Home Screen first (see below). On a computer, use Chrome or Edge.</p>';
+          '<p class="shp-note">On iPhone, open SHARMA360 in Safari and add it to your Home Screen first (see below). On a computer, use Chrome or Edge.</p>';
       } else if (state.sub) {
         html += '<p class="shp-status shp-status--on">Notifications are ON for this phone.</p>' +
           '<p class="shp-note">Alerts for ' + esc(state.person) + ' (' + esc(state.role) + ') are delivered to this device.</p>';
       } else if (perm === "denied") {
-        html += '<p class="shp-status shp-status--off">Notifications are blocked for Sharma Home on this phone.</p>' +
-          '<p class="shp-note">Turn them on in this phone\u2019s Settings for Sharma Home, then come back here.</p>';
+        html += '<p class="shp-status shp-status--off">Notifications are blocked for SHARMA360 on this phone.</p>' +
+          '<p class="shp-note">Turn them on in this phone\u2019s Settings for SHARMA360, then come back here.</p>';
       } else {
         html += '<p class="shp-status shp-status--off">Notifications are not turned on yet for this phone.</p>';
       }
@@ -145,11 +145,11 @@
       html += "</div>";
 
       if (ios && !installed) {
-        html += '<div class="shp-card shp-card--tip"><p class="shp-status">First, add Sharma Home to your Home Screen</p>' +
+        html += '<div class="shp-card shp-card--tip"><p class="shp-status">First, add SHARMA360 to your Home Screen</p>' +
           '<p class="shp-note">' + esc(IOS_TIP) + "</p></div>";
       } else if (!installed && supported()) {
-        html += '<div class="shp-card shp-card--tip"><p class="shp-status">Tip: install Sharma Home first</p>' +
-          '<p class="shp-note">Notifications work best when Sharma Home is installed (Add to Home Screen / Install app) and opened from its icon.</p></div>';
+        html += '<div class="shp-card shp-card--tip"><p class="shp-status">Tip: install SHARMA360 first</p>' +
+          '<p class="shp-note">Notifications work best when SHARMA360 is installed (Add to Home Screen / Install app) and opened from its icon.</p></div>';
       }
 
       /* identity + role */
@@ -227,7 +227,7 @@
         return navigator.serviceWorker.getRegistration().then(function (reg) {
           if (reg) return reg;
           /* Standalone panel page (notifications.html): register the app's own
-             worker, the same file Sharma Home uses. */
+             worker, the same file SHARMA360 uses. */
           return navigator.serviceWorker.register("sw.js");
         }).then(function () { return navigator.serviceWorker.ready; });
       } catch (e) { return Promise.reject(e); }
