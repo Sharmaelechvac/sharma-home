@@ -143,6 +143,72 @@
     .dash__date { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray); }
     .dash__greet { font-size: 24px; font-weight: 700; letter-spacing: -0.01em; color: var(--navy-dark); margin-top: 3px; line-height: 1.15; }
     .dash__asof { margin: 10px 2px 0; font-size: 12px; color: var(--gray); }
+    /* --- Today v2 (2026-11-20.23, Sanjay's approved package): day-at-a-glance
+       header, schedule as a timeline, inspections as verdict cards, bids as
+       cards with due countdowns, a real field photo up top, and a playful
+       NBA/NFL section at the bottom. Same Office TV data underneath. --- */
+    .glance { margin: 18px 0 4px; padding: 0 16px; }
+    .glance__date { font-size: 31px; font-weight: 800; letter-spacing: -0.02em; color: var(--navy-dark); line-height: 1.08; }
+    .glance__greet { font-size: 17px; font-weight: 600; color: var(--ink); margin-top: 4px; }
+    .glance__wx { font-size: 15px; font-weight: 600; color: var(--navy); margin-top: 5px; }
+    .glance__wx:empty { display: none; }
+    .gchips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .gchip { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 999px; background: rgba(38,67,135,0.09); color: var(--navy-dark); font-size: 14px; font-weight: 700; }
+    .gchip--gold { background: rgba(240,168,70,0.22); color: #7a4d00; }
+    .gchip--red { background: rgba(198,40,40,0.12); color: #b02323; }
+    .hero { margin: 14px 0 2px; }
+    .hero img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; background: #dfe4ee; }
+    .hero__cap { padding: 10px 16px 12px; background: var(--panel); }
+    .hero__cap b { display: block; font-size: 16px; color: var(--ink); }
+    .hero__cap span { display: block; font-size: 13px; color: var(--gray); margin-top: 1px; }
+    .hero a { text-decoration: none; }
+    .tline { position: relative; margin: 4px 0 0; padding: 2px 0 2px 0; }
+    .tline::before { content: ""; position: absolute; left: 16px; top: 14px; bottom: 14px; width: 3px; border-radius: 2px; background: rgba(38,67,135,0.16); }
+    .tstop { position: relative; display: flex; gap: 12px; padding: 7px 16px 7px 0; }
+    .tstop__dot { flex: 0 0 auto; width: 35px; display: flex; justify-content: center; padding-top: 20px; }
+    .tstop__dot i { width: 13px; height: 13px; border-radius: 50%; background: var(--gold); border: 3px solid #fff; box-shadow: 0 0 0 2px rgba(38,67,135,0.25); display: block; }
+    .tstop__card { flex: 1 1 auto; min-width: 0; display: flex; gap: 12px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 13px 14px; }
+    .tstop__main { flex: 1 1 auto; min-width: 0; }
+    .tstop__time { font-size: 19px; font-weight: 800; color: var(--navy); letter-spacing: -0.01em; }
+    .tstop__title { font-size: 17px; font-weight: 700; color: var(--ink); line-height: 1.25; margin-top: 1px; }
+    .tstop__builder { font-size: 14px; font-weight: 700; color: #b97a14; margin-top: 1px; }
+    .tstop__sub { font-size: 14px; color: var(--gray); margin-top: 1px; line-height: 1.35; }
+    .tstop__thumb { flex: 0 0 auto; width: 74px; height: 74px; border-radius: 12px; overflow: hidden; background: rgba(38,67,135,0.07); display: flex; align-items: center; justify-content: center; }
+    .tstop__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .tstop__thumb b { font-size: 21px; font-weight: 800; color: var(--navy); }
+    .tstop__thumb .mono { width: 46px; height: 46px; border-radius: 11px; }
+    .vcard { display: flex; gap: 12px; align-items: stretch; background: var(--panel); border: 1px solid var(--line); border-left: 6px solid var(--gray); border-radius: 16px; padding: 13px 14px; margin-top: 10px; }
+    .vcard--pass { border-left-color: #1e9e57; }
+    .vcard--fail { border-left-color: #d43a2f; }
+    .vcard--partial { border-left-color: #e8a13a; }
+    .vcard__main { flex: 1 1 auto; min-width: 0; }
+    .vcard__job { font-size: 17px; font-weight: 700; color: var(--ink); line-height: 1.25; }
+    .vcard__meta { font-size: 14px; color: var(--gray); margin-top: 2px; line-height: 1.4; }
+    .vchip { flex: 0 0 auto; align-self: center; padding: 8px 12px; border-radius: 999px; font-size: 14px; font-weight: 800; letter-spacing: 0.02em; background: rgba(38,67,135,0.09); color: var(--navy-dark); text-align: center; }
+    .vchip--pass { background: rgba(30,158,87,0.14); color: #14703d; }
+    .vchip--fail { background: rgba(212,58,47,0.13); color: #b02323; }
+    .vchip--partial { background: rgba(232,161,58,0.20); color: #8a5a00; }
+    .bidcard { display: flex; gap: 12px; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; margin-top: 10px; }
+    .bidcard__face { flex: 0 0 auto; width: 48px; height: 48px; border-radius: 12px; background: rgba(38,67,135,0.08); color: var(--navy); display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 800; }
+    .bidcard__main { flex: 1 1 auto; min-width: 0; }
+    .bidcard__proj { font-size: 17px; font-weight: 700; color: var(--ink); line-height: 1.25; }
+    .bidcard__sub { font-size: 14px; color: var(--gray); margin-top: 1px; line-height: 1.4; }
+    .duechip { flex: 0 0 auto; padding: 7px 11px; border-radius: 999px; font-size: 13px; font-weight: 800; background: rgba(38,67,135,0.09); color: var(--navy-dark); text-align: center; }
+    .duechip--red { background: rgba(212,58,47,0.13); color: #b02323; }
+    .sportcard { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 13px 14px; margin-top: 10px; }
+    .sportcard__tag { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; color: #fff; background: var(--navy); }
+    .sportcard__tag--nba { background: #c8102e; }
+    .sportcard__tag--nfl { background: #013369; }
+    .sportcard__body { font-size: 16px; font-weight: 600; color: var(--ink); line-height: 1.45; margin-top: 8px; }
+    .secnote { margin: 2px 16px 0; font-size: 13px; color: var(--gray); }
+    .seclink { display: inline-flex; align-items: center; gap: 4px; margin: 10px 16px 2px; min-height: 40px; font-size: 15px; font-weight: 700; color: var(--navy); text-decoration: none; }
+    html[data-scheme="dark"] .glance__date, html[data-scheme="dark"] .glance__greet { color: #F2F2F7; }
+    html[data-scheme="dark"] .glance__wx { color: #9db8ec; }
+    html[data-scheme="dark"] .gchip { background: rgba(255,255,255,0.10); color: #F2F2F7; }
+    html[data-scheme="dark"] .gchip--gold { background: rgba(240,168,70,0.25); color: #ffd9a0; }
+    html[data-scheme="dark"] .tstop__dot i { border-color: #1C1C1E; }
+    html[data-scheme="dark"] .tstop__time { color: #9db8ec; }
+    html[data-scheme="dark"] .seclink { color: #9db8ec; }
     .dcard { display: block; background: var(--panel); border-radius: 18px; padding: 15px 16px 7px; margin: 14px 0 0;
       box-shadow: 0 1px 2px rgba(26,47,97,0.07), 0 10px 26px rgba(26,47,97,0.07); color: var(--ink); text-decoration: none; }
     .dcard:active { background: #eef2fa; }
@@ -731,7 +797,7 @@ function repaintJobs(){ var p = PAGES.jobsPage; if (p) p.html(jobsPageHtml()); }
 function buildToday(page){
   PAGES.today = page;
   page.setHeader({ title: 'Today', trail: TRAIL_BTN });
-  page.html('<div class="wrap"><div style="background:#fff;border-radius:16px;padding:16px 18px;margin-top:14px;box-shadow:0 3px 10px rgba(16,24,40,0.08)"><img src="assets/sharma360-logo.png" alt="SHARMA360 Electric &amp; HVAC" style="width:100%;max-width:340px;height:auto;display:block;margin:0 auto"></div><div class="sk-pagehead"><div><h1 class="sk-title">Today</h1><p class="sk-note">Schedule · inspections · new bids</p></div></div><div id="dash"></div><footer>Sharma Electric &amp; HVAC · Lic. EC13013924 · CAC1823596<br>Kept current by Jarvis</footer></div>');
+  page.html('<div class="wrap"><div id="dash"></div><footer>Sharma Electric &amp; HVAC · Lic. EC13013924 · CAC1823596<br>Kept current by Jarvis</footer></div>');
   page.refreshable(function(){ loadDashboard(); return loadData(); });
   loadDashboard();
 }
@@ -767,32 +833,237 @@ function bidsCard(bids, href){
   return '<div class="dcard"><button type="button" class="dcard__headrow" data-bids-toggle aria-expanded="true" aria-label="New bids — tap to collapse">' + headInner + '</button>' + detail
     + '<a class="dcard__more" href="' + href + '">Open Bid Boards<svg class="sk-icon"><use href="#i-chevron-right"/></svg></a></div>';
 }
+/* --- Today v2 pieces (2026-11-20.23) --- */
+function parseDue(s){
+  if (!s) return null;
+  var t = String(s).replace(/^\s*[A-Za-z]{3,9}\s+/, '').replace(/\s*(ET|EST|EDT)\s*$/, '');
+  var nowY = new Date().getFullYear();
+  var dt = new Date(t + ' ' + nowY);
+  if (isNaN(dt)) return null;
+  if (dt.getTime() < Date.now() - 45 * 864e5) dt = new Date(t + ' ' + (nowY + 1));
+  return dt;
+}
+function dueChipHtml(b){
+  var dt = parseDue(b.due); if (!dt) return '';
+  var ms = dt.getTime() - Date.now();
+  var txt, red = false;
+  if (ms < 0) { txt = 'Overdue'; red = true; }
+  else if (ms < 48 * 3600e3) { var h = Math.max(1, Math.round(ms / 3600e3)); txt = h < 24 ? ('Due in ' + h + 'h') : 'Due tomorrow'; red = true; }
+  else { var days = Math.round(ms / 864e5); txt = days <= 13 ? ('Due in ' + days + 'd') : ('Due ' + dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })); }
+  return '<span class="duechip' + (red ? ' duechip--red' : '') + '">' + esc(txt) + '</span>';
+}
+function initialsOf(name){
+  var w = String(name || '').replace(/[^A-Za-z0-9 ]/g, ' ').split(/\s+/).filter(Boolean);
+  if (!w.length) return '•';
+  return (w[0].charAt(0) + (w.length > 1 ? w[w.length - 1].charAt(0) : '')).toUpperCase();
+}
+var PHOTO_FEEDS = [
+  { key: 'exj', base: 'https://sharmaelechvac.github.io/exj-root-tracker/', builder: 'EXJ Root' },
+  { key: 'crew', base: 'https://sharmaelechvac.github.io/sharmatrack-crew/', builder: 'Z Brothers' },
+  { key: 'nok', base: 'https://sharmaelechvac.github.io/sharmatrack-nok/', builder: 'NOK Construction' },
+  { key: 'brross', base: 'https://sharmaelechvac.github.io/sharmatrack-brross/', builder: 'BR Ross Construction' },
+  { key: 'dnr', base: 'https://sharmaelechvac.github.io/sharmatrack-dnr/', builder: 'DNR Contracting' },
+  { key: 'logan', base: 'https://sharmaelechvac.github.io/sharmatrack-logan/', builder: 'Logan Construction' },
+  { key: 'mrcela', base: 'https://sharmaelechvac.github.io/sharmatrack-mrcela/', builder: 'MRCELA Custom Homes' }
+];
+var DASH_PHOTOS = null;      /* null = not loaded yet; [] = loaded, none found */
+var DASH_PHOTOS_LOADING = false;
+function loadDashPhotos(){
+  if (DASH_PHOTOS !== null || DASH_PHOTOS_LOADING || typeof fetch !== 'function') { paintDashPhotos(); return; }
+  DASH_PHOTOS_LOADING = true;
+  var jobs = PHOTO_FEEDS.map(function(f){
+    return fetch(f.base + 'seed-photos.json', { cache: 'no-store' }).then(function(r){ if (!r.ok) throw new Error('feed'); return r.json(); }).then(function(list){
+      if (!Array.isArray(list)) return [];
+      return list.filter(function(p){ return p && p.url && (p.media_type || 'image/jpeg').indexOf('image') === 0; }).map(function(p){
+        return { job: String(p.job || ''), caption: p.caption || '', taken: p.taken_at || '', builder: f.builder, base: f.base,
+          url: /^https?:\/\//.test(p.url) ? p.url : f.base + String(p.url).replace(/^\//, '') };
+      });
+    }).catch(function(){ return []; });
+  });
+  Promise.all(jobs).then(function(parts){
+    var all = [];
+    parts.forEach(function(x){ all = all.concat(x); });
+    all.sort(function(a, b){ return String(b.taken).localeCompare(String(a.taken)); });
+    DASH_PHOTOS = all; DASH_PHOTOS_LOADING = false;
+    paintDashPhotos();
+  });
+}
+function paintDashPhotos(){
+  var hero = document.getElementById('dashHero');
+  if (hero && DASH_PHOTOS && DASH_PHOTOS.length) {
+    var p = DASH_PHOTOS[0];
+    var when = '';
+    if (p.taken) { var td = new Date(p.taken); if (!isNaN(td)) when = td.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); }
+    hero.innerHTML = '<div class="hero"><img src="' + esc(p.url) + '" alt="" loading="lazy"><div class="hero__cap"><b>' + esc(p.caption || 'Latest field photo') + '</b><span>' + esc(p.builder) + (when ? ' · ' + esc(when) : '') + ' · latest from the field</span></div></div>';
+  }
+  var thumbs = document.querySelectorAll('[data-thumb]');
+  thumbs.forEach(function(el){
+    var key = (el.getAttribute('data-thumb') || '').toLowerCase();
+    if (!key || !DASH_PHOTOS) return;
+    for (var i = 0; i < DASH_PHOTOS.length; i++) {
+      var ph = DASH_PHOTOS[i];
+      var jk = ph.job.toLowerCase().replace(/[^a-z0-9-]/g, '');
+      if (jk.length < 3) continue;
+      if (new RegExp('(^|[^a-z0-9])' + jk + '([^a-z0-9]|$)').test(key)) {
+        el.innerHTML = '<img src="' + esc(ph.url) + '" alt="" loading="lazy">';
+        break;
+      }
+    }
+  });
+}
+var WX_LABELS = { 0: 'Clear', 1: 'Mostly clear', 2: 'Partly cloudy', 3: 'Cloudy', 45: 'Fog', 48: 'Fog', 51: 'Light drizzle', 53: 'Drizzle', 55: 'Drizzle', 61: 'Light rain', 63: 'Rain', 65: 'Heavy rain', 71: 'Snow', 73: 'Snow', 75: 'Snow', 80: 'Showers', 81: 'Showers', 82: 'Heavy showers', 95: 'Thunderstorms', 96: 'Thunderstorms', 99: 'Thunderstorms' };
+var DASH_WX_CITY = '';
+function loadDashWeather(city, newsItems){
+  var slot = document.getElementById('dashWx');
+  if (!slot) return;
+  var fallback = function(){
+    var s2 = document.getElementById('dashWx');
+    if (!s2 || s2.textContent) return;
+    var items = newsItems || [];
+    for (var i = 0; i < items.length; i++) {
+      var h = (items[i] && items[i].headline) || '';
+      if (/NWS|Flood Warning|Storm Warning|Heat Advisory|Hurricane|Tropical/i.test(h)) { s2.textContent = h.length > 118 ? h.slice(0, 118) + '…' : h; return; }
+    }
+  };
+  if (!city) { fallback(); return; }
+  var ck = 'sh_home_wx_v1';
+  try {
+    var raw = localStorage.getItem(ck);
+    if (raw) { var c = JSON.parse(raw); if (c && c.date === nyToday() && c.city === city) { slot.textContent = c.text; return; } }
+  } catch (e) {}
+  if (DASH_WX_CITY === city || typeof fetch !== 'function') { if (DASH_WX_CITY !== city) fallback(); return; }
+  DASH_WX_CITY = city;
+  fetch('https://geocoding-api.open-meteo.com/v1/search?name=' + encodeURIComponent(city) + '&count=5&language=en&format=json').then(function(r){ return r.json(); }).then(function(g){
+    var res = (g && g.results) || [];
+    var spot = null;
+    for (var i = 0; i < res.length; i++) if (res[i].admin1 === 'Florida') { spot = res[i]; break; }
+    if (!spot && res.length) spot = res[0];
+    if (!spot) throw new Error('geo');
+    return fetch('https://api.open-meteo.com/v1/forecast?latitude=' + spot.latitude + '&longitude=' + spot.longitude + '&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&temperature_unit=fahrenheit&timezone=America%2FNew_York').then(function(r){ return r.json(); });
+  }).then(function(w){
+    var s2 = document.getElementById('dashWx');
+    if (!s2) return;
+    var cur = w.current || {}, day = w.daily || {};
+    var t = Math.round(cur.temperature_2m);
+    var label = WX_LABELS[cur.weather_code] || '';
+    var hi = day.temperature_2m_max && day.temperature_2m_max[0] != null ? Math.round(day.temperature_2m_max[0]) : null;
+    var lo = day.temperature_2m_min && day.temperature_2m_min[0] != null ? Math.round(day.temperature_2m_min[0]) : null;
+    var text = city + ' · ' + t + '°' + (label ? ' ' + label : '') + (hi != null && lo != null ? ' · Hi ' + hi + '° · Lo ' + lo + '°' : '');
+    s2.textContent = text;
+    try { localStorage.setItem(ck, JSON.stringify({ date: nyToday(), city: city, text: text })); } catch (e) {}
+  }).catch(fallback);
+}
+function sportsHtml(d){
+  var items = (d.news || []).filter(function(n){ return n && /^\s*(NBA|NFL)\b/i.test(n.headline || ''); });
+  if (!items.length) return '';
+  var cards = items.map(function(n){
+    var m = String(n.headline).match(/^\s*(NBA|NFL)\b\s*:?\s*(.*)$/i);
+    var league = m ? m[1].toUpperCase() : 'SPORTS';
+    var body = m ? m[2] : n.headline;
+    return '<div class="sportcard"><span class="sportcard__tag sportcard__tag--' + league.toLowerCase() + '">' + league + '</span><div class="sportcard__body">' + esc(body) + '</div></div>';
+  }).join('');
+  return '<h2 class="sec">NBA · NFL</h2><div class="secnote">Florida teams first · from the Sharma news wire</div><div style="padding:0 16px">' + cards + '</div>';
+}
+function builderOfStop(x, photo){
+  var t = x.title || '';
+  var m = t.match(/\(([^)]+)\)\s*$/);
+  if (m) return { name: m[1], title: t.replace(/\s*\([^)]+\)\s*$/, '') };
+  if (photo) return { name: photo.builder, title: t };
+  var names = ['EXJ Root', 'Z Brothers', 'NOK Construction', 'DNR Contracting', 'Logan Construction', 'BR Ross Construction', 'MRCELA Custom Homes'];
+  for (var i = 0; i < names.length; i++) if ((t + ' ' + (x.location || '')).indexOf(names[i].split(' ')[0]) >= 0 && (t + ' ' + (x.location || '')).indexOf(names[i]) >= 0) return { name: names[i], title: t };
+  if (/^DNR\b/.test(t)) return { name: 'DNR Contracting', title: t.replace(/^DNR\s+/, '') };
+  return { name: '', title: t };
+}
+function verdictOf(status){
+  var s = String(status || '').toUpperCase();
+  if (/FAIL|REJECT|DENIED|CORRECTION/.test(s)) return { cls: 'fail', label: status };
+  if (/PARTIAL/.test(s)) return { cls: 'partial', label: status };
+  if (/APPROV|PASS/.test(s)) return { cls: 'pass', label: status };
+  return { cls: '', label: status || 'Scheduled' };
+}
 function renderDashboard(d){
   var host = document.getElementById('dash'); if (!host) return;
   var today = nyToday(); var hr = nyHour();
   var greet = hr < 12 ? 'Good morning' : hr < 18 ? 'Good afternoon' : 'Good evening';
-  var head = '<div class="dash__head"><div class="dash__date">' + esc(nyDateLabel()) + '</div><div class="dash__greet">' + greet + ', Sanjay</div></div>';
-  if (!d || tvStale(d)) { host.innerHTML = head; return; }
+  var glance = '<div class="glance"><div class="glance__date">' + esc(nyDateLabel()) + '</div><div class="glance__greet">' + greet + ', Sanjay</div><div class="glance__wx" id="dashWx"></div>';
+  if (!d || tvStale(d)) { host.innerHTML = glance + '</div>'; return; }
   var myDayUrl = findAppUrl('My Day', 'https://sharmaelechvac.github.io/sharma-my-day/');
-  var bidsUrl = findAppUrl('Bid Boards', 'https://sharmaelechvac.github.io/sharma-bid-boards/');
-  var tvUrl = findAppUrl('Office TV', 'https://sharmaelechvac.github.io/sharma-office-tv/');
-  var cards = '';
+  var bidsUrl = findAppUrl('Bids', findAppUrl('Bid Boards', 'https://sharmaelechvac.github.io/sharma-bids/'));
+  var tvUrl = findAppUrl('Office TV', '#/tv');
   var sched = (d.mySchedule || []).filter(function(x){ return x.date === today; });
-  if (sched.length) cards += dashCard("TODAY'S SCHEDULE", sched.map(function(x){ return '<div class="drow"><span class="dtime">' + esc(x.time || '') + '</span><span class="dbody"><span class="dtitle">' + esc(x.title || '') + '</span>' + (x.location ? '<span class="dsub">' + esc(x.location) + '</span>' : '') + '</span></div>'; }).join(''), myDayUrl);
   var insp = [];
   if (d.todayInspections && d.todayInspections.date === today && d.todayInspections.entries) insp = d.todayInspections.entries;
   else if (Array.isArray(d.inspections)) insp = d.inspections.filter(function(x){ return !x.date || x.date === today; });
-  if (insp.length) cards += dashCard("TODAY'S INSPECTIONS", insp.map(function(x){ var name = x.title || x.name || x.address || ''; var meta = [x.type, x.number, x.time].filter(Boolean).join(' · '); return '<div class="drow"><span class="dbody"><span class="dtitle">' + esc(name) + '</span>' + (meta ? '<span class="dsub">' + esc(meta) + '</span>' : '') + (x.inspector ? '<span class="dsub">' + esc(x.inspector) + '</span>' : '') + '</span>' + (x.status ? '<span class="chip">' + esc(x.status) + '</span>' : '') + '</div>'; }).join(''), myDayUrl);
   var bids = (d.newBids || []).filter(function(x){ return x.date === today; });
-  if (bids.length) cards += bidsCard(bids, bidsUrl);
+  /* glance chips */
+  var chips = '';
+  if (sched.length) chips += '<span class="gchip">' + sched.length + (sched.length === 1 ? ' stop' : ' stops') + ' today</span>';
+  if (insp.length) {
+    var timed = insp.filter(function(x){ return x.time; });
+    chips += '<span class="gchip gchip--gold">' + (timed.length ? ('Next inspection ' + esc(timed[0].time)) : (insp.length + (insp.length === 1 ? ' inspection' : ' inspections'))) + '</span>';
+  }
+  var soonest = null;
+  (d.newBids || []).forEach(function(b){ var dt = parseDue(b.due); if (dt && (!soonest || dt < soonest.dt)) soonest = { dt: dt, b: b }; });
+  if (soonest && soonest.dt.getTime() - Date.now() < 14 * 864e5) chips += '<span class="gchip' + (soonest.dt.getTime() - Date.now() < 48 * 3600e3 ? ' gchip--red' : '') + '">Bid due ' + esc(soonest.dt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })) + '</span>';
+  else if (bids.length) chips += '<span class="gchip">' + bids.length + ' new ' + (bids.length === 1 ? 'bid' : 'bids') + ' today</span>';
+  if (chips) glance += '<div class="gchips">' + chips + '</div>';
+  glance += '</div>';
+  var out = glance + '<div id="dashHero"></div>';
+  /* schedule timeline */
+  if (sched.length) {
+    out += '<h2 class="sec">Today\'s schedule</h2><div class="tline">' + sched.map(function(x){
+      var b = builderOfStop(x, null);
+      var key = ((x.title || '') + ' ' + (x.location || '')).replace(/"/g, '');
+      return '<div class="tstop"><span class="tstop__dot"><i></i></span><div class="tstop__card"><div class="tstop__main">'
+        + '<div class="tstop__time">' + esc(x.time || 'All day') + '</div>'
+        + '<div class="tstop__title">' + esc(b.title) + '</div>'
+        + (b.name ? '<div class="tstop__builder">' + esc(b.name) + '</div>' : '')
+        + (x.location ? '<div class="tstop__sub">' + esc(x.location) + '</div>' : '')
+        + (x.notes ? '<div class="tstop__sub">' + esc(x.notes) + '</div>' : '')
+        + '</div><span class="tstop__thumb" data-thumb="' + esc(key) + '"><b>' + esc(initialsOf(b.name || b.title)) + '</b></span></div></div>';
+    }).join('') + '</div><a class="seclink" href="' + myDayUrl + '">Open My Day<svg class="sk-icon"><use href="#i-chevron-right"/></svg></a>';
+  }
+  /* inspections as verdict cards */
+  if (insp.length) {
+    out += '<h2 class="sec">Today\'s inspections</h2><div style="padding:0 16px">' + insp.map(function(x){
+      var v = verdictOf(x.status);
+      var name = x.title || x.name || x.address || '';
+      var meta = [x.type, x.number, x.time].filter(Boolean).join(' · ');
+      return '<div class="vcard vcard--' + v.cls + '"><div class="vcard__main"><div class="vcard__job">' + esc(name) + '</div>'
+        + (meta ? '<div class="vcard__meta">' + esc(meta) + '</div>' : '')
+        + (x.inspector ? '<div class="vcard__meta">Inspector ' + esc(x.inspector) + '</div>' : '')
+        + (x.note ? '<div class="vcard__meta">' + esc(x.note) + '</div>' : '')
+        + '</div><span class="vchip vchip--' + v.cls + '">' + esc(v.label) + '</span></div>';
+    }).join('') + '</div><a class="seclink" href="' + myDayUrl + '">Open My Day<svg class="sk-icon"><use href="#i-chevron-right"/></svg></a>';
+  }
+  /* new bids as cards */
+  if (bids.length) {
+    out += '<h2 class="sec">New bids</h2><div style="padding:0 16px">' + bids.map(function(x){
+      var sub = [x.from, x.received].filter(Boolean).join(' · ');
+      var meta = [];
+      if (x.sqft) meta.push(fmtSqft(x.sqft));
+      if (x.due) meta.push('Due ' + x.due);
+      return '<div class="bidcard"><span class="bidcard__face">' + esc(initialsOf(x.from || x.project)) + '</span><div class="bidcard__main"><div class="bidcard__proj">' + esc(x.project || '') + '</div>'
+        + (sub ? '<div class="bidcard__sub">' + esc(sub) + '</div>' : '')
+        + (meta.length ? '<div class="bidcard__sub">' + esc(meta.join(' · ')) + '</div>' : '')
+        + '</div>' + dueChipHtml(x) + '</div>';
+    }).join('') + '</div><a class="seclink" href="' + bidsUrl + '">Open Bids<svg class="sk-icon"><use href="#i-chevron-right"/></svg></a>';
+  }
+  /* important notes — unchanged house feature */
   var notes = d.importantNotes || d.important || d.notes || null;
   var noteItems = [];
   if (Array.isArray(notes)) noteItems = notes.map(function(n){ return typeof n === 'string' ? n : (n.title || n.text || ''); }).filter(Boolean);
   else if (typeof notes === 'string' && notes) noteItems = [notes];
-  if (noteItems.length) cards += dashCard('IMPORTANT NOTES', noteItems.map(function(n){ return '<div class="drow"><span class="dbody"><span class="dtitle">' + esc(n) + '</span></span></div>'; }).join(''), tvUrl);
+  if (noteItems.length) out += dashCard('IMPORTANT NOTES', noteItems.map(function(n){ return '<div class="drow"><span class="dbody"><span class="dtitle">' + esc(n) + '</span></span></div>'; }).join(''), tvUrl);
+  out += sportsHtml(d);
   var asof = '';
-  if (d.updatedAt) { var ud = new Date(d.updatedAt); if (!isNaN(ud)) asof = '<div class="dash__asof">Office TV data as of ' + esc(ud.toLocaleString('en-US', { timeZone: 'America/New_York', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })) + '</div>'; }
-  host.innerHTML = head + cards + asof;
+  if (d.updatedAt) { var ud = new Date(d.updatedAt); if (!isNaN(ud)) asof = '<div class="dash__asof" style="padding:0 16px">Office TV data as of ' + esc(ud.toLocaleString('en-US', { timeZone: 'America/New_York', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })) + '</div>'; }
+  host.innerHTML = out + asof;
+  /* async extras: field photos + weather where the crews are */
+  loadDashPhotos();
+  var city = '';
+  for (var i = 0; i < sched.length; i++) { var m2 = String(sched[i].location || '').match(/,\s*([A-Za-z .]+),\s*FL/); if (m2) { city = m2[1].trim(); break; } }
+  loadDashWeather(city, d.news || []);
 }
 function loadDashboard(){
   var host = document.getElementById('dash'); if (!host) return;
