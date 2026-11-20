@@ -149,6 +149,8 @@
        NBA/NFL section at the bottom. Same Office TV data underneath. --- */
     .glance { margin: 18px 0 4px; padding: 0 16px; }
     .glance__date { font-size: 31px; font-weight: 800; letter-spacing: -0.02em; color: var(--navy-dark); line-height: 1.08; }
+    .glance__clock { font-size: 27px; font-weight: 800; color: var(--navy); font-variant-numeric: tabular-nums; letter-spacing: 0.01em; margin-top: 3px; line-height: 1.1; }
+    .glance__clock small { font-size: 14px; font-weight: 700; color: var(--gray); letter-spacing: 0.04em; }
     .glance__greet { font-size: 17px; font-weight: 600; color: var(--ink); margin-top: 4px; }
     .glance__wx { font-size: 15px; font-weight: 600; color: var(--navy); margin-top: 5px; }
     .glance__wx:empty { display: none; }
@@ -834,6 +836,21 @@ function bidsCard(bids, href){
     + '<a class="dcard__more" href="' + href + '">Open Bid Boards<svg class="sk-icon"><use href="#i-chevron-right"/></svg></a></div>';
 }
 /* --- Today v2 pieces (2026-11-20.23) --- */
+var DASH_CLOCK_TIMER = null;
+function tickDashClock(){
+  var el = document.getElementById('dashClock');
+  if (!el) return;
+  var t = '';
+  try { t = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true }).format(new Date()); }
+  catch (e) { var d = new Date(); t = d.toLocaleTimeString('en-US'); }
+  el.innerHTML = esc(t.replace(/\s*(AM|PM)$/i, '')) + ' <small>' + esc((t.match(/(AM|PM)$/i) || [''])[0]) + ' ET · LIVE</small>';
+  var dl = document.getElementById('dashDate');
+  if (dl) { var lbl = nyDateLabel(); if (lbl && dl.textContent !== lbl) dl.textContent = lbl; }
+}
+function startDashClock(){
+  tickDashClock();
+  if (!DASH_CLOCK_TIMER) DASH_CLOCK_TIMER = setInterval(tickDashClock, 1000);
+}
 function parseDue(s){
   if (!s) return null;
   var t = String(s).replace(/^\s*[A-Za-z]{3,9}\s+/, '').replace(/\s*(ET|EST|EDT)\s*$/, '');
@@ -985,7 +1002,8 @@ function renderDashboard(d){
   var host = document.getElementById('dash'); if (!host) return;
   var today = nyToday(); var hr = nyHour();
   var greet = hr < 12 ? 'Good morning' : hr < 18 ? 'Good afternoon' : 'Good evening';
-  var glance = '<div class="glance"><div class="glance__date">' + esc(nyDateLabel()) + '</div><div class="glance__greet">' + greet + ', Sanjay</div><div class="glance__wx" id="dashWx"></div>';
+  var glance = '<div class="glance"><div class="glance__date" id="dashDate">' + esc(nyDateLabel()) + '</div><div class="glance__clock" id="dashClock"></div><div class="glance__greet">' + greet + ', Sanjay</div><div class="glance__wx" id="dashWx"></div>';
+  startDashClock();
   if (!d || tvStale(d)) { host.innerHTML = glance + '</div>'; return; }
   var myDayUrl = findAppUrl('My Day', 'https://sharmaelechvac.github.io/sharma-my-day/');
   var bidsUrl = findAppUrl('Bids', findAppUrl('Bid Boards', 'https://sharmaelechvac.github.io/sharma-bids/'));
