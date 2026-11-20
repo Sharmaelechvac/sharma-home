@@ -19,7 +19,7 @@
  * drift, phones either never update or refresh on every open. */
 (function () {
   "use strict";
-  var APP_VERSION = "2026-11-20.1";
+  var APP_VERSION = "2026-11-20.2";
   var GUARD_KEY = "sharma-refresh-at";    // sessionStorage: last purge stamp
   var CHECK_KEY = "sharma-vercheck-at";   // sessionStorage: last version check
   var DONE_KEY = "sharma-vercheck-done";  // sessionStorage: stamp already refreshed onto

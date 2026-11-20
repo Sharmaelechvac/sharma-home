@@ -154,6 +154,21 @@
     .dchev.open { transform: rotate(90deg); }
     .dcard__more { display: inline-flex; align-items: center; gap: 4px; margin: 8px 0 6px; min-height: 44px; font-size: 15px; font-weight: 700; color: var(--navy); text-decoration: none; }
     html[data-scheme="dark"] .dcard__more { color: #F2F2F7; }
+
+    /* --- Tile grid, no folders (Job A, 2026-11-20) --- */
+    .tsec { margin: 24px 2px 10px; font-size: 13px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--gray); }
+    .tgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 10px; }
+    @media (max-width: 360px) { .tgrid { grid-template-columns: repeat(3, 1fr); } }
+    .tile { display: flex; flex-direction: column; align-items: center; gap: 7px; padding: 2px 0 0; text-decoration: none; color: var(--ink); -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+    .tic { width: 58px; height: 58px; border-radius: 15px; background: rgba(38,67,135,0.09); color: var(--navy); display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 0 1px rgba(38,67,135,0.07); }
+    .tic.gold { background: rgba(240,168,70,0.25); color: var(--navy-dark); box-shadow: inset 0 0 0 1px rgba(240,168,70,0.35); }
+    .tic .sk-icon { width: 27px; height: 27px; }
+    .tile:active .tic { background: rgba(38,67,135,0.20); }
+    .tile:active .tic.gold { background: rgba(240,168,70,0.45); }
+    .tname { font-size: 13px; font-weight: 600; line-height: 1.2; text-align: center; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    html[data-scheme="dark"] .tic { background: rgba(255,255,255,0.10); color: #F2F2F7; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08); }
+    html[data-scheme="dark"] .tic.gold { background: rgba(240,168,70,0.32); color: #F2F2F7; }
+    html[data-scheme="dark"] .tile:active .tic { background: rgba(255,255,255,0.22); }
 </style>
 <style id="lockcss">
 html.locked body > *:not(#lock){display:none!important}
@@ -191,8 +206,7 @@ else{document.getElementById('lockerr').textContent='Wrong passcode';document.ge
 <main id="app" class="sk-stackview"></main>
 <nav class="sk-tabbar" aria-label="Sections"><div class="sk-tabbar__inner">
   <a class="sk-tab" href="#/" data-tab="apps" data-match="^#/?$"><svg class="sk-icon"><use href="#i-home"/></svg>Apps</a>
-  <a class="sk-tab" href="#/office" data-tab="office" data-match="^#/office"><svg class="sk-icon"><use href="#i-briefcase"/></svg>Office</a>
-  <a class="sk-tab" href="#/jobs" data-tab="jobs" data-match="^#/jobs"><svg class="sk-icon"><use href="#i-house"/></svg>Jobs</a>
+  <a class="sk-tab" href="#/today" data-tab="today" data-match="^#/today"><svg class="sk-icon"><use href="#i-calendar"/></svg>Today</a>
 </div></nav>
 <section class="sk-sheet" id="about-sheet" aria-label="About Sharma Home">
   <div class="sk-sheet__grab"></div>
@@ -227,61 +241,73 @@ function rowHtml(r){ return '<a class="row" href="' + r.u + '"><span class="mono
 function skelHtml(n){ var h = ''; for (var i = 0; i < n; i++) h += '<div class="sk-skel" style="height:62px;margin-bottom:10px"></div>'; return h; }
 function tabData(id){ if (!DATA) return null; for (var i = 0; i < DATA.tabs.length; i++) if (DATA.tabs[i].id === id) return DATA.tabs[i]; return null; }
 function sectionsHtml(tab){ return tab.sections.map(function(sec){ return '<h2 class="sec">' + esc(sec.title) + '</h2><div class="rows">' + sec.rows.map(rowHtml).join('') + '</div>'; }).join(''); }
-function foldersHtml(tab){ return (tab.folders || []).map(function(f, i){ return '<div class="folder"><button type="button" data-push="' + i + '"><span class="ftab"></span><span class="fname">' + esc(f.name) + '</span><span class="fcount">' + esc(f.count) + '</span><span class="fchev"><svg class="sk-icon"><use href="#i-chevron-right"/></svg></span></button></div>'; }).join(''); }
-function appsHomeHtml(){ var t = tabData('apps'); if (!t) return skelHtml(5); return sectionsHtml(t) + foldersHtml(t); }
+/* --- Tile grid model (Job A, 2026-11-20): every row in the data becomes one
+   tile on the Apps screen, grouped under quiet labels. Groups are built from
+   the data itself; any folder the data adds later still gets its own group,
+   so nothing can be lost when the data changes. --- */
+var SHORT_NAMES = { 'Material Pricing': 'Materials', 'Builders Application': 'Builders', 'Cloudflare Dashboard': 'Cloudflare', 'SharmaElectric.info': 'Website', 'Grok — Bot Team': 'Grok Team', 'Pending Projects': 'Pending', 'Builder Follow-up': 'Follow-up', 'EXJ Root Tracker': 'EXJ Root', 'MRCELA Custom Homes': 'MRCELA', 'SHARMATRACK Website': 'SHARMATRACK', 'SHARMATRACK — Links': 'Links', 'Sample House — Citrus Craft': 'Citrus Craft', 'Sample House — Template': 'Sample House', 'Owner Edition': 'Owner', 'Homeowner Hub': 'Homeowner', 'Smart Home Picker': 'Smart Home', 'Electrical Picker': 'Electrical', 'Code of Conduct': 'Conduct', '3131 W Eunice Dr': '3131 Eunice', '3262 W Eunice Dr': '3262 Eunice', '3286 W Eunice Dr': '3286 Eunice', '3274 W Eunice Dr': '3274 Eunice', '212 Marion Oaks Golf Rd': '212 Marion Oaks', '601 Marion Oaks Golf Rd': '601 Marion Oaks', '17385 SW 25th Cir': '17385 SW 25th', '14065 SW 48th Ave': '14065 SW 48th', '16321 SW 26th Terrace Rd': '16321 SW 26th', '109 Forest Park Ct': '109 Forest Park', 'Lot 69 Bella Collina': 'Lot 69 Bella', '9700 Blandford Rd': '9700 Blandford', 'Mukherjee Residence': 'Mukherjee', 'Glaze Residence': 'Glaze' };
+function tileShort(n){ return SHORT_NAMES[n] || n; }
+function tileHtml(r){
+  return '<a class="tile" href="' + r.u + '" aria-label="' + esc(r.n) + '" data-search="' + esc((r.n + ' ' + (r.d || '')).toLowerCase()) + '"><span class="tic' + (r.g ? ' gold' : '') + '"><svg class="sk-icon"><use href="#' + r.i + '"/></svg></span><span class="tname">' + esc(tileShort(r.n)) + '</span></a>';
+}
+function tileGroups(){
+  if (!DATA) return null;
+  var apps = tabData('apps'), office = tabData('office'), jobs = tabData('jobs');
+  var claimed = ['Office', 'Field — SHARMATRACK', 'Client-facing', 'Education', 'Admin'];
+  function sectionRows(tab){ var out = []; if (tab) tab.sections.forEach(function(s){ s.rows.forEach(function(r){ out.push(r); }); }); return out; }
+  function folderRows(name){ if (!apps || !apps.folders) return []; for (var i = 0; i < apps.folders.length; i++) if (apps.folders[i].name === name) return apps.folders[i].rows; return []; }
+  var groups = [
+    { label: 'Every day', rows: sectionRows(apps) },
+    { label: 'Office', rows: sectionRows(office).concat(folderRows('Office')) },
+    { label: 'Field — SHARMATRACK', rows: folderRows('Field — SHARMATRACK') },
+    { label: 'Jobs', rows: sectionRows(jobs) },
+    { label: 'Client-facing', rows: folderRows('Client-facing') },
+    { label: 'Education', rows: folderRows('Education') },
+    { label: 'Admin', rows: folderRows('Admin') }
+  ];
+  if (apps && apps.folders) apps.folders.forEach(function(f){ if (claimed.indexOf(f.name) === -1) groups.push({ label: f.name, rows: f.rows }); });
+  return groups.filter(function(g){ return g.rows.length; });
+}
+function tilesHtml(){
+  var groups = tileGroups();
+  if (!groups) return skelHtml(5);
+  return groups.map(function(g){ return '<div class="tgroup"><h2 class="tsec">' + esc(g.label) + '</h2><div class="tgrid">' + g.rows.map(tileHtml).join('') + '</div></div>'; }).join('');
+}
 function allRows(){ var out = []; if (!DATA) return out; DATA.tabs.forEach(function(t){ t.sections.forEach(function(sec){ sec.rows.forEach(function(r){ out.push({ r: r, where: sec.title }); }); }); }); var at = tabData('apps'); (at && at.folders ? at.folders : []).forEach(function(f){ f.rows.forEach(function(r){ out.push({ r: r, where: f.name }); }); }); return out; }
 
 function buildApps(page){
   PAGES.apps = page;
   page.setHeader({ title: 'Sharma Home', trail: TRAIL_BTN });
-  page.html('<div class="wrap"><div class="sk-pagehead"><div><h1 class="sk-title">Sharma Home</h1><p class="sk-note">Every Sharma app — for Sanjay only</p></div></div>'
-    + '<div id="dash"></div>'
+  page.html('<div class="wrap wrap--tiles"><div class="sk-pagehead"><div><h1 class="sk-title">Sharma Home</h1><p class="sk-note">Every Sharma app — for Sanjay only</p></div></div>'
     + '<label class="sk-search"><svg class="sk-icon"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Search apps…" autocomplete="off"><button type="button" class="sk-search__clear" aria-label="Clear"><svg class="sk-icon"><use href="#i-close"/></svg></button></label>'
-    + '<div id="appsHome">' + appsHomeHtml() + '</div><div id="appsResults"></div>'
+    + '<div id="appsHome">' + tilesHtml() + '</div><p class="nomatch" id="appsNomatch">No app matches that search.</p>'
     + '<footer>Sharma Electric &amp; HVAC · Lic. EC13013924 · CAC1823596<br>Kept current by Jarvis</footer></div>');
-  page.refreshable(function(){ loadDashboard(); return loadData().then(function(){ repaintApps(); }); });
+  page.refreshable(function(){ return loadData().then(function(){ repaintApps(); }); });
   var q = page.body.querySelector('#q');
   q.addEventListener('input', function(){ paintSearch(page, q.value); });
   page.body.querySelector('.sk-search__clear').addEventListener('click', function(){ q.value = ''; paintSearch(page, ''); q.focus(); });
-  loadDashboard();
 }
 function paintSearch(page, value){
-  var home = page.body.querySelector('#appsHome'), res = page.body.querySelector('#appsResults');
   var needle = (value || '').trim().toLowerCase();
-  if (!needle) { home.style.display = ''; res.innerHTML = ''; return; }
-  var hits = allRows().filter(function(x){ return (x.r.n + ' ' + x.r.d).toLowerCase().indexOf(needle) >= 0; });
-  home.style.display = 'none';
-  if (!hits.length) { res.innerHTML = '<p class="nomatch" style="display:block">No app matches that search.</p>'; return; }
-  var lastWhere = null, h = '';
-  hits.forEach(function(x){ if (x.where !== lastWhere) { h += '<h2 class="sec">' + esc(x.where) + '</h2>'; lastWhere = x.where; } h += '<div class="rows">' + rowHtml(x.r) + '</div>'; });
-  res.innerHTML = h;
+  var anyVisible = false;
+  page.body.querySelectorAll('.tgroup').forEach(function(g){
+    var vis = 0;
+    g.querySelectorAll('.tile').forEach(function(t){ var hit = !needle || (t.getAttribute('data-search') || '').indexOf(needle) >= 0; t.classList.toggle('hidden', !hit); if (hit) vis++; });
+    g.classList.toggle('hidden', !!needle && vis === 0);
+    if (vis) anyVisible = true;
+  });
+  var nm = page.body.querySelector('#appsNomatch');
+  if (nm) nm.style.display = needle && !anyVisible ? 'block' : 'none';
 }
-function repaintApps(){ var p = PAGES.apps; if (!p) return; var home = p.body.querySelector('#appsHome'); if (home) home.innerHTML = appsHomeHtml(); var q = p.body.querySelector('#q'); if (q && q.value) paintSearch(p, q.value); }
-function buildOffice(page){
-  PAGES.office = page;
-  page.setHeader({ title: 'Office', trail: TRAIL_BTN });
-  var t = tabData('office');
-  page.html('<div class="wrap"><div class="sk-pagehead"><div><h1 class="sk-title">Office apps</h1><p class="sk-note">The Hub office set — trackers and admin</p></div></div>' + (t ? sectionsHtml(t) : skelHtml(5)) + '</div>');
-  page.refreshable(function(){ return loadData().then(function(){ repaintOffice(); }); });
+function repaintApps(){ var p = PAGES.apps; if (!p) return; var home = p.body.querySelector('#appsHome'); if (home) home.innerHTML = tilesHtml(); var q = p.body.querySelector('#q'); if (q && q.value) paintSearch(p, q.value); }
+function buildToday(page){
+  PAGES.today = page;
+  page.setHeader({ title: 'Today', trail: TRAIL_BTN });
+  page.html('<div class="wrap"><div class="sk-pagehead"><div><h1 class="sk-title">Today</h1><p class="sk-note">Schedule · inspections · new bids</p></div></div><div id="dash"></div><footer>Sharma Electric &amp; HVAC · Lic. EC13013924 · CAC1823596<br>Kept current by Jarvis</footer></div>');
+  page.refreshable(function(){ loadDashboard(); return loadData(); });
+  loadDashboard();
 }
-function repaintOffice(){ var p = PAGES.office; if (!p) return; var t = tabData('office'); if (t) p.html('<div class="wrap"><div class="sk-pagehead"><div><h1 class="sk-title">Office apps</h1><p class="sk-note">The Hub office set — trackers and admin</p></div></div>' + sectionsHtml(t) + '</div>'); }
-function buildJobs(page){
-  PAGES.jobs = page;
-  page.setHeader({ title: 'Jobs', trail: TRAIL_BTN });
-  var t = tabData('jobs');
-  page.html('<div class="wrap"><div class="sk-pagehead"><div><h1 class="sk-title">Job pages</h1><p class="sk-note">Every house, job by job</p></div></div>' + (t ? sectionsHtml(t) : skelHtml(6)) + '</div>');
-  page.refreshable(function(){ return loadData().then(function(){ repaintJobs(); }); });
-}
-function repaintJobs(){ var p = PAGES.jobs; if (!p) return; var t = tabData('jobs'); if (t) p.html('<div class="wrap"><div class="sk-pagehead"><div><h1 class="sk-title">Job pages</h1><p class="sk-note">Every house, job by job</p></div></div>' + sectionsHtml(t) + '</div>'); }
-function repaintFolder(){ var pf = PAGES.folder; if (!pf || !nav || nav.top() !== pf.page) return; if (!tabData('apps')) return; buildFolder(pf.page, pf.idx); }
-function buildFolder(page, idx){
-  PAGES.folder = { page: page, idx: idx };
-  var t = tabData('apps'); if (!t || !t.folders || !t.folders[idx]) { page.html('<div class="wrap">' + skelHtml(4) + '</div>'); return; }
-  var f = t.folders[idx];
-  page.setHeader({ lead: '<a class="sk-header__btn sk-header__back" href="#/" data-back><svg class="sk-icon"><use href="#i-chevron-left"/></svg>Apps</a>', title: '', trail: TRAIL_BTN, backHref: '#/' });
-  page.html('<div class="wrap"><div class="sk-pagehead"><div><h1 class="sk-title">' + esc(f.name) + '</h1><p class="sk-note">' + esc(f.count) + '</p></div></div><div class="rows">' + f.rows.map(rowHtml).join('') + '</div></div>');
-  page.refreshable(function(){ return loadData().then(function(){ buildFolder(page, idx); }); });
-}
+function repaintToday(){ if (PAGES.today) loadDashboard(); }
 var TV_URL = 'https://sharmaelechvac.github.io/sharma-office-tv/data.json';
 var TV_CACHE_KEY = 'sh_home_tv_v1';
 function nyToday(){ try { return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()); } catch (e) { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); } }
@@ -349,21 +375,14 @@ function loadDashboard(){
   if (typeof fetch !== 'function') return;
   fetch(TV_URL, { cache: 'no-store' }).then(function(r){ if (!r.ok) throw new Error('tv ' + r.status); return r.json(); }).then(function(d){ try { localStorage.setItem(TV_CACHE_KEY, JSON.stringify(d)); } catch (e) {} renderDashboard(d); }).catch(function(){});
 }
-var BUILDERS = { apps: buildApps, office: buildOffice, jobs: buildJobs };
+var BUILDERS = { apps: buildApps, today: buildToday };
 function route(){
   if (!nav) return;
   scheduleSettle();
   var h = location.hash || '#/';
-  var m = h.match(/^#\/folder\/(\d+)$/);
-  if (m) {
-    var idx = +m[1], key = 'folder:' + idx;
-    if (!nav.stack[0] || nav.stack[0].key !== 'apps') nav.root('apps', buildApps);
-    var at = nav.find(key);
-    if (at === -1) nav.push(key, function(p){ buildFolder(p, idx); });
-    else if (nav.top().key !== key) nav.popTo(at);
-    return;
-  }
-  var tab = h.indexOf('#/office') === 0 ? 'office' : h.indexOf('#/jobs') === 0 ? 'jobs' : 'apps';
+  /* Legacy hashes (#/office, #/jobs, #/folder/N from the folder layout) all
+     land on the Apps tile grid, where those groups now live. */
+  var tab = h.indexOf('#/today') === 0 ? 'today' : 'apps';
   if (nav.stack[0] && nav.stack[0].key === tab) { if (nav.depth() > 1) nav.popTo(0); }
   else nav.root(tab, BUILDERS[tab]);
 }
@@ -397,9 +416,9 @@ function settleStack(){
 function scheduleSettle(){ if (settleTimer) clearTimeout(settleTimer); settleTimer = setTimeout(settleStack, 500); }
 function loadData(){
   if (window.SK && SK.data) {
-    return SK.data('apps.json', function(d){ DATA = d; repaintApps(); repaintOffice(); repaintJobs(); repaintFolder(); }).catch(function(){ if (!DATA) { DATA = EMBEDDED; repaintApps(); repaintOffice(); repaintJobs(); repaintFolder(); } });
+    return SK.data('apps.json', function(d){ DATA = d; repaintApps(); repaintToday(); }).catch(function(){ if (!DATA) { DATA = EMBEDDED; repaintApps(); repaintToday(); } });
   }
-  DATA = EMBEDDED; repaintApps(); repaintOffice(); repaintJobs(); repaintFolder();
+  DATA = EMBEDDED; repaintApps(); repaintToday();
   return Promise.resolve();
 }
 function fallbackRender(){
@@ -416,7 +435,7 @@ window.__bootHome = function(){
   nav = SK.stack('#app', { lead: LOGO_HTML, title: 'Sharma Home' });
   route();
   loadData();
-  setTimeout(function(){ if (!DATA) { DATA = EMBEDDED; repaintApps(); repaintOffice(); repaintJobs(); repaintFolder(); } }, 3000);
+  setTimeout(function(){ if (!DATA) { DATA = EMBEDDED; repaintApps(); repaintToday(); } }, 3000);
 };
 document.addEventListener('click', function(e){
   var bt = e.target.closest && e.target.closest('[data-bids-toggle]');
@@ -428,8 +447,6 @@ document.addEventListener('click', function(e){
     if (!cached) loadDashboard();
     return;
   }
-  var push = e.target.closest && e.target.closest('[data-push]');
-  if (push) { location.hash = '#/folder/' + push.getAttribute('data-push'); return; }
   var about = e.target.closest && e.target.closest('.js-about');
   if (about && window.SK && SK.openSheet) { SK.openSheet('about-sheet'); return; }
   if (e.target && e.target.id === 'lockAppBtn') {
