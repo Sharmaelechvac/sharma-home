@@ -366,6 +366,38 @@
     @media (min-width: 960px) { .tab-pill { display: none; } }
     @media (prefers-reduced-motion: reduce) { .tile .tic, .tab-pill { transition: none; } }
 </style>
+<style id="viewcss">
+/* Finder-style view options for the Apps launcher (Sanjay 2026-11-20:
+   white-based icons, view options = Enlarged icons / List, based on Finder) */
+.viewseg { display: inline-flex; background: rgba(38,67,135,0.09); border-radius: 10px; padding: 2px; gap: 2px; flex: 0 0 auto; align-self: center; }
+.viewseg button { border: 0; background: transparent; padding: 6px 11px; border-radius: 8px; color: var(--gray); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+.viewseg button svg { width: 17px; height: 17px; display: block; }
+.viewseg button[aria-pressed="true"] { background: #fff; color: var(--navy); box-shadow: 0 1px 4px rgba(16,24,40,0.20); }
+html[data-scheme="dark"] .viewseg { background: rgba(255,255,255,0.12); }
+html[data-scheme="dark"] .viewseg button[aria-pressed="true"] { background: rgba(255,255,255,0.22); color: #fff; }
+#appsHome.view-large .tgrid { grid-template-columns: repeat(3, 1fr); gap: 26px 12px; }
+#appsHome.view-large .tic { width: 88px; height: 88px; border-radius: 20px; }
+#appsHome.view-large .tic .sk-icon { width: 40px; height: 40px; }
+#appsHome.view-large .tname { font-size: 14.5px; }
+.lrows { background: #fff; border-radius: 16px; box-shadow: 0 3px 10px rgba(16,24,40,0.06), 0 1px 3px rgba(16,24,40,0.05); overflow: hidden; }
+.lrow { display: flex; align-items: center; gap: 12px; padding: 10px 14px; text-decoration: none; color: var(--ink); border-top: 1px solid rgba(38,67,135,0.07); }
+.lrow:first-child { border-top: 0; }
+button.lrow { width: 100%; font: inherit; background: none; border: 0; border-top: 1px solid rgba(38,67,135,0.07); text-align: left; cursor: pointer; }
+button.lrow:first-child { border-top: 0; }
+.lrow .ltic { width: 42px; height: 42px; border-radius: 11px; flex: 0 0 auto; overflow: hidden; background: #fff; color: var(--navy); box-shadow: inset 0 0 0 1px rgba(38,67,135,0.12); display: flex; align-items: center; justify-content: center; }
+.lrow .ltic img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.lrow .ltic .sk-icon { width: 21px; height: 21px; }
+.lrow .lt { flex: 1 1 auto; min-width: 0; }
+.lrow .ln { font-size: 16px; font-weight: 600; line-height: 1.25; }
+.lrow .ld { font-size: 13px; color: var(--gray); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lrow .arr { color: var(--gray); display: inline-flex; flex: 0 0 auto; }
+.lrow .arr .sk-icon { width: 16px; height: 16px; }
+.lrow:active { background: rgba(38,67,135,0.06); }
+html[data-scheme="dark"] .lrows { background: rgba(255,255,255,0.06); box-shadow: none; }
+html[data-scheme="dark"] .lrow { border-top-color: rgba(255,255,255,0.09); }
+html[data-scheme="dark"] button.lrow { border-top-color: rgba(255,255,255,0.09); }
+html[data-scheme="dark"] .lrow .ltic { box-shadow: inset 0 0 0 1px rgba(255,255,255,0.14); }
+</style>
 <style id="lockcss">
 html.locked body > *:not(#lock){display:none!important}
 #lock{display:none}
@@ -464,29 +496,29 @@ function tileShort(n){ return SHORT_NAMES[n] || n; }
    BuzzDrafts' own icon, and the real GitHub/Cloudflare marks. Keyed by the
    row's app name; job pages key by builder via TILE_ICON_URLS below. --- */
 var TILE_ICONS = {
-  'My Day': 'icons/apps/my-day-192.png', 'Office TV': 'icons/apps/office-tv-192.png',
-  'Sharma News': 'icons/apps/news-192.png', 'Legal Briefing': 'icons/apps/legal-192.png',
-  'Sanjay’s Hub': 'icons/apps/hub-192.png',
-  'Sharma Finance': 'icons/apps/finance-192.png', 'Material Pricing': 'icons/apps/materials-192.png',
-  'Permit Tracker': 'icons/apps/permits-192.png', 'Collections': 'icons/apps/collections-192.png',
-  'Bids': 'icons/apps/bids-leads-192.png', 'Bid Tracker': 'icons/apps/bids-leads-192.png', 'Builder Follow-up': 'icons/apps/follow-up-192.png',
-  'Inspection Prep': 'icons/apps/inspection-192.png', 'Pending Projects': 'icons/apps/pending-192.png',
-  'Cloudflare Dashboard': 'icons/apps/cloudflare-192.png',
-  'Bid Boards': 'icons/apps/bid-boards-192.png', 'Lead Finder': 'icons/apps/lead-finder-192.png',
-  'BuzzDrafts': 'icons/apps/buzzdrafts-192.png',
-  'Owner Edition': 'icons/apps/track-192.png', 'SHARMATRACK Website': 'icons/apps/tracksite-192.png',
-  'SHARMATRACK — Links': 'icons/apps/track-192.png', 'Code of Conduct': 'icons/apps/track-192.png',
+  'My Day': 'icons/apps/my-day-192.png?v=3', 'Office TV': 'icons/apps/office-tv-192.png?v=3',
+  'Sharma News': 'icons/apps/news-192.png?v=3', 'Legal Briefing': 'icons/apps/legal-192.png?v=3',
+  'Sanjay’s Hub': 'icons/apps/hub-192.png?v=3',
+  'Sharma Finance': 'icons/apps/finance-192.png?v=3', 'Material Pricing': 'icons/apps/materials-192.png?v=3',
+  'Permit Tracker': 'icons/apps/permits-192.png?v=3', 'Collections': 'icons/apps/collections-192.png?v=3',
+  'Bids': 'icons/apps/bids-leads-192.png?v=3', 'Bid Tracker': 'icons/apps/bids-leads-192.png?v=3', 'Builder Follow-up': 'icons/apps/follow-up-192.png?v=3',
+  'Inspection Prep': 'icons/apps/inspection-192.png?v=3', 'Pending Projects': 'icons/apps/pending-192.png?v=3',
+  'Cloudflare Dashboard': 'icons/apps/cloudflare-192.png?v=3',
+  'Bid Boards': 'icons/apps/bid-boards-192.png?v=3', 'Lead Finder': 'icons/apps/lead-finder-192.png?v=3',
+  'BuzzDrafts': 'icons/apps/buzzdrafts-192.png?v=3',
+  'Owner Edition': 'icons/apps/track-192.png?v=3', 'SHARMATRACK Website': 'icons/apps/tracksite-192.png?v=3',
+  'SHARMATRACK — Links': 'icons/apps/track-192.png?v=3', 'Code of Conduct': 'icons/apps/track-192.png?v=3',
   'Z Brothers': 'icons/builders/zbrothers-192.png?v=2', 'EXJ Root Tracker': 'icons/builders/exj-192.png?v=2',
   'NOK Construction': 'icons/builders/nok-192.png?v=2', 'MRCELA Custom Homes': 'icons/builders/mrcela-192.png?v=2',
   'Logan Construction': 'icons/builders/logan-192.png?v=2',
   'DNR Contracting': 'icons/builders/dnr-192.png?v=2', 'BR Ross Construction': 'icons/builders/brross-192.png?v=2',
-  'Builders Application': 'icons/apps/builders-192.png', 'Homeowner Hub': 'icons/apps/homeowner-192.png',
-  'Smart Home Picker': 'icons/apps/smart-home-192.png', 'HVAC Picker': 'icons/apps/hvac-picker-192.png',
-  'Electrical Picker': 'icons/apps/electrical-picker-192.png',
-  'Sample House — Citrus Craft': 'icons/builders/citrus-192.png?v=2', 'Sample House — Template': 'icons/apps/sample-house-192.png',
-  'Education': 'icons/apps/education-192.png', 'NEC Code': 'icons/apps/nec-code-192.png',
-  'Rough-In Guide': 'icons/apps/rough-in-192.png',
-  'GitHub': 'icons/apps/github-192.png', 'Grok — Bot Team': 'icons/apps/grok-192.png',
+  'Builders Application': 'icons/apps/builders-192.png?v=3', 'Homeowner Hub': 'icons/apps/homeowner-192.png?v=3',
+  'Smart Home Picker': 'icons/apps/smart-home-192.png?v=3', 'HVAC Picker': 'icons/apps/hvac-picker-192.png?v=3',
+  'Electrical Picker': 'icons/apps/electrical-picker-192.png?v=3',
+  'Sample House — Citrus Craft': 'icons/builders/citrus-192.png?v=2', 'Sample House — Template': 'icons/apps/sample-house-192.png?v=3',
+  'Education': 'icons/apps/education-192.png?v=3', 'NEC Code': 'icons/apps/nec-code-192.png?v=3',
+  'Rough-In Guide': 'icons/apps/rough-in-192.png?v=3',
+  'GitHub': 'icons/apps/github-192.png?v=3', 'Grok — Bot Team': 'icons/apps/grok-192.png?v=3',
   'Glaze Residence': 'icons/builders/nok-192.png?v=2', 'Forest Park': 'icons/builders/nok-192.png?v=2',
   'Bella Collina · Lot 69': 'icons/builders/logan-192.png?v=2', 'Blandford Residence': 'icons/builders/mrcela-192.png?v=2',
   'Mukherjee Residence': 'icons/builders/dnr-192.png?v=2', 'Fisher Loop': 'icons/builders/brross-192.png?v=2'
@@ -535,13 +567,46 @@ function tileGroups(){
 function jobsTileHtml(){
   var all = trackerRows().concat(jobPageRows());
   var search = 'jobs trackers job pages ' + all.map(function(r){ return r.n + ' ' + (r.d || ''); }).join(' ');
-  return '<button type="button" class="tile tile--jobs" data-jobs aria-label="Jobs — ' + esc(jobsSub()) + '" data-search="' + esc(search.toLowerCase()) + '"><span class="tic tic--img"><img src="icons/apps/track-192.png" alt="" loading="lazy"></span><span class="tname">Jobs</span><span class="tsub">' + esc(jobsSub()) + '</span></button>';
+  return '<button type="button" class="tile tile--jobs" data-jobs aria-label="Jobs — ' + esc(jobsSub()) + '" data-search="' + esc(search.toLowerCase()) + '"><span class="tic tic--img"><img src="icons/apps/track-192.png?v=3" alt="" loading="lazy"></span><span class="tname">Jobs</span><span class="tsub">' + esc(jobsSub()) + '</span></button>';
 }
 function jobsResultsHtml(){
   /* search-only group: the grouped entries as tiles, revealed by
      paintSearch while a query is typed; hidden the rest of the time */
   var all = trackerRows().concat(jobPageRows());
   return '<div class="tgroup jobs-results hidden"><h2 class="tsec">Jobs</h2><div class="tgrid">' + all.map(tileHtml).join('') + '</div></div>';
+}
+var APPS_VIEW_KEY = 'sh360_apps_view';
+function appsView(){ try { var v = localStorage.getItem(APPS_VIEW_KEY); return (v === 'large' || v === 'list') ? v : 'icons'; } catch (e) { return 'icons'; } }
+function setAppsView(v){ try { localStorage.setItem(APPS_VIEW_KEY, v); } catch (e) {} }
+function listRowHtml(r){
+  var icon = tileIcon(r);
+  var face = icon
+    ? '<span class="ltic"><img src="' + icon + '" alt="" loading="lazy"></span>'
+    : '<span class="ltic"><svg class="sk-icon"><use href="#' + r.i + '"/></svg></span>';
+  return '<a class="lrow" href="' + r.u + '" data-search="' + esc((r.n + ' ' + (r.d || '')).toLowerCase()) + '">' + face + '<span class="lt"><span class="ln">' + esc(r.n) + '</span>' + (r.d ? '<span class="ld" style="display:block">' + esc(r.d) + '</span>' : '') + '</span><span class="arr"><svg class="sk-icon"><use href="#i-chevron-right"/></svg></span></a>';
+}
+function jobsListRowHtml(){
+  var all = trackerRows().concat(jobPageRows());
+  var search = 'jobs trackers job pages ' + all.map(function(r){ return r.n + ' ' + (r.d || ''); }).join(' ');
+  return '<button type="button" class="lrow" data-jobs data-search="' + esc(search.toLowerCase()) + '"><span class="ltic"><img src="icons/apps/track-192.png?v=3" alt=""></span><span class="lt"><span class="ln">Jobs</span><span class="ld" style="display:block">' + esc(jobsSub()) + '</span></span><span class="arr"><svg class="sk-icon"><use href="#i-chevron-right"/></svg></span></button>';
+}
+function listHtml(){
+  var groups = tileGroups();
+  if (!groups) return skelHtml(5);
+  return groups.map(function(g){
+    if (g.jobsGroup) return '<div class="lgroup"><h2 class="tsec">' + esc(g.label) + '</h2><div class="lrows">' + jobsListRowHtml() + '</div></div>';
+    return '<div class="lgroup"><h2 class="tsec">' + esc(g.label) + '</h2><div class="lrows">' + g.rows.map(listRowHtml).join('') + '</div></div>';
+  }).join('');
+}
+function appsHomeHtml(){ return appsView() === 'list' ? listHtml() : tilesHtml(); }
+function appsHomeClass(){ var v = appsView(); return v === 'large' ? 'view-large' : (v === 'list' ? 'view-list' : ''); }
+function viewSegHtml(){
+  var v = appsView();
+  function btn(mode, label, path){ return '<button type="button" data-view="' + mode + '" aria-pressed="' + (v === mode) + '" aria-label="' + label + '" title="' + label + '"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">' + path + '</svg></button>'; }
+  var grid = '<rect x="2" y="2" width="7" height="7" rx="1.5"/><rect x="11" y="2" width="7" height="7" rx="1.5"/><rect x="2" y="11" width="7" height="7" rx="1.5"/><rect x="11" y="11" width="7" height="7" rx="1.5"/>';
+  var big = '<rect x="2" y="2" width="16" height="7" rx="1.5"/><rect x="2" y="11" width="7" height="7" rx="1.5"/><rect x="11" y="11" width="7" height="7" rx="1.5"/>';
+  var list = '<rect x="2" y="3" width="16" height="3.4" rx="1.7"/><rect x="2" y="8.3" width="16" height="3.4" rx="1.7"/><rect x="2" y="13.6" width="16" height="3.4" rx="1.7"/>';
+  return '<div class="viewseg" role="group" aria-label="View options">' + btn('icons', 'Icons', grid) + btn('large', 'Enlarged icons', big) + btn('list', 'List', list) + '</div>';
 }
 function tilesHtml(){
   var groups = tileGroups();
@@ -556,11 +621,20 @@ function allRows(){ var out = []; if (!DATA) return out; DATA.tabs.forEach(funct
 function buildApps(page){
   PAGES.apps = page;
   page.setHeader({ title: 'SHARMA360', trail: TRAIL_BTN });
-  page.html('<div class="wrap wrap--tiles"><div class="sk-pagehead"><div><h1 class="sk-title">SHARMA360</h1><p class="sk-note">Every Sharma app — for Sanjay only</p></div></div>'
+  page.html('<div class="wrap wrap--tiles"><div class="sk-pagehead"><div><h1 class="sk-title">SHARMA360</h1><p class="sk-note">Every Sharma app — for Sanjay only</p></div>' + viewSegHtml() + '</div>'
     + '<label class="sk-search"><svg class="sk-icon"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Search apps…" autocomplete="off"><button type="button" class="sk-search__clear" aria-label="Clear"><svg class="sk-icon"><use href="#i-close"/></svg></button></label>'
-    + '<div id="appsHome">' + tilesHtml() + '</div><div class="sk-empty hidden" id="appsNomatch"><div class="sk-empty__icon"><svg class="sk-icon"><use href="#i-search"/></svg></div><p class="sk-empty__title">No Results</p><p class="sk-empty__text" id="appsNomatchText">No app matches that search.</p></div>'
+    + '<div id="appsHome" class="' + appsHomeClass() + '">' + appsHomeHtml() + '</div><div class="sk-empty hidden" id="appsNomatch"><div class="sk-empty__icon"><svg class="sk-icon"><use href="#i-search"/></svg></div><p class="sk-empty__title">No Results</p><p class="sk-empty__text" id="appsNomatchText">No app matches that search.</p></div>'
     + '<footer>Sharma Electric &amp; HVAC · Lic. EC13013924 · CAC1823596<br>Kept current by Jarvis</footer></div>');
   page.refreshable(function(){ return loadData().then(function(){ repaintApps(); }); });
+  page.body.querySelectorAll('.viewseg [data-view]').forEach(function(b){
+    b.addEventListener('click', function(){
+      setAppsView(b.getAttribute('data-view'));
+      page.body.querySelectorAll('.viewseg [data-view]').forEach(function(x){ x.setAttribute('aria-pressed', String(x === b)); });
+      var home = page.body.querySelector('#appsHome');
+      if (home) { home.className = appsHomeClass(); home.innerHTML = appsHomeHtml(); }
+      var q0 = page.body.querySelector('#q'); if (q0 && q0.value) paintSearch(page, q0.value);
+    });
+  });
   var q = page.body.querySelector('#q');
   q.addEventListener('input', function(){ paintSearch(page, q.value); });
   page.body.querySelector('.sk-search__clear').addEventListener('click', function(){ q.value = ''; paintSearch(page, ''); q.focus(); });
@@ -568,9 +642,9 @@ function buildApps(page){
 function paintSearch(page, value){
   var needle = (value || '').trim().toLowerCase();
   var anyVisible = false;
-  page.body.querySelectorAll('.tgroup').forEach(function(g){
+  page.body.querySelectorAll('.tgroup, .lgroup').forEach(function(g){
     var vis = 0;
-    g.querySelectorAll('.tile').forEach(function(t){ var hit = !needle || (t.getAttribute('data-search') || '').indexOf(needle) >= 0; t.classList.toggle('hidden', !hit); if (hit) vis++; });
+    g.querySelectorAll('.tile, .lrow').forEach(function(t){ var hit = !needle || (t.getAttribute('data-search') || '').indexOf(needle) >= 0; t.classList.toggle('hidden', !hit); if (hit) vis++; });
     if (g.classList.contains('jobs-results') && !needle) { g.classList.add('hidden'); return; }
     g.classList.toggle('hidden', !!needle && vis === 0);
     if (vis) anyVisible = true;
@@ -582,7 +656,7 @@ function paintSearch(page, value){
     if (nt && needle) nt.textContent = 'No results for \u201C' + (value || '').trim() + '\u201D \u2014 try a shorter word, or clear the search to see every app.';
   }
 }
-function repaintApps(){ var p = PAGES.apps; if (!p) return; var home = p.body.querySelector('#appsHome'); if (home) home.innerHTML = tilesHtml(); var q = p.body.querySelector('#q'); if (q && q.value) paintSearch(p, q.value); }
+function repaintApps(){ var p = PAGES.apps; if (!p) return; var home = p.body.querySelector('#appsHome'); if (home) { home.className = appsHomeClass(); home.innerHTML = appsHomeHtml(); } var q = p.body.querySelector('#q'); if (q && q.value) paintSearch(p, q.value); }
 /* --- Jobs screen: every tracker + job page as full rows, pushed over the
    Apps grid. Reached via the hash #/jobs/list so the router pushes/pops
    it — the header back button, the edge swipe and the browser back button
