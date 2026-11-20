@@ -69,10 +69,10 @@
      "count": "3 apps",
      "rows": [
       {
-       "u": "https://sharmaelechvac.github.io/sharma-bid-boards/",
+       "u": "https://sharma-bids.sharma-crew.workers.dev",
        "i": "i-briefcase",
        "g": false,
-       "n": "Bid Boards",
+       "n": "Bids",
        "d": "Commercial + residential bids \u00b7 Mark Cuban"
       },
       {
@@ -283,13 +283,6 @@
        "g": false,
        "n": "Collections",
        "d": "Invoices & payments"
-      },
-      {
-       "u": "https://sharma-bids.sharma-crew.workers.dev",
-       "i": "i-briefcase",
-       "g": false,
-       "n": "Bid Tracker",
-       "d": "Bids & deadlines"
       },
       {
        "u": "https://sharma-followup.sharma-crew.workers.dev",
