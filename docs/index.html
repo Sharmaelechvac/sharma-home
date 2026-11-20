@@ -292,8 +292,9 @@ var SHORT_NAMES = { 'Material Pricing': 'Materials', 'Builders Application': 'Bu
 function tileShort(n){ return SHORT_NAMES[n] || n; }
 /* --- Tile logos (2026-11-20): every app tile carries a real logo — the
    custom AI family built on the Sharma lion+bolt mark (icons/apps/), the
-   builder's own company logo for Sharma Track editions and job pages
-   (icons/builders/, reused from the tracker repos), the Track app icon,
+   builder's own company logo over the SHARMATRACK word branding for
+   Sharma Track editions and job pages (icons/builders/, the stacked
+   tile-icon artwork composed in sharmatrack-core from the real logos),
    BuzzDrafts' own icon, and the real GitHub/Cloudflare marks. Keyed by the
    row's app name; job pages key by builder via TILE_ICON_URLS below. --- */
 var TILE_ICONS = {
@@ -309,24 +310,24 @@ var TILE_ICONS = {
   'BuzzDrafts': 'icons/apps/buzzdrafts-192.png',
   'Owner Edition': 'icons/apps/track-192.png', 'SHARMATRACK Website': 'icons/apps/tracksite-192.png',
   'SHARMATRACK — Links': 'icons/apps/track-192.png', 'Code of Conduct': 'icons/apps/track-192.png',
-  'Z Brothers': 'icons/builders/zbrothers-192.png', 'EXJ Root Tracker': 'icons/builders/exj-192.png',
-  'NOK Construction': 'icons/builders/nok-192.png', 'MRCELA Custom Homes': 'icons/builders/mrcela-192.png',
-  'Logan Construction': 'icons/builders/logan-192.png',
-  'DNR Contracting': 'icons/apps/track-192.png', 'BR Ross Construction': 'icons/apps/track-192.png',
+  'Z Brothers': 'icons/builders/zbrothers-192.png?v=2', 'EXJ Root Tracker': 'icons/builders/exj-192.png?v=2',
+  'NOK Construction': 'icons/builders/nok-192.png?v=2', 'MRCELA Custom Homes': 'icons/builders/mrcela-192.png?v=2',
+  'Logan Construction': 'icons/builders/logan-192.png?v=2',
+  'DNR Contracting': 'icons/builders/dnr-192.png?v=2', 'BR Ross Construction': 'icons/builders/brross-192.png?v=2',
   'Builders Application': 'icons/apps/builders-192.png', 'Homeowner Hub': 'icons/apps/homeowner-192.png',
   'Smart Home Picker': 'icons/apps/smart-home-192.png', 'HVAC Picker': 'icons/apps/hvac-picker-192.png',
   'Electrical Picker': 'icons/apps/electrical-picker-192.png',
-  'Sample House — Citrus Craft': 'icons/apps/sample-house-192.png', 'Sample House — Template': 'icons/apps/sample-house-192.png',
+  'Sample House — Citrus Craft': 'icons/builders/citrus-192.png?v=2', 'Sample House — Template': 'icons/apps/sample-house-192.png',
   'Education': 'icons/apps/education-192.png', 'NEC Code': 'icons/apps/nec-code-192.png',
   'Rough-In Guide': 'icons/apps/rough-in-192.png',
   'GitHub': 'icons/apps/github-192.png', 'Grok — Bot Team': 'icons/apps/grok-192.png',
-  'Glaze Residence': 'icons/builders/nok-192.png', '109 Forest Park Ct': 'icons/builders/nok-192.png',
-  'Lot 69 Bella Collina': 'icons/builders/logan-192.png', '9700 Blandford Rd': 'icons/builders/mrcela-192.png',
-  'Mukherjee Residence': 'icons/apps/track-192.png', '178 Fisher Loop': 'icons/apps/track-192.png'
+  'Glaze Residence': 'icons/builders/nok-192.png?v=2', '109 Forest Park Ct': 'icons/builders/nok-192.png?v=2',
+  'Lot 69 Bella Collina': 'icons/builders/logan-192.png?v=2', '9700 Blandford Rd': 'icons/builders/mrcela-192.png?v=2',
+  'Mukherjee Residence': 'icons/builders/dnr-192.png?v=2', '178 Fisher Loop': 'icons/builders/brross-192.png?v=2'
 };
 var TILE_ICON_URLS = [
-  ['sharmatrack-crew/', 'icons/builders/zbrothers-192.png'],
-  ['exj-root-tracker', 'icons/builders/exj-192.png']
+  ['sharmatrack-crew/', 'icons/builders/zbrothers-192.png?v=2'],
+  ['exj-root-tracker', 'icons/builders/exj-192.png?v=2']
 ];
 function tileIcon(r){
   if (TILE_ICONS[r.n]) return TILE_ICONS[r.n];
