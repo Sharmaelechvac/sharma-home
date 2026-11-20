@@ -44,6 +44,19 @@
     .sk-icon { width: 24px; height: 24px; flex: none; }
     .sk-icon--sm { width: 18px; height: 18px; }
     .sk-icon--lg { width: 30px; height: 30px; }
+    /* Header guarantee (2026-11-20.19): the top bar must ALWAYS be present —
+       solid, full height, page starting below it — even if the kit stylesheet
+       is late, cached stale, or missing. Values mirror sharma-kit.css through
+       the same variables, so when the kit loads nothing changes; when it
+       doesn't, the fallbacks paint the navy bar with the gold rule. */
+    .sk-header { position: sticky; top: 0; z-index: 40;
+      background: var(--sk-header-bg, #264387); color: var(--sk-header-fg, #fff);
+      border-bottom: 3px solid var(--sk-header-rule, #F0A846);
+      padding-top: env(safe-area-inset-top, 0px); }
+    .sk-header__bar { height: var(--sk-header-h, 52px); display: grid;
+      grid-template-columns: 1fr auto 1fr; align-items: center;
+      max-width: 960px; margin: 0 auto; }
+    .sk-header__title { font-weight: 600; white-space: nowrap; }
     html, body { overscroll-behavior: none; }
     .row, .folder button, header { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
     .wrap { padding-bottom: calc(30px + env(safe-area-inset-bottom, 0px)); }
