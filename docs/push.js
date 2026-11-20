@@ -24,14 +24,10 @@
  * Every server call is best-effort: if the worker is unreachable the panel
  * still works from the on-phone copy of the preferences.
  *
- * HOOK STILL NEEDED in docs/index.html (left for the Home rebuild stream,
- * whose index.html edits are in flight — this file does not touch it):
- *   1) In <head>:  <link rel="stylesheet" href="push.css">
- *      Before </body>: <script src="push.js" defer></script>
- *   2) In the About sheet (#about-sheet), replace the static "Notifications"
- *      row in the Install list (the one that says alerts live in each app)
- *      with:  <div data-sharma-push></div>
- * Until that hook lands, the same panel is live at notifications.html. */
+ * HOOK LANDED in docs/index.html (lean Home build, 2026-11-20): push.css is
+ * linked in <head>, push.js loads before </body>, and the About sheet's
+ * Install list mounts this panel via <div data-sharma-push></div>. The same
+ * panel also stands alone at notifications.html. */
 (function () {
   "use strict";
 
