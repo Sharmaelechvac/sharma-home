@@ -10,14 +10,17 @@
  *   - person name + role picker (Owner / Office / Crew), persisted on the
  *     phone; alert switches start at the role's defaults
  *   - per-alert switches synced to the worker: GET/POST /prefs
- *   - "Send test notification": POST /send { test: true, person, role }
+ *   - "Send test notification": POST /test { endpoint } — the worker sends
+ *     a test only to this device's own subscription. (The worker's /send
+ *     route is secret-locked server-side and is never called from a page;
+ *     real alert sends happen server-side from the watchers.)
  *
  * Push server: https://sharma-push.sharma-crew.workers.dev
  *   GET  /vapid-public-key  -> { publicKey } (plain text also accepted)
  *   POST /subscribe         -> { subscription, person, role, app }
  *   GET  /prefs?person=&role= -> { prefs: {...} } (bare object also accepted)
  *   POST /prefs             -> { person, role, prefs }
- *   POST /send              -> { person, role, test, title, body, url }
+ *   POST /test              -> { endpoint }
  * Every server call is best-effort: if the worker is unreachable the panel
  * still works from the on-phone copy of the preferences.
  *
@@ -277,16 +280,16 @@
     }
 
     function sendTest() {
+      if (!state.sub || !state.sub.endpoint) {
+        state.err = "No subscription on this phone yet \u2014 turn notifications on first.";
+        render();
+        return;
+      }
       state.busy = true; state.err = ""; state.msg = ""; render();
-      jsonFetch("/send", {
+      jsonFetch("/test", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          person: state.person, role: state.role, test: true,
-          title: "Sharma Home test",
-          body: "Test notification \u2014 push is working on this phone.",
-          url: "/sharma-home/"
-        })
+        body: JSON.stringify({ endpoint: state.sub.endpoint })
       }).then(function () {
         state.busy = false; state.msg = "Test sent \u2014 it should land on this phone in a few seconds."; render();
       }).catch(function (e) {
