@@ -137,6 +137,23 @@
     html[data-scheme="dark"] h2.sec, html[data-scheme="dark"] .fname { color: #F2F2F7; }
     html[data-scheme="dark"] .dcard:active, html[data-scheme="dark"] a.row:active, html[data-scheme="dark"] .folder > button:active { background: #2C2C2E; }
     html[data-scheme="dark"] .chip { color: #6FD08C; background: rgba(111,208,140,0.16); }
+
+    /* --- Refresh button + expandable New Bids card (2026-11-19) --- */
+    @keyframes sharma-refresh-spin { to { transform: rotate(360deg); } }
+    [data-refresh].is-updating .sk-icon { animation: sharma-refresh-spin 0.9s linear infinite; }
+    .refresh-btn { gap: 6px; }
+    .refresh-btn .refresh-label { font-size: 15px; font-weight: 600; }
+    @media (max-width: 520px) { .refresh-btn .refresh-label { display: none; } }
+    .dcard__toggle { display: block; width: 100%; background: none; border: 0; padding: 0; margin: 0; font: inherit; color: inherit; text-align: left; cursor: pointer; }
+    .dcard__headrow { display: flex; align-items: center; gap: 10px; min-height: 32px; }
+    button.dcard__headrow { width: 100%; background: none; border: 0; padding: 0; margin: 0; font: inherit; color: inherit; text-align: left; cursor: pointer; }
+    .dcard__headrow + .drow { border-top: none; }
+    .dcard__count { font-size: 13px; font-weight: 700; color: var(--navy); background: rgba(38,67,135,0.10); border-radius: 999px; padding: 3px 10px; }
+    html[data-scheme="dark"] .dcard__count { color: #F2F2F7; background: rgba(255,255,255,0.14); }
+    .dchev { margin-left: auto; color: var(--gray); display: inline-flex; transition: transform 0.15s ease; }
+    .dchev.open { transform: rotate(90deg); }
+    .dcard__more { display: inline-flex; align-items: center; gap: 4px; margin: 8px 0 6px; min-height: 44px; font-size: 15px; font-weight: 700; color: var(--navy); text-decoration: none; }
+    html[data-scheme="dark"] .dcard__more { color: #F2F2F7; }
 </style>
 <style id="lockcss">
 html.locked body > *:not(#lock){display:none!important}
@@ -192,6 +209,7 @@ else{document.getElementById('lockerr').textContent='Wrong passcode';document.ge
     <div class="sk-list">
       <div class="sk-row"><div class="sk-row__body"><div class="sk-row__title">Add to Home Screen</div><div class="sk-row__sub">Open in Safari, tap Share, then Add to Home Screen — opens full-screen, like an app</div></div></div>
       <div class="sk-row"><div class="sk-row__body"><div class="sk-row__title">Notifications</div><div class="sk-row__sub">Alerts live in each app — My Day, Bid Boards, Permits — not in Home</div></div></div>
+      <button type="button" class="sk-row" data-refresh aria-label="Refresh — get the newest copy of Sharma Home"><span class="sk-row__body"><span class="sk-row__title refresh-label" style="display:block">Refresh</span><span class="sk-row__sub" style="display:block;white-space:normal">Get the newest copy now — clears the saved offline copy and reloads. Settings stay.</span></span><svg class="sk-icon"><use href="#i-refresh"/></svg></button>
     </div>
     <p style="margin:16px 0"><button type="button" class="sk-btn sk-btn--danger" id="lockAppBtn">Lock app</button></p>
   </div>
@@ -202,6 +220,8 @@ var DATA = null, nav = null, booted = false;
 var PAGES = {};
 var LOGO_HTML = '<span class="sk-header__logo"><img src="https://sharma-kit.sharma-crew.workers.dev/assets/logo-white-header.png" alt="Sharma Electric & HVAC" width="103" height="20"></span>';
 var INFO_BTN = '<button class="sk-header__btn js-about" aria-label="About Sharma Home"><svg class="sk-icon"><use href="#i-info"/></svg></button>';
+var REFRESH_BTN = '<button type="button" class="sk-header__btn refresh-btn" data-refresh aria-label="Refresh — get the newest copy of Sharma Home"><svg class="sk-icon"><use href="#i-refresh"/></svg><span class="refresh-label">Refresh</span></button>';
+var TRAIL_BTN = REFRESH_BTN + INFO_BTN;
 function esc(t){ return String(t == null ? "" : t).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
 function rowHtml(r){ return '<a class="row" href="' + r.u + '"><span class="mono' + (r.g ? ' gold' : '') + '"><svg class="sk-icon"><use href="#' + r.i + '"/></svg></span><span class="rt"><span class="rn">' + esc(r.n) + '</span><span class="rd">' + esc(r.d) + '</span></span><span class="arr"><svg class="sk-icon"><use href="#i-chevron-right"/></svg></span></a>'; }
 function skelHtml(n){ var h = ''; for (var i = 0; i < n; i++) h += '<div class="sk-skel" style="height:62px;margin-bottom:10px"></div>'; return h; }
@@ -213,7 +233,7 @@ function allRows(){ var out = []; if (!DATA) return out; DATA.tabs.forEach(funct
 
 function buildApps(page){
   PAGES.apps = page;
-  page.setHeader({ title: 'Sharma Home', trail: INFO_BTN });
+  page.setHeader({ title: 'Sharma Home', trail: TRAIL_BTN });
   page.html('<div class="wrap"><div class="sk-pagehead"><div><h1 class="sk-title">Sharma Home</h1><p class="sk-note">Every Sharma app — for Sanjay only</p></div></div>'
     + '<div id="dash"></div>'
     + '<label class="sk-search"><svg class="sk-icon"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Search apps…" autocomplete="off"><button type="button" class="sk-search__clear" aria-label="Clear"><svg class="sk-icon"><use href="#i-close"/></svg></button></label>'
@@ -239,7 +259,7 @@ function paintSearch(page, value){
 function repaintApps(){ var p = PAGES.apps; if (!p) return; var home = p.body.querySelector('#appsHome'); if (home) home.innerHTML = appsHomeHtml(); var q = p.body.querySelector('#q'); if (q && q.value) paintSearch(p, q.value); }
 function buildOffice(page){
   PAGES.office = page;
-  page.setHeader({ title: 'Office', trail: INFO_BTN });
+  page.setHeader({ title: 'Office', trail: TRAIL_BTN });
   var t = tabData('office');
   page.html('<div class="wrap"><div class="sk-pagehead"><div><h1 class="sk-title">Office apps</h1><p class="sk-note">The Hub office set — trackers and admin</p></div></div>' + (t ? sectionsHtml(t) : skelHtml(5)) + '</div>');
   page.refreshable(function(){ return loadData().then(function(){ repaintOffice(); }); });
@@ -247,7 +267,7 @@ function buildOffice(page){
 function repaintOffice(){ var p = PAGES.office; if (!p) return; var t = tabData('office'); if (t) p.html('<div class="wrap"><div class="sk-pagehead"><div><h1 class="sk-title">Office apps</h1><p class="sk-note">The Hub office set — trackers and admin</p></div></div>' + sectionsHtml(t) + '</div>'); }
 function buildJobs(page){
   PAGES.jobs = page;
-  page.setHeader({ title: 'Jobs', trail: INFO_BTN });
+  page.setHeader({ title: 'Jobs', trail: TRAIL_BTN });
   var t = tabData('jobs');
   page.html('<div class="wrap"><div class="sk-pagehead"><div><h1 class="sk-title">Job pages</h1><p class="sk-note">Every house, job by job</p></div></div>' + (t ? sectionsHtml(t) : skelHtml(6)) + '</div>');
   page.refreshable(function(){ return loadData().then(function(){ repaintJobs(); }); });
@@ -256,7 +276,7 @@ function repaintJobs(){ var p = PAGES.jobs; if (!p) return; var t = tabData('job
 function buildFolder(page, idx){
   var t = tabData('apps'); if (!t || !t.folders || !t.folders[idx]) { page.html('<div class="wrap">' + skelHtml(4) + '</div>'); return; }
   var f = t.folders[idx];
-  page.setHeader({ lead: '<a class="sk-header__btn sk-header__back" href="#/" data-back><svg class="sk-icon"><use href="#i-chevron-left"/></svg>Apps</a>', title: '', trail: INFO_BTN, backHref: '#/' });
+  page.setHeader({ lead: '<a class="sk-header__btn sk-header__back" href="#/" data-back><svg class="sk-icon"><use href="#i-chevron-left"/></svg>Apps</a>', title: '', trail: TRAIL_BTN, backHref: '#/' });
   page.html('<div class="wrap"><div class="sk-pagehead"><div><h1 class="sk-title">' + esc(f.name) + '</h1><p class="sk-note">' + esc(f.count) + '</p></div></div><div class="rows">' + f.rows.map(rowHtml).join('') + '</div></div>');
   page.refreshable(function(){ return loadData().then(function(){ buildFolder(page, idx); }); });
 }
@@ -268,6 +288,29 @@ function nyDateLabel(){ try { return new Intl.DateTimeFormat('en-US', { timeZone
 function findAppUrl(name, fallback){ if (DATA) { var rows = allRows(); for (var i = 0; i < rows.length; i++) if (rows[i].r.n === name) return rows[i].r.u; } return fallback; }
 function tvStale(d){ if (!d || !d.updatedAt) return true; var t = Date.parse(d.updatedAt); if (isNaN(t)) return true; return (Date.now() - t) > 36 * 3600 * 1000; }
 function dashCard(label, inner, href){ return '<a class="dcard" href="' + href + '"><div class="dcard__label">' + esc(label) + '</div>' + inner + '</a>'; }
+var dashBidsOpen = false;
+function fmtSqft(v){ var n = Number(v); if (!isFinite(n) || n <= 0) return String(v); return n.toLocaleString('en-US') + ' sq ft'; }
+function bidsCard(bids, href){
+  var headInner = '<span class="dcard__label">NEW BIDS</span><span class="dcard__count">' + bids.length + '</span><span class="dchev' + (dashBidsOpen ? ' open' : '') + '"><svg class="sk-icon"><use href="#i-chevron-right"/></svg></span>';
+  if (!dashBidsOpen) {
+    var rows = bids.map(function(x){
+      var sub = [x.from, x.received].filter(Boolean).join(' · ');
+      return '<div class="drow"><span class="dbody"><span class="dtitle">' + esc(x.project || '') + '</span>' + (sub ? '<span class="dsub">' + esc(sub) + '</span>' : '') + '</span></div>';
+    }).join('');
+    return '<div class="dcard"><button type="button" class="dcard__toggle" data-bids-toggle aria-expanded="false" aria-label="New bids — tap for details"><span class="dcard__headrow">' + headInner + '</span>' + rows + '</button></div>';
+  }
+  var detail = bids.map(function(x){
+    var who = [x.from, x.received].filter(Boolean).join(' · ');
+    var meta = [];
+    if (x.sqft) meta.push(fmtSqft(x.sqft));
+    if (x.due) meta.push('Due ' + x.due);
+    return '<div class="drow"><span class="dbody"><span class="dtitle">' + esc(x.project || '') + '</span>'
+      + (who ? '<span class="dsub">' + esc(who) + '</span>' : '')
+      + (meta.length ? '<span class="dsub">' + esc(meta.join(' · ')) + '</span>' : '') + '</span></div>';
+  }).join('');
+  return '<div class="dcard"><button type="button" class="dcard__headrow" data-bids-toggle aria-expanded="true" aria-label="New bids — tap to collapse">' + headInner + '</button>' + detail
+    + '<a class="dcard__more" href="' + href + '">Open Bid Boards<svg class="sk-icon"><use href="#i-chevron-right"/></svg></a></div>';
+}
 function renderDashboard(d){
   var host = document.getElementById('dash'); if (!host) return;
   var today = nyToday(); var hr = nyHour();
@@ -285,7 +328,7 @@ function renderDashboard(d){
   else if (Array.isArray(d.inspections)) insp = d.inspections.filter(function(x){ return !x.date || x.date === today; });
   if (insp.length) cards += dashCard("TODAY'S INSPECTIONS", insp.map(function(x){ var name = x.title || x.name || x.address || ''; var meta = [x.type, x.number, x.time].filter(Boolean).join(' · '); return '<div class="drow"><span class="dbody"><span class="dtitle">' + esc(name) + '</span>' + (meta ? '<span class="dsub">' + esc(meta) + '</span>' : '') + (x.inspector ? '<span class="dsub">' + esc(x.inspector) + '</span>' : '') + '</span>' + (x.status ? '<span class="chip">' + esc(x.status) + '</span>' : '') + '</div>'; }).join(''), myDayUrl);
   var bids = (d.newBids || []).filter(function(x){ return x.date === today; });
-  if (bids.length) cards += dashCard('NEW BIDS', bids.map(function(x){ var sub = [x.from, x.received || x.due || ''].filter(Boolean).join(' · '); return '<div class="drow"><span class="dbody"><span class="dtitle">' + esc(x.project || '') + '</span>' + (sub ? '<span class="dsub">' + esc(sub) + '</span>' : '') + '</span><span class="arr"><svg class="sk-icon"><use href="#i-chevron-right"/></svg></span></div>'; }).join(''), bidsUrl);
+  if (bids.length) cards += bidsCard(bids, bidsUrl);
   var notes = d.importantNotes || d.important || d.notes || null;
   var noteItems = [];
   if (Array.isArray(notes)) noteItems = notes.map(function(n){ return typeof n === 'string' ? n : (n.title || n.text || ''); }).filter(Boolean);
@@ -345,6 +388,15 @@ window.__bootHome = function(){
   setTimeout(function(){ if (!DATA) { DATA = EMBEDDED; repaintApps(); repaintOffice(); repaintJobs(); } }, 3000);
 };
 document.addEventListener('click', function(e){
+  var bt = e.target.closest && e.target.closest('[data-bids-toggle]');
+  if (bt) {
+    dashBidsOpen = !dashBidsOpen;
+    var cached = null;
+    try { var raw = localStorage.getItem(TV_CACHE_KEY); if (raw) cached = JSON.parse(raw); } catch (err) {}
+    renderDashboard(cached);
+    if (!cached) loadDashboard();
+    return;
+  }
   var push = e.target.closest && e.target.closest('[data-push]');
   if (push) { location.hash = '#/folder/' + push.getAttribute('data-push'); return; }
   var about = e.target.closest && e.target.closest('.js-about');
@@ -359,6 +411,7 @@ if (document.documentElement.classList.contains('locked')) { if (window.SK && SK
 else if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', window.__bootHome);
 else window.__bootHome();
 </script>
+<script src="refresh.js"></script>
 <script>if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) { addEventListener("load", function(){ navigator.serviceWorker.register("sw.js?kit=https://sharma-kit.sharma-crew.workers.dev", { scope: "/sharma-home/" }).catch(function(){}); }); }</script>
 </body>
 </html>
