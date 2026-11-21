@@ -535,6 +535,20 @@ html[data-scheme="dark"] .lrow .ltic { box-shadow: inset 0 0 0 1px rgba(255,255,
     .sk-header__title { color: #ffffff !important; }
     /* A one-stop timeline has nothing to connect — no dangling rail line. */
     .tline--single::before { display: none; }
+    /* .26 (2026-11-21): the BOTTOM border fixated too — Sanjay: "fixate the
+       bottom and top borders." The floating glass capsule tab bar is now a
+       solid full-width bottom bar: fixed edge to edge, no blur, no float,
+       its top border one clean hairline across the whole screen, lining up
+       with the page. (Phone widths only — the macOS sidebar layout at
+       960px+ is untouched.) */
+    @media (max-width: 959px) {
+      .sk .sk-tabbar { left: 0 !important; right: 0 !important; bottom: 0 !important;
+        border-radius: 0 !important; background: #ffffff !important;
+        -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+        border-top: 1px solid var(--line) !important; box-shadow: none !important;
+        padding-bottom: env(safe-area-inset-bottom, 0px) !important; }
+      html[data-scheme="dark"] .sk .sk-tabbar { background: #1C1C1E !important; }
+    }
 </style>
 <style id="lockcss">
 html.locked body > *:not(#lock){display:none!important}
