@@ -9,7 +9,7 @@
   <script>(function(){try{if(localStorage.getItem("sk-scheme")==="dark"){var d=document.documentElement;d.setAttribute("data-scheme","dark");var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=d.getAttribute("data-theme")==="track"?"#1C1C1E":"#1a2f61"}}catch(e){}})()</script>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="SHARMA360">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="mobile-web-app-capable" content="yes">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icons/icon-180.png">
@@ -518,6 +518,23 @@ html[data-scheme="dark"] .lrow .ltic { box-shadow: inset 0 0 0 1px rgba(255,255,
   .hrow { max-width: none; margin-left: 0; margin-right: 0; padding-left: 16px; padding-right: 16px; }
   .badge { max-width: none; margin-left: 16px; margin-right: 16px; }
 }
+</style>
+<style id="headerpin">
+    /* .25 (2026-11-21): THE HEADER, pinned in the shell — Sanjay's recurring
+       complaint ("top is blurry", "the bottom border isn't lining up") traced
+       to the header painting as a washed-out translucent band on his phone
+       (kit/theme state dependent), its gold bottom rule lost with it. The
+       shell now owns the header outright: solid Sharma navy, white text, the
+       3px gold rule, no blur of any kind, whatever the kit or a stored theme
+       says. The status bar is non-overlay ('default' meta) so nothing can
+       slide under it and ghost. */
+    html { --sk-header-bg: #264387 !important; --sk-header-fg: #ffffff !important; --sk-header-rule: #F0A846 !important; }
+    .sk-header { background: #264387 !important; color: #ffffff !important;
+      border-bottom: 3px solid #F0A846 !important;
+      -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+    .sk-header__title { color: #ffffff !important; }
+    /* A one-stop timeline has nothing to connect — no dangling rail line. */
+    .tline--single::before { display: none; }
 </style>
 <style id="lockcss">
 html.locked body > *:not(#lock){display:none!important}
@@ -1029,7 +1046,7 @@ function renderDashboard(d){
   var out = glance + '<div id="dashHero"></div>';
   /* schedule timeline */
   if (sched.length) {
-    out += '<h2 class="sec">Today\'s schedule</h2><div class="tline">' + sched.map(function(x){
+    out += '<h2 class="sec">Today\'s schedule</h2><div class="tline' + (sched.length > 1 ? '' : ' tline--single') + '">' + sched.map(function(x){
       var b = builderOfStop(x, null);
       var key = ((x.title || '') + ' ' + (x.location || '')).replace(/"/g, '');
       return '<div class="tstop"><span class="tstop__dot"><i></i></span><div class="tstop__card"><div class="tstop__main">'
