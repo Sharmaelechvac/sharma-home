@@ -937,13 +937,9 @@ function loadDashPhotos(){
   });
 }
 function paintDashPhotos(){
-  var hero = document.getElementById('dashHero');
-  if (hero && DASH_PHOTOS && DASH_PHOTOS.length) {
-    var p = DASH_PHOTOS[0];
-    var when = '';
-    if (p.taken) { var td = new Date(p.taken); if (!isNaN(td)) when = td.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); }
-    hero.innerHTML = '<div class="hero"><img src="' + esc(p.url) + '" alt="" loading="lazy"><div class="hero__cap"><b>' + esc(p.caption || 'Latest field photo') + '</b><span>' + esc(p.builder) + (when ? ' · ' + esc(when) : '') + ' · latest from the field</span></div></div>';
-  }
+  /* .27 (2026-11-21): the big field photo at the top is GONE — Sanjay:
+     "I don't like the job photo on top." The feeds now only paint the
+     timeline thumbnails. */
   var thumbs = document.querySelectorAll('[data-thumb]');
   thumbs.forEach(function(el){
     var key = (el.getAttribute('data-thumb') || '').toLowerCase();
@@ -1057,7 +1053,7 @@ function renderDashboard(d){
   else if (bids.length) chips += '<span class="gchip">' + bids.length + ' new ' + (bids.length === 1 ? 'bid' : 'bids') + ' today</span>';
   if (chips) glance += '<div class="gchips">' + chips + '</div>';
   glance += '</div>';
-  var out = glance + '<div id="dashHero"></div>';
+  var out = glance;
   /* schedule timeline */
   if (sched.length) {
     out += '<h2 class="sec">Today\'s schedule</h2><div class="tline' + (sched.length > 1 ? '' : ' tline--single') + '">' + sched.map(function(x){
