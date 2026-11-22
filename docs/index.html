@@ -622,7 +622,10 @@ html.locked #lock{display:flex;position:fixed;inset:0;z-index:9999;background:#2
      Spruce up the home page, crisp Pro Max status bar (no blur), Apple Sports
      score cards, Incoming Bids with no prices. Side text aligned 20px with
      the cards; header navy band is exactly the safe-area; hero bottom rounded.
-     Rollback: 5ec41d4 (.28). */
+     Rollback: 5ec41d4 (.28).
+     .30 (2026-11-21 8:06 PM ET, Sanjay: "Put only NY & FL NBA NFL Teams.
+     And give it two headlines, one for each league."): only NY/FL teams,
+     separate NBA and NFL headings. */
   :root {
     --safe-top: env(safe-area-inset-top, 0px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -960,9 +963,12 @@ html.locked #lock{display:flex;position:fixed;inset:0;z-index:9999;background:#2
 
 
     /* Apple Sports score cards */
-    #dash .sportsboard { margin: 0; }
+    #dash .sportsboard { margin: 0 0 8px; }
     #dash .sportsboard__skel, #dash .sportsboard__empty {
-      padding: 16px; color: #5b6478; font-size: 15px;
+      padding: 0 0 12px;
+      color: #5b6478;
+      font-size: 15px;
+      font-weight: 500;
     }
     #dash .gcard {
       display: grid;
@@ -1610,7 +1616,10 @@ function loadDashWeather(city, newsItems){
   }).catch(fallback);
 }
 
-var FL_TEAMS = { NBA: { ORL: 1, MIA: 1 }, NFL: { TB: 1, MIA: 1, JAX: 1 } };
+var NYFL_TEAMS = {
+  NBA: { NY: 1, NYK: 1, BKN: 1, MIA: 1, ORL: 1 },
+  NFL: { NYG: 1, NYJ: 1, BUF: 1, MIA: 1, TB: 1, JAX: 1 }
+};
 var ESPN_LOGO = {
   NBA: 'https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/',
   NFL: 'https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/'
@@ -1655,7 +1664,7 @@ function parseEspnEvent(e, league){
   var state = st.state || '';
   var aAbbr = ((away.team || {}).abbreviation || '').toUpperCase();
   var hAbbr = ((home.team || {}).abbreviation || '').toUpperCase();
-  var fl = !!(FL_TEAMS[league] && (FL_TEAMS[league][aAbbr] || FL_TEAMS[league][hAbbr]));
+  var nyfl = !!(NYFL_TEAMS[league] && (NYFL_TEAMS[league][aAbbr] || NYFL_TEAMS[league][hAbbr]));
   return {
     id: e.id || (league + aAbbr + hAbbr + (e.date || '')),
     league: league,
@@ -1664,7 +1673,7 @@ function parseEspnEvent(e, league){
     status: st,
     short: st.shortDetail || st.detail || st.description || '',
     channel: broadcastOf(comp),
-    florida: fl,
+    nyfl: nyfl,
     away: away,
     home: home
   };
@@ -1700,54 +1709,59 @@ function gameStatusHtml(g){
     + (chan ? '<div class="gcard__chan">' + esc(chan) + '</div>' : '') + '</div>';
 }
 function gameCardHtml(g){
-  return '<div class="gcard"><div class="gcard__league"><span class="gcard__pill gcard__pill--' + g.league.toLowerCase() + '">' + g.league + '</span></div>'
+  return '<div class="gcard">'
     + '<div class="gcard__teams">' + teamRow(g.away, g.state, g.league) + teamRow(g.home, g.state, g.league) + '</div>'
     + gameStatusHtml(g) + '</div>';
 }
-function sportsFallbackHtml(d){
-  var items = (d && d.news || []).filter(function(n){ return n && /^\s*(NBA|NFL)\b/i.test(n.headline || ''); });
-  if (!items.length) return '<div class="sportsboard__empty">Scores will show here when the board is available.</div>';
-  return items.map(function(n){
-    var m = String(n.headline).match(/^\s*(NBA|NFL)\b\s*:?\s*(.*)$/i);
-    var league = m ? m[1].toUpperCase() : 'SPORTS';
-    var body = m ? m[2] : n.headline;
-    return '<div class="sportcard"><span class="sportcard__tag sportcard__tag--' + league.toLowerCase() + '">' + league + '</span><div class="sportcard__body">' + esc(body) + '</div></div>';
-  }).join('');
+function sportsEmptyHtml(){
+  return '<div class="sportsboard__empty">No NY or Florida games today</div>';
 }
 function sportsHtml(d){
   window._dashSportsNews = d;
-  return '<h2 class="sec">NBA · NFL</h2><div class="secnote">Florida teams first</div><div id="sportsBoard" class="sportsboard"><div class="sportsboard__skel">Loading scores…</div></div>';
+  return '<h2 class="sec">NBA</h2><div id="sportsBoardNba" class="sportsboard"><div class="sportsboard__skel">Loading scores…</div></div>'
+    + '<h2 class="sec">NFL</h2><div id="sportsBoardNfl" class="sportsboard"><div class="sportsboard__skel">Loading scores…</div></div>';
+}
+function fillSportsBoard(host, games){
+  if (!host) return;
+  if (!games.length) { host.innerHTML = sportsEmptyHtml(); return; }
+  var rank = function(g){ return (g.state === 'in' ? 0 : g.state === 'pre' ? 1 : 2); };
+  games.sort(function(a, b){
+    var d = rank(a) - rank(b);
+    if (d) return d;
+    return String(a.date).localeCompare(String(b.date));
+  });
+  host.innerHTML = games.map(gameCardHtml).join('');
 }
 function loadSports(){
-  var host = document.getElementById('sportsBoard');
-  if (!host) return;
-  if (typeof fetch !== 'function') { host.innerHTML = sportsFallbackHtml(window._dashSportsNews); return; }
+  var nbaHost = document.getElementById('sportsBoardNba');
+  var nflHost = document.getElementById('sportsBoardNfl');
+  if (!nbaHost && !nflHost) return;
+  if (typeof fetch !== 'function') {
+    fillSportsBoard(nbaHost, []);
+    fillSportsBoard(nflHost, []);
+    return;
+  }
   var days = [etYmd(-1), etYmd(0), etYmd(1)];
   var nba = days.map(function(d){ return fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=' + d).then(function(r){ if (!r.ok) throw new Error('nba'); return r.json(); }).catch(function(){ return { events: [] }; }); });
   var nfl = fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard').then(function(r){ if (!r.ok) throw new Error('nfl'); return r.json(); }).catch(function(){ return { events: [] }; });
   Promise.all(nba.concat([nfl])).then(function(parts){
-    var games = [], seen = {};
+    var nbaGames = [], nflGames = [], seen = {};
     parts.forEach(function(board, i){
       var league = i < days.length ? 'NBA' : 'NFL';
       (board.events || []).forEach(function(e){
         var g = parseEspnEvent(e, league);
-        if (!g || seen[g.id]) return;
+        if (!g || !g.nyfl || seen[g.id]) return;
         seen[g.id] = 1;
-        games.push(g);
+        if (league === 'NBA') nbaGames.push(g);
+        else nflGames.push(g);
       });
     });
-    if (!games.length) { host.innerHTML = sportsFallbackHtml(window._dashSportsNews); return; }
-    var rank = function(g){ return (g.florida ? 0 : 10) + (g.state === 'in' ? 0 : g.state === 'pre' ? 1 : 2); };
-    games.sort(function(a, b){
-      var d = rank(a) - rank(b);
-      if (d) return d;
-      return String(a.date).localeCompare(String(b.date));
-    });
-    var fl = games.filter(function(g){ return g.florida; });
-    var rest = games.filter(function(g){ return !g.florida; });
-    var pick = fl.concat(rest).slice(0, 8);
-    host.innerHTML = pick.map(gameCardHtml).join('');
-  }).catch(function(){ host.innerHTML = sportsFallbackHtml(window._dashSportsNews); });
+    fillSportsBoard(nbaHost, nbaGames);
+    fillSportsBoard(nflHost, nflGames);
+  }).catch(function(){
+    fillSportsBoard(nbaHost, []);
+    fillSportsBoard(nflHost, []);
+  });
 }
 
 function normBuilder(s){
