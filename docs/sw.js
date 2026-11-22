@@ -6,7 +6,7 @@
    - Never touches: /login, /logout (it wipes saved data first), /api/* (the app's SK.data handles
      last-data-first in the page), POSTs, or anything else.
    Holds no data, passcodes or keys. */
-var VERSION = "sk-shell-v1.3-home-apple-1144";
+var VERSION = "sk-shell-v1.3-home-apple-1145";
 var DATA = "sk-data-v1";
 var KIT = new URL((new URL(self.location.href).searchParams.get("kit") || "https://sharma-kit.sharma-crew.workers.dev").replace(/\/$/, ""), self.location.href).href.replace(/\/$/, "");
 var KIT_FILES = [KIT + "/sharma-kit.css", KIT + "/sharma-kit.js", KIT + "/assets/logo-white-header.png"];
@@ -32,7 +32,7 @@ self.addEventListener("activate", function (e) {
 function wipe() { return Promise.all([caches.delete(DATA), caches.open(VERSION).then(function (c) { return c.delete("/sharma-home/"); })]); }
 
 function shell(req) {
-  var net = fetch(req).then(function (r) {
+  var net = fetch(req.url, { credentials: "same-origin", cache: "no-cache", redirect: "manual" }).then(function (r) {
     if (r.type === "opaqueredirect" || r.redirected || r.status === 401 || r.status === 403) { wipe(); return r; }
     if (r.ok && (r.headers.get("content-type") || "").indexOf("text/html") === 0) {
       var copy = r.clone(); caches.open(VERSION).then(function (c) { return c.put("/sharma-home/", copy); });

@@ -19,7 +19,7 @@
  * drift, phones either never update or refresh on every open. */
 (function () {
   "use strict";
-  var APP_VERSION = "2026-11-21.32";
+  var APP_VERSION = "2026-11-22.33";
   var GUARD_KEY = "sharma-refresh-at";    // sessionStorage: last purge stamp
   var CHECK_KEY = "sharma-vercheck-at";   // sessionStorage: last version check
   var DONE_KEY = "sharma-vercheck-done";  // sessionStorage: stamp already refreshed onto
@@ -53,6 +53,14 @@
       return Promise.all(regs.map(function (r) { return r.unregister().then(function () {}, function () {}); }));
     }).then(function () {}, function () {});
   }
+  /* .33: open the page again with a throw-away query so the phone's own web
+     cache (GitHub keeps pages for 10 minutes) can never hand back the old copy. */
+  function freshLoad() {
+    try {
+      var u = location.pathname + "?r=" + now() + (location.hash || "");
+      location.replace(u);
+    } catch (e) { location.reload(); }
+  }
   function markUpdating(btn) {
     if (!btn) return;
     btn.disabled = true;
@@ -62,11 +70,11 @@
   }
   function hardRefresh(btn) {
     var last = parseInt(sget(GUARD_KEY) || "0", 10) || 0;
-    if (now() - last < GUARD_MS) { location.reload(); return; }
+    if (now() - last < GUARD_MS) { freshLoad(); return; }
     sset(GUARD_KEY, String(now()));
     markUpdating(btn);
     var done = false;
-    function go() { if (!done) { done = true; location.reload(); } }
+    function go() { if (!done) { done = true; freshLoad(); } }
     var slow = setTimeout(go, 3500); // a hung purge must never dead-end the button
     Promise.all([purgeCaches(), updateWorker(), dropWorker()]).then(function () { clearTimeout(slow); go(); }, function () { clearTimeout(slow); go(); });
   }
