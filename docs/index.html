@@ -629,25 +629,41 @@ html.locked #lock{display:flex;position:fixed;inset:0;z-index:9999;background:#2
      .31 (2026-11-21 8:11 PM ET): NBA and NFL start collapsed and expand
      on tap; Incoming Bids renamed New RFQ. Rollback: c9667a8 (.30). */
   :root {
+    /* Use env() directly in padding (not only via this variable). On a
+       real iPhone, storing env(safe-area-inset-top) in a custom property
+       often resolves to 0, which left the logo under the status bar. */
     --safe-top: env(safe-area-inset-top, 0px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-top-fallback: 0px;
+    --safe-top-used: max(env(safe-area-inset-top, 0px), var(--safe-top-fallback, 0px));
     --dash-radius: 20px;
     --dash-shadow: 0 8px 28px rgba(16, 24, 40, 0.08), 0 1px 2px rgba(16, 24, 40, 0.04);
   }
 
-  /* ---- Crisp, solid navy status-bar + header. No frost, no wash-out. ---- */
+  /* ---- Crisp, solid navy status-bar + header. No frost, no wash-out. ----
+     .32 (2026-11-21 8:17 PM ET, Sanjay: "Why is it we can't fix the top
+     issue?"): a real Pro Max shot showed the logo bar frosted under the
+     clock/battery. Root cause: black-translucent draws under the status
+     bar, and padding-top used var(--safe-top) which stored
+     env(safe-area-inset-top) and often computed as 0 on a real iPhone.
+     Padding now uses env() directly, with a JS fallback (~59px Pro Max)
+     if that value is 0 in the home-screen app or in Safari. Header is
+     fixed, fully opaque navy, no blur or fade, logo row below the inset.
+     Rollback: 99d4ad2 (.31). */
   html { background: #264387; }
   @media (max-width: 959px) {
+    html { background: #264387 !important; }
     .sk-header {
-      position: sticky;
-      top: 0;
-      z-index: 60;
+      position: fixed !important;
+      top: 0 !important;
+      z-index: 80;
       margin: 0;
-      left: 0;
-      right: 0;
+      left: 0 !important;
+      right: 0 !important;
       width: 100%;
       color: #ffffff !important;
       background: #264387 !important;
+      background-color: #264387 !important;
       background-image: none !important;
       border-bottom: 3px solid #F0A846 !important;
       -webkit-backdrop-filter: none !important;
@@ -655,7 +671,10 @@ html.locked #lock{display:flex;position:fixed;inset:0;z-index:9999;background:#2
       opacity: 1 !important;
       box-shadow: none !important;
       mix-blend-mode: normal !important;
-      padding-top: var(--safe-top) !important;
+      -webkit-mask-image: none !important;
+      mask-image: none !important;
+      padding-top: env(safe-area-inset-top, 0px) !important;
+      padding-top: max(env(safe-area-inset-top, 0px), var(--safe-top-fallback, 0px)) !important;
       padding-bottom: 0 !important;
       box-sizing: content-box !important;
     }
@@ -702,13 +721,14 @@ html.locked #lock{display:flex;position:fixed;inset:0;z-index:9999;background:#2
       left: 0;
       right: 0;
       top: 0;
-      height: var(--safe-top);
+      height: env(safe-area-inset-top, 0px);
+      height: max(env(safe-area-inset-top, 0px), var(--safe-top-fallback, 0px));
       background: #264387;
       pointer-events: none;
       z-index: 2;
     }
     .sk-stackview {
-      top: calc(var(--safe-top) + var(--sk-header-h, 52px) + 3px) !important;
+      top: calc(max(env(safe-area-inset-top, 0px), var(--safe-top-fallback, 0px)) + var(--sk-header-h, 52px) + 3px) !important;
     }
     body { background: #F2F4F8; }
     html[data-scheme="dark"] body { background: #000000; }
@@ -1223,6 +1243,44 @@ html.locked #lock{display:flex;position:fixed;inset:0;z-index:9999;background:#2
     html[data-scheme="dark"] #dash .tstop__thumb b { color: #9db8ec; }
   }
 </style>
+
+<script>
+/* Pin the iPhone safe-area if env(safe-area-inset-top) reads as 0.
+   Runs in both the home-screen app and Safari. */
+(function pinSafeTop(){
+  function ios(){
+    var ua = navigator.userAgent || "";
+    return /iP(hone|ad|od)/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  }
+  function readEnv(){
+    var el = document.createElement("div");
+    el.setAttribute("aria-hidden", "true");
+    el.style.cssText = "position:absolute;visibility:hidden;pointer-events:none;padding-top:env(safe-area-inset-top, 0px);";
+    document.documentElement.appendChild(el);
+    var v = parseFloat(window.getComputedStyle(el).paddingTop) || 0;
+    if (el.parentNode) el.parentNode.removeChild(el);
+    return v;
+  }
+  function apply(){
+    try {
+      if (!ios()) return;
+      var top = readEnv();
+      if (top >= 20) {
+        document.documentElement.style.setProperty("--safe-top-fallback", "0px");
+        return;
+      }
+      var long = Math.max(screen.width || 0, screen.height || 0, window.innerWidth || 0, window.innerHeight || 0);
+      var fallback = (long >= 850 || Math.max(screen.width || 0, screen.height || 0) >= 428) ? 59 : 47;
+      document.documentElement.style.setProperty("--safe-top-fallback", fallback + "px");
+    } catch (e) {}
+  }
+  apply();
+  window.addEventListener("orientationchange", function(){ setTimeout(apply, 150); });
+  window.addEventListener("resize", apply);
+  window.addEventListener("pageshow", apply);
+})();
+</script>
+
 </head>
 <body class="sk">
 <div id="lock"><form class="box" onsubmit="return shUnlock(event)">
