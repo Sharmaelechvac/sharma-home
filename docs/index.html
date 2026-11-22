@@ -6,10 +6,10 @@
   <meta name="robots" content="noindex, nofollow, noarchive">
   <meta name="theme-color" content="#264387">
   <meta name="color-scheme" content="light">
-  <script>(function(){try{if(localStorage.getItem("sk-scheme")==="dark"){var d=document.documentElement;d.setAttribute("data-scheme","dark");var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=d.getAttribute("data-theme")==="track"?"#1C1C1E":"#1a2f61"}}catch(e){}})()</script>
+  <script>(function(){try{if(localStorage.getItem("sk-scheme")==="dark"){var d=document.documentElement;d.setAttribute("data-scheme","dark");var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=d.getAttribute("data-theme")==="track"?"#1C1C1E":"#264387"}}catch(e){}})()</script>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="SHARMA360">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="mobile-web-app-capable" content="yes">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icons/icon-180.png">
@@ -616,6 +616,554 @@ html.locked #lock{display:flex;position:fixed;inset:0;z-index:9999;background:#2
 #lock .err{color:#c0392b;min-height:18px;margin-top:8px;font-size:13px}
 </style>
 <script>(function(){try{if(localStorage.getItem('sh_home_ok')!=='51f6a9f8a0017601ef145c7daa916d20a14646d9921090122222a12e9e39b146')document.documentElement.classList.add('locked')}catch(e){document.documentElement.classList.add('locked')}})();</script>
+
+<style id="today-redesign">
+  /* .29 (2026-11-21): Today redesign — Sanjay approved 8:05 PM ("Yes, push it live").
+     Spruce up the home page, crisp Pro Max status bar (no blur), Apple Sports
+     score cards, Incoming Bids with no prices. Side text aligned 20px with
+     the cards; header navy band is exactly the safe-area; hero bottom rounded.
+     Rollback: 5ec41d4 (.28). */
+  :root {
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --dash-radius: 20px;
+    --dash-shadow: 0 8px 28px rgba(16, 24, 40, 0.08), 0 1px 2px rgba(16, 24, 40, 0.04);
+  }
+
+  /* ---- Crisp, solid navy status-bar + header. No frost, no wash-out. ---- */
+  html { background: #264387; }
+  @media (max-width: 959px) {
+    .sk-header {
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      margin: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      color: #ffffff !important;
+      background: #264387 !important;
+      background-image: none !important;
+      border-bottom: 3px solid #F0A846 !important;
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
+      opacity: 1 !important;
+      box-shadow: none !important;
+      mix-blend-mode: normal !important;
+      padding-top: var(--safe-top) !important;
+      padding-bottom: 0 !important;
+      box-sizing: content-box !important;
+    }
+    .sk-header__title { color: #ffffff !important; }
+    /* Logo row is exactly 52px, vertically centered. No extra
+       padding above the bar on top of the safe-area inset. */
+    .sk-header__bar {
+      height: var(--sk-header-h, 52px) !important;
+      max-height: var(--sk-header-h, 52px) !important;
+      padding: 0 !important;
+      margin: 0 auto !important;
+      align-items: center !important;
+      box-sizing: border-box !important;
+    }
+    .sk-header__lead,
+    .sk-header__logo {
+      display: flex !important;
+      align-items: center !important;
+      margin: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+    /* Kit swaps in logo-white-header.png at 20px inside a 44px box,
+       which leaves ~16px of empty navy above the wordmark on top of
+       the safe-area. Fill the 52px bar and size the mark so the navy
+       above the logo row is only the safe-area inset. */
+    .sk-header__lead { height: var(--sk-header-h, 52px); }
+    .sk-header__logo {
+      height: var(--sk-header-h, 52px) !important;
+      padding-left: 4px !important;
+      padding-right: 8px !important;
+    }
+    .sk-header__logo img {
+      height: 36px !important;
+      width: auto !important;
+      max-height: 36px !important;
+      display: block !important;
+    }
+    /* Extra solid fill in the safe area so iOS never shows page content
+       through a translucent status bar. */
+    .sk-header::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: var(--safe-top);
+      background: #264387;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .sk-stackview {
+      top: calc(var(--safe-top) + var(--sk-header-h, 52px) + 3px) !important;
+    }
+    body { background: #F2F4F8; }
+    html[data-scheme="dark"] body { background: #000000; }
+    .sk-stackview,
+    .sk-page {
+      background: #F2F4F8;
+    }
+    html[data-scheme="dark"] .sk-stackview,
+    html[data-scheme="dark"] .sk-page {
+      background: #000000 !important;
+    }
+  }
+
+  /* ---- Today hero + cards (phone). macOS sidebar layout untouched. ---- */
+  @media (max-width: 959px) {
+    /* The phone .wrap rule at 959px zeroes side padding so lists can
+       go edge-to-edge. Today keeps a 20px inset so hero copy, section
+       titles and cards share one left edge. The hero then pulls out
+       with a matching negative margin so it stays full-bleed, with
+       20px inner padding so its text lines up with the cards. */
+    #dash {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+    #dash .glance {
+      margin: 0 -20px 20px;
+      padding: 22px 20px 24px;
+      background:
+        radial-gradient(120% 80% at 100% 0%, rgba(240, 168, 70, 0.22) 0%, rgba(240, 168, 70, 0) 55%),
+        linear-gradient(180deg, #264387 0%, #203972 58%, #1a2f61 100%);
+      color: #ffffff;
+      border-radius: 0 0 28px 28px;
+      overflow: hidden;
+      position: relative;
+      z-index: 0;
+      box-shadow: 0 16px 32px rgba(26, 47, 97, 0.22);
+    }
+    #dash .glance__date {
+      font-family: -apple-system, "SF Pro Display", Inter, sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.25;
+      color: rgba(255, 255, 255, 0.84) !important;
+    }
+    #dash .glance__clock {
+      margin-top: 6px;
+      font-family: -apple-system, "SF Pro Display", Inter, sans-serif;
+      font-size: 44px;
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.02;
+      color: #ffffff !important;
+      font-variant-numeric: tabular-nums;
+    }
+    #dash .glance__clock small {
+      display: inline-block;
+      margin-left: 6px;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: #F0A846 !important;
+      vertical-align: 8px;
+    }
+    #dash .glance__greet {
+      margin-top: 8px;
+      font-size: 20px;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      color: rgba(255, 255, 255, 0.96) !important;
+    }
+    #dash .glance__wx {
+      margin-top: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.82) !important;
+      line-height: 1.35;
+    }
+    #dash .glance__wx:empty { display: none; }
+    #dash .glance__wx--alert {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 14px;
+      padding: 11px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(240, 168, 70, 0.5);
+      color: #ffffff !important;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.35;
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+    #dash .glance__wx-icon {
+      flex: none;
+      width: 18px;
+      height: 18px;
+      margin-top: 1px;
+      stroke: #F0A846;
+      fill: none;
+    }
+    #dash .gchips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    #dash .gchip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      color: #ffffff !important;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    #dash .gchip--gold {
+      background: #F0A846;
+      color: #1a2f61 !important;
+    }
+    #dash .gchip--red {
+      background: rgba(255, 80, 80, 0.22);
+      color: #ffd0d0 !important;
+    }
+
+    /* Apple-style section titles — large, bold, no gold underline */
+    #dash h2.sec {
+      margin: 16px 0 10px;
+      font-family: -apple-system, "SF Pro Display", Inter, sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #10203d;
+      line-height: 1.15;
+    }
+    #dash h2.sec::after { display: none !important; content: none !important; }
+    #dash .secnote {
+      margin: -6px 0 12px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #5b6478;
+    }
+
+    /* Schedule as one timeline card with a gold rail */
+    #dash .tline {
+      position: relative;
+      margin: 0;
+      padding: 8px 8px 8px 0;
+      background: #ffffff;
+      border-radius: var(--dash-radius);
+      box-shadow: var(--dash-shadow);
+      border: none;
+    }
+    #dash .tline::before {
+      left: 22px;
+      top: 28px;
+      bottom: 28px;
+      width: 3px;
+      background: #F0A846;
+      border-radius: 2px;
+      opacity: 1;
+    }
+    #dash .tstop { padding: 6px 8px 6px 0; gap: 10px; }
+    #dash .tstop__dot { width: 44px; padding-top: 22px; }
+    #dash .tstop__dot i {
+      width: 13px;
+      height: 13px;
+      background: #F0A846;
+      border: 3px solid #ffffff;
+      box-shadow: 0 0 0 2px rgba(240, 168, 70, 0.55);
+    }
+    #dash .tstop__card {
+      background: transparent;
+      border: none;
+      border-radius: 14px;
+      padding: 12px 10px 12px 4px;
+      box-shadow: none;
+    }
+    #dash .tstop__time {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      color: #264387;
+      text-transform: uppercase;
+    }
+    #dash .tstop__title {
+      font-size: 18px;
+      font-weight: 750;
+      letter-spacing: -0.02em;
+      color: #10203d;
+    }
+    #dash .tstop__thumb {
+      width: 72px;
+      height: 72px;
+      border-radius: 16px;
+    }
+    #dash .seclink {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 10px 0 18px;
+      padding: 14px 16px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: var(--dash-shadow);
+      color: #264387;
+      font-size: 17px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    #dash .seclink .sk-icon { width: 18px; height: 18px; }
+
+    #dash .vcard,
+    #dash .bidcard,
+    #dash .sportcard {
+      border: none;
+      border-radius: var(--dash-radius);
+      box-shadow: var(--dash-shadow);
+      padding: 16px;
+      margin-top: 10px;
+      background: #ffffff;
+    }
+    #dash .sportcard__body {
+      margin-top: 8px;
+      font-size: 17px;
+      font-weight: 650;
+      letter-spacing: -0.015em;
+      line-height: 1.35;
+      color: #10203d;
+    }
+    #dash .sportcard__tag {
+      padding: 4px 9px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+    }
+    #dash .dash__asof {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #8b93a6;
+    }
+    #dash + footer,
+    .wrap > footer {
+      margin: 8px 0 0;
+      padding: 8px 0 12px;
+      font-size: 12px;
+      color: #8b93a6;
+      text-align: center;
+      line-height: 1.45;
+      border: none;
+      background: none;
+    }
+
+
+    /* Apple Sports score cards */
+    #dash .sportsboard { margin: 0; }
+    #dash .sportsboard__skel, #dash .sportsboard__empty {
+      padding: 16px; color: #5b6478; font-size: 15px;
+    }
+    #dash .gcard {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px 14px;
+      align-items: center;
+      background: #ffffff;
+      border-radius: var(--dash-radius);
+      box-shadow: var(--dash-shadow);
+      padding: 12px 14px;
+      margin-top: 10px;
+    }
+    #dash .gcard__league {
+      grid-column: 1 / -1;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #5b6478;
+    }
+    #dash .gcard__pill {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      color: #fff;
+      background: #264387;
+    }
+    #dash .gcard__pill--nba { background: #c8102e; }
+    #dash .gcard__pill--nfl { background: #013369; }
+    #dash .gcard__teams { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+    #dash .grow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+    #dash .grow--lose { opacity: 0.42; }
+    #dash .grow__logo, #dash .grow__badge {
+      flex: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+    }
+    #dash .grow__logo { object-fit: contain; background: transparent; display: block; }
+    #dash .grow__badge {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      color: #fff;
+      background: #264387;
+    }
+    #dash .grow__meta { flex: 1 1 auto; min-width: 0; display: flex; align-items: baseline; gap: 6px; }
+    #dash .grow__abbr {
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #10203d;
+    }
+    #dash .grow__rec { font-size: 12px; font-weight: 600; color: #8b93a6; }
+    #dash .grow__score {
+      flex: none;
+      margin-left: auto;
+      font-size: 22px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.03em;
+      color: #10203d;
+      min-width: 2ch;
+      text-align: right;
+    }
+    #dash .gcard__status { text-align: right; min-width: 64px; }
+    #dash .gcard__when {
+      font-size: 13px;
+      font-weight: 700;
+      color: #10203d;
+      line-height: 1.25;
+    }
+    #dash .gcard__when--live { color: #c8102e; }
+    #dash .gcard__chan { font-size: 12px; font-weight: 600; color: #5b6478; margin-top: 2px; }
+
+    /* Incoming Bids rows */
+    #dash .bidlist {
+      background: #ffffff;
+      border-radius: var(--dash-radius);
+      box-shadow: var(--dash-shadow);
+      overflow: hidden;
+    }
+    #dash .ibrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-top: 0.5px solid rgba(16, 24, 40, 0.08);
+    }
+    #dash .ibrow:first-child { border-top: none; }
+    #dash .ibrow__logo, #dash .ibrow__badge {
+      flex: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+    }
+    #dash .ibrow__logo {
+      object-fit: contain;
+      background: #F4F6FA;
+      display: none;
+    }
+    #dash .ibrow__badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #264387;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+    #dash .ibrow__main { flex: 1 1 auto; min-width: 0; }
+    #dash .ibrow__proj {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #10203d;
+      line-height: 1.25;
+    }
+    #dash .ibrow__sub {
+      margin-top: 2px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #5b6478;
+      line-height: 1.3;
+    }
+    #dash .ibrow__side { flex: none; text-align: right; max-width: 42%; }
+    #dash .ibrow__due {
+      font-size: 13px;
+      font-weight: 800;
+      color: #264387;
+      line-height: 1.25;
+    }
+    #dash .ibrow__due--soon, #dash .ibrow__due--late { color: #c0392b; }
+    #dash .ibrow__stat {
+      margin-top: 2px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #8b93a6;
+    }
+
+    html[data-scheme="dark"] #dash .gcard,
+    html[data-scheme="dark"] #dash .bidlist {
+      background: #1C1C1E;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+    }
+    html[data-scheme="dark"] #dash .grow__abbr,
+    html[data-scheme="dark"] #dash .grow__score,
+    html[data-scheme="dark"] #dash .gcard__when,
+    html[data-scheme="dark"] #dash .ibrow__proj { color: #F2F2F7; }
+    html[data-scheme="dark"] #dash .grow__rec,
+    html[data-scheme="dark"] #dash .gcard__chan,
+    html[data-scheme="dark"] #dash .ibrow__sub,
+    html[data-scheme="dark"] #dash .ibrow__stat,
+    html[data-scheme="dark"] #dash .gcard__league { color: #AEAEB2; }
+    html[data-scheme="dark"] #dash .ibrow { border-top-color: rgba(255, 255, 255, 0.08); }
+    html[data-scheme="dark"] #dash .ibrow__logo { background: #2C2C2E; }
+    html[data-scheme="dark"] #dash .ibrow__due { color: #9db8ec; }
+    html[data-scheme="dark"] #dash .ibrow__due--soon,
+    html[data-scheme="dark"] #dash .ibrow__due--late { color: #ff8a80; }
+    html[data-scheme="dark"] #dash .gcard__when--live { color: #ff8a80; }
+    html[data-scheme="dark"] #dash .sportsboard__skel { color: #AEAEB2; }
+
+    /* Dark mode: header stays solid navy; page and cards go dark.
+       Rounded hero corners sit on black, not on the html navy fill. */
+    html[data-scheme="dark"] #dash .glance {
+      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.45);
+    }
+    html[data-scheme="dark"] #dash h2.sec { color: #F2F2F7; }
+    html[data-scheme="dark"] #dash .secnote { color: #AEAEB2; }
+    html[data-scheme="dark"] #dash .tline,
+    html[data-scheme="dark"] #dash .seclink,
+    html[data-scheme="dark"] #dash .vcard,
+    html[data-scheme="dark"] #dash .bidcard,
+    html[data-scheme="dark"] #dash .sportcard {
+      background: #1C1C1E;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+    }
+    html[data-scheme="dark"] #dash .tstop__dot i { border-color: #1C1C1E; }
+    html[data-scheme="dark"] #dash .tstop__time { color: #9db8ec; }
+    html[data-scheme="dark"] #dash .tstop__title,
+    html[data-scheme="dark"] #dash .sportcard__body { color: #F2F2F7; }
+    html[data-scheme="dark"] #dash .seclink { color: #9db8ec; }
+    html[data-scheme="dark"] #dash .tstop__thumb { background: rgba(255, 255, 255, 0.08); }
+    html[data-scheme="dark"] #dash .tstop__thumb b { color: #9db8ec; }
+  }
+</style>
 </head>
 <body class="sk">
 <div id="lock"><form class="box" onsubmit="return shUnlock(event)">
@@ -1009,6 +1557,18 @@ function paintDashPhotos(){
 }
 var WX_LABELS = { 0: 'Clear', 1: 'Mostly clear', 2: 'Partly cloudy', 3: 'Cloudy', 45: 'Fog', 48: 'Fog', 51: 'Light drizzle', 53: 'Drizzle', 55: 'Drizzle', 61: 'Light rain', 63: 'Rain', 65: 'Heavy rain', 71: 'Snow', 73: 'Snow', 75: 'Snow', 80: 'Showers', 81: 'Showers', 82: 'Heavy showers', 95: 'Thunderstorms', 96: 'Thunderstorms', 99: 'Thunderstorms' };
 var DASH_WX_CITY = '';
+function setDashWx(el, text, isAlert){
+  if (!el) return;
+  var s = String(text || '').trim();
+  if (!s) { el.className = 'glance__wx'; el.textContent = ''; return; }
+  var alert = !!isAlert || /NWS|Flood Warning|Storm Warning|Heat Advisory|Hurricane|Tropical|Tornado|Severe/i.test(s);
+  el.className = alert ? 'glance__wx glance__wx--alert' : 'glance__wx';
+  if (alert) {
+    el.innerHTML = '<svg class="glance__wx-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="17" r="1" fill="#F0A846" stroke="none"/><path d="M12 3.6 21 19.5H3L12 3.6z" stroke-width="2" stroke-linejoin="round"/></svg><span>' + esc(s) + '</span>';
+  } else {
+    el.textContent = s;
+  }
+}
 function loadDashWeather(city, newsItems){
   var slot = document.getElementById('dashWx');
   if (!slot) return;
@@ -1018,14 +1578,14 @@ function loadDashWeather(city, newsItems){
     var items = newsItems || [];
     for (var i = 0; i < items.length; i++) {
       var h = (items[i] && items[i].headline) || '';
-      if (/NWS|Flood Warning|Storm Warning|Heat Advisory|Hurricane|Tropical/i.test(h)) { s2.textContent = h.length > 118 ? h.slice(0, 118) + '…' : h; return; }
+      if (/NWS|Flood Warning|Storm Warning|Heat Advisory|Hurricane|Tropical/i.test(h)) { var hx = h.length > 118 ? h.slice(0, 118) + '…' : h; setDashWx(s2, hx, true); return; }
     }
   };
   if (!city) { fallback(); return; }
   var ck = 'sh_home_wx_v1';
   try {
     var raw = localStorage.getItem(ck);
-    if (raw) { var c = JSON.parse(raw); if (c && c.date === nyToday() && c.city === city) { slot.textContent = c.text; return; } }
+    if (raw) { var c = JSON.parse(raw); if (c && c.date === nyToday() && c.city === city) { setDashWx(slot, c.text, false); return; } }
   } catch (e) {}
   if (DASH_WX_CITY === city || typeof fetch !== 'function') { if (DASH_WX_CITY !== city) fallback(); return; }
   DASH_WX_CITY = city;
@@ -1045,21 +1605,249 @@ function loadDashWeather(city, newsItems){
     var hi = day.temperature_2m_max && day.temperature_2m_max[0] != null ? Math.round(day.temperature_2m_max[0]) : null;
     var lo = day.temperature_2m_min && day.temperature_2m_min[0] != null ? Math.round(day.temperature_2m_min[0]) : null;
     var text = city + ' · ' + t + '°' + (label ? ' ' + label : '') + (hi != null && lo != null ? ' · Hi ' + hi + '° · Lo ' + lo + '°' : '');
-    s2.textContent = text;
+    setDashWx(s2, text, false);
     try { localStorage.setItem(ck, JSON.stringify({ date: nyToday(), city: city, text: text })); } catch (e) {}
   }).catch(fallback);
 }
-function sportsHtml(d){
-  var items = (d.news || []).filter(function(n){ return n && /^\s*(NBA|NFL)\b/i.test(n.headline || ''); });
-  if (!items.length) return '';
-  var cards = items.map(function(n){
+
+var FL_TEAMS = { NBA: { ORL: 1, MIA: 1 }, NFL: { TB: 1, MIA: 1, JAX: 1 } };
+var ESPN_LOGO = {
+  NBA: 'https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/',
+  NFL: 'https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/'
+};
+var BID_LOGOS_URL = 'https://sharmaelechvac.github.io/sharma-bids/logos/sources.json';
+var BID_LOGOS_BASE = 'https://sharmaelechvac.github.io/sharma-bids/logos/';
+var BID_LOGO_MAP = null;
+
+function etYmd(offset){
+  var ms = Date.now() + (offset || 0) * 864e5;
+  try {
+    var parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date(ms));
+    var z = {};
+    parts.forEach(function(p){ z[p.type] = p.value; });
+    return z.year + z.month + z.day;
+  } catch (e) {
+    var d = new Date(ms);
+    return d.getFullYear() + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0');
+  }
+}
+function recordOf(c){
+  var recs = c && c.records || [];
+  for (var i = 0; i < recs.length; i++) if ((recs[i].type || recs[i].name) === 'total' || /overall/i.test(recs[i].name || '')) return recs[i].summary || '';
+  return recs[0] && recs[0].summary || '';
+}
+function broadcastOf(comp){
+  var names = [];
+  (comp.broadcasts || []).forEach(function(b){
+    (b.names || (b.name ? [b.name] : [])).forEach(function(n){ if (n && names.indexOf(n) < 0) names.push(n); });
+  });
+  var prefer = /^(CBS|FOX|NBC|ABC|ESPN|ESPN2|NFLN|NBA TV|Prime|Amazon|Peacock|ABC|TNT|Max)/i;
+  for (var i = 0; i < names.length; i++) if (prefer.test(names[i])) return names[i];
+  return names[0] || '';
+}
+function parseEspnEvent(e, league){
+  var comp = (e.competitions || [])[0]; if (!comp) return null;
+  var teams = {};
+  (comp.competitors || []).forEach(function(c){ teams[c.homeAway] = c; });
+  var away = teams.away, home = teams.home;
+  if (!away || !home) return null;
+  var st = (comp.status && comp.status.type) || {};
+  var state = st.state || '';
+  var aAbbr = ((away.team || {}).abbreviation || '').toUpperCase();
+  var hAbbr = ((home.team || {}).abbreviation || '').toUpperCase();
+  var fl = !!(FL_TEAMS[league] && (FL_TEAMS[league][aAbbr] || FL_TEAMS[league][hAbbr]));
+  return {
+    id: e.id || (league + aAbbr + hAbbr + (e.date || '')),
+    league: league,
+    date: e.date,
+    state: state,
+    status: st,
+    short: st.shortDetail || st.detail || st.description || '',
+    channel: broadcastOf(comp),
+    florida: fl,
+    away: away,
+    home: home
+  };
+}
+function teamRow(c, state, league){
+  var team = c.team || {};
+  var abbr = team.abbreviation || '';
+  var rec = recordOf(c);
+  var score = (state === 'pre') ? '' : (c.score == null ? '' : String(c.score));
+  var lose = (state === 'post' && c.winner === false);
+  var logo = team.logo || (ESPN_LOGO[league] && abbr ? ESPN_LOGO[league] + abbr.toLowerCase() + '.png' : '');
+  var color = team.color ? ('#' + String(team.color).replace(/^#/, '')) : '#264387';
+  var badge = esc((abbr || initialsOf(team.shortDisplayName || team.displayName || '?')).slice(0, 3));
+  return '<div class="grow' + (lose ? ' grow--lose' : '') + '">'
+    + (logo ? '<img class="grow__logo" src="' + esc(logo) + '" alt="" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">' : '')
+    + '<span class="grow__badge" style="background:' + esc(color) + (logo ? '' : ';display:flex') + '">' + badge + '</span>'
+    + '<span class="grow__meta"><span class="grow__abbr">' + esc(abbr) + '</span>'
+    + (rec ? '<span class="grow__rec">' + esc(rec) + '</span>' : '') + '</span>'
+    + (score !== '' ? '<span class="grow__score">' + esc(score) + '</span>' : '')
+    + '</div>';
+}
+function gameStatusHtml(g){
+  var when = '', live = false, chan = g.channel || '';
+  if (g.state === 'post') when = 'Final';
+  else if (g.state === 'in') { when = g.short.replace(/\s+/g, ' '); live = true; }
+  else {
+    try {
+      var dt = new Date(g.date);
+      when = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'short', hour: 'numeric', minute: '2-digit', hour12: true }).format(dt);
+    } catch (e) { when = g.short || ''; }
+  }
+  return '<div class="gcard__status"><div class="gcard__when' + (live ? ' gcard__when--live' : '') + '">' + esc(when) + '</div>'
+    + (chan ? '<div class="gcard__chan">' + esc(chan) + '</div>' : '') + '</div>';
+}
+function gameCardHtml(g){
+  return '<div class="gcard"><div class="gcard__league"><span class="gcard__pill gcard__pill--' + g.league.toLowerCase() + '">' + g.league + '</span></div>'
+    + '<div class="gcard__teams">' + teamRow(g.away, g.state, g.league) + teamRow(g.home, g.state, g.league) + '</div>'
+    + gameStatusHtml(g) + '</div>';
+}
+function sportsFallbackHtml(d){
+  var items = (d && d.news || []).filter(function(n){ return n && /^\s*(NBA|NFL)\b/i.test(n.headline || ''); });
+  if (!items.length) return '<div class="sportsboard__empty">Scores will show here when the board is available.</div>';
+  return items.map(function(n){
     var m = String(n.headline).match(/^\s*(NBA|NFL)\b\s*:?\s*(.*)$/i);
     var league = m ? m[1].toUpperCase() : 'SPORTS';
     var body = m ? m[2] : n.headline;
     return '<div class="sportcard"><span class="sportcard__tag sportcard__tag--' + league.toLowerCase() + '">' + league + '</span><div class="sportcard__body">' + esc(body) + '</div></div>';
   }).join('');
-  return '<h2 class="sec">NBA · NFL</h2><div class="secnote">Florida teams first · from the Sharma news wire</div><div style="padding:0 16px">' + cards + '</div>';
 }
+function sportsHtml(d){
+  window._dashSportsNews = d;
+  return '<h2 class="sec">NBA · NFL</h2><div class="secnote">Florida teams first</div><div id="sportsBoard" class="sportsboard"><div class="sportsboard__skel">Loading scores…</div></div>';
+}
+function loadSports(){
+  var host = document.getElementById('sportsBoard');
+  if (!host) return;
+  if (typeof fetch !== 'function') { host.innerHTML = sportsFallbackHtml(window._dashSportsNews); return; }
+  var days = [etYmd(-1), etYmd(0), etYmd(1)];
+  var nba = days.map(function(d){ return fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=' + d).then(function(r){ if (!r.ok) throw new Error('nba'); return r.json(); }).catch(function(){ return { events: [] }; }); });
+  var nfl = fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard').then(function(r){ if (!r.ok) throw new Error('nfl'); return r.json(); }).catch(function(){ return { events: [] }; });
+  Promise.all(nba.concat([nfl])).then(function(parts){
+    var games = [], seen = {};
+    parts.forEach(function(board, i){
+      var league = i < days.length ? 'NBA' : 'NFL';
+      (board.events || []).forEach(function(e){
+        var g = parseEspnEvent(e, league);
+        if (!g || seen[g.id]) return;
+        seen[g.id] = 1;
+        games.push(g);
+      });
+    });
+    if (!games.length) { host.innerHTML = sportsFallbackHtml(window._dashSportsNews); return; }
+    var rank = function(g){ return (g.florida ? 0 : 10) + (g.state === 'in' ? 0 : g.state === 'pre' ? 1 : 2); };
+    games.sort(function(a, b){
+      var d = rank(a) - rank(b);
+      if (d) return d;
+      return String(a.date).localeCompare(String(b.date));
+    });
+    var fl = games.filter(function(g){ return g.florida; });
+    var rest = games.filter(function(g){ return !g.florida; });
+    var pick = fl.concat(rest).slice(0, 8);
+    host.innerHTML = pick.map(gameCardHtml).join('');
+  }).catch(function(){ host.innerHTML = sportsFallbackHtml(window._dashSportsNews); });
+}
+
+function normBuilder(s){
+  return String(s || '').toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, ' ').replace(/\b(inc|llc|co|company|the|corp|corporation)\b/g, ' ').replace(/\s+/g, ' ').trim();
+}
+function matchBidLogo(name, map){
+  if (!name || !map) return '';
+  var n = normBuilder(name);
+  if (!n) return '';
+  var best = '', bestLen = 0;
+  Object.keys(map).forEach(function(k){
+    var kn = normBuilder(k);
+    if (!kn) return;
+    if (n === kn || n.indexOf(kn) !== -1 || kn.indexOf(n) !== -1) {
+      if (kn.length > bestLen) { best = map[k]; bestLen = kn.length; }
+    }
+  });
+  return best;
+}
+function dueLabel(b){
+  var dt = parseDue(b.due);
+  if (!dt) return null;
+  var ms = dt.getTime() - Date.now();
+  var days = Math.round(ms / 864e5);
+  var label, kind = '';
+  if (ms < 0) { label = 'Overdue'; kind = 'late'; }
+  else if (ms < 24 * 3600e3) { label = 'Due today'; kind = 'soon'; }
+  else if (ms < 48 * 3600e3) { label = 'Due tomorrow'; kind = 'soon'; }
+  else if (days <= 2) { label = 'Due in ' + days + ' days'; kind = 'soon'; }
+  else label = 'Due in ' + days + ' days';
+  return { label: label, kind: kind, date: dt };
+}
+function incomingBidRow(b){
+  var due = dueLabel(b);
+  var trade = b.trade || b.division || b.scope || '';
+  if (trade && /price|amount|cost|dollar|\$/i.test(trade)) trade = '';
+  var status = b.status || b.state || '';
+  if (status && /price|amount|cost|dollar|\$/i.test(status)) status = '';
+  if (!status) status = b.received ? ('Received ' + b.received) : (b.date ? 'Received' : 'Incoming');
+  var sub = [b.from, trade].filter(Boolean).join(' · ');
+  var dueTxt = due ? due.label : (b.due ? ('Due ' + b.due) : '');
+  var dateTxt = due ? due.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+  return '<div class="ibrow" data-gc="' + esc(b.from || '') + '">'
+    + '<span class="ibrow__badge">' + esc(initialsOf(b.from || b.project)) + '</span>'
+    + '<img class="ibrow__logo" alt="">'
+    + '<div class="ibrow__main"><div class="ibrow__proj">' + esc(b.project || '') + '</div>'
+    + (sub ? '<div class="ibrow__sub">' + esc(sub) + '</div>' : '') + '</div>'
+    + '<div class="ibrow__side">'
+    + (dueTxt ? '<div class="ibrow__due' + (due && due.kind ? ' ibrow__due--' + due.kind : '') + '">' + esc(dueTxt) + '</div>' : '')
+    + '<div class="ibrow__stat">' + esc(dateTxt || status) + '</div>'
+    + '</div></div>';
+}
+function incomingBidsHtml(d, href){
+  var bids = (d.newBids || []).filter(function(b){ return b && (b.project || b.from); });
+  if (!bids.length) return '';
+  bids = bids.slice().sort(function(a, b){
+    var da = parseDue(a.due), db = parseDue(b.due);
+    if (da && db) return da - db;
+    if (da && !db) return -1;
+    if (!da && db) return 1;
+    return String(b.date || '').localeCompare(String(a.date || ''));
+  }).slice(0, 6);
+  return '<h2 class="sec">Incoming Bids</h2><div class="bidlist">' + bids.map(incomingBidRow).join('') + '</div>'
+    + '<a class="seclink" href="' + href + '">See all bids<svg class="sk-icon"><use href="#i-chevron-right"/></svg></a>';
+}
+function paintBidLogos(){
+  var rows = document.querySelectorAll('#dash .ibrow[data-gc]');
+  if (!rows.length) return;
+  var apply = function(map){
+    rows.forEach(function(row){
+      var url = matchBidLogo(row.getAttribute('data-gc'), map);
+      if (!url) return;
+      var img = row.querySelector('.ibrow__logo');
+      var badge = row.querySelector('.ibrow__badge');
+      if (!img) return;
+      img.onload = function(){ img.style.display = 'block'; if (badge) badge.style.display = 'none'; };
+      img.onerror = function(){ img.style.display = 'none'; if (badge) badge.style.display = 'flex'; };
+      img.src = url;
+    });
+  };
+  if (BID_LOGO_MAP) { apply(BID_LOGO_MAP); return; }
+  if (typeof fetch !== 'function') return;
+  fetch(BID_LOGOS_URL, { cache: 'no-store' }).then(function(r){ if (!r.ok) throw new Error('logos'); return r.json(); }).then(function(d){
+    var logos = (d && d.logos) || {};
+    var map = {};
+    Object.keys(logos).forEach(function(k){
+      var file = logos[k] && (logos[k].file || logos[k]);
+      if (typeof file === 'string') map[k] = BID_LOGOS_BASE + file;
+    });
+    BID_LOGO_MAP = map;
+    apply(map);
+  }).catch(function(){});
+}
+function pinThemeColor(){
+  try {
+    var m = document.querySelector('meta[name="theme-color"]');
+    if (m && document.documentElement.getAttribute('data-theme') !== 'track') m.content = '#264387';
+  } catch (e) {}
+}
+
 function builderOfStop(x, photo){
   var t = x.title || '';
   var m = t.match(/\(([^)]+)\)\s*$/);
@@ -1102,7 +1890,7 @@ function renderDashboard(d){
   var soonest = null;
   (d.newBids || []).forEach(function(b){ var dt = parseDue(b.due); if (dt && (!soonest || dt < soonest.dt)) soonest = { dt: dt, b: b }; });
   if (soonest && soonest.dt.getTime() - Date.now() < 14 * 864e5) chips += '<span class="gchip' + (soonest.dt.getTime() - Date.now() < 48 * 3600e3 ? ' gchip--red' : '') + '">Bid due ' + esc(soonest.dt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })) + '</span>';
-  else if (bids.length) chips += '<span class="gchip">' + bids.length + ' new ' + (bids.length === 1 ? 'bid' : 'bids') + ' today</span>';
+  else if ((d.newBids || []).length) chips += '<span class="gchip">' + (d.newBids || []).length + ' incoming ' + ((d.newBids || []).length === 1 ? 'bid' : 'bids') + '</span>';
   if (chips) glance += '<div class="gchips">' + chips + '</div>';
   glance += '</div>';
   var out = glance;
@@ -1133,19 +1921,8 @@ function renderDashboard(d){
         + '</div><span class="vchip vchip--' + v.cls + '">' + esc(v.label) + '</span></div>';
     }).join('') + '</div><a class="seclink" href="' + myDayUrl + '">Open My Day<svg class="sk-icon"><use href="#i-chevron-right"/></svg></a>';
   }
-  /* new bids as cards */
-  if (bids.length) {
-    out += '<h2 class="sec">New bids</h2><div style="padding:0 16px">' + bids.map(function(x){
-      var sub = [x.from, x.received].filter(Boolean).join(' · ');
-      var meta = [];
-      if (x.sqft) meta.push(fmtSqft(x.sqft));
-      if (x.due) meta.push('Due ' + x.due);
-      return '<div class="bidcard"><span class="bidcard__face">' + esc(initialsOf(x.from || x.project)) + '</span><div class="bidcard__main"><div class="bidcard__proj">' + esc(x.project || '') + '</div>'
-        + (sub ? '<div class="bidcard__sub">' + esc(sub) + '</div>' : '')
-        + (meta.length ? '<div class="bidcard__sub">' + esc(meta.join(' · ')) + '</div>' : '')
-        + '</div>' + dueChipHtml(x) + '</div>';
-    }).join('') + '</div><a class="seclink" href="' + bidsUrl + '">Open Bids<svg class="sk-icon"><use href="#i-chevron-right"/></svg></a>';
-  }
+  /* Incoming bids: all open/recent from Office TV, not only those dated today. No prices. */
+  out += incomingBidsHtml(d, bidsUrl);
   /* important notes — unchanged house feature */
   var notes = d.importantNotes || d.important || d.notes || null;
   var noteItems = [];
@@ -1156,8 +1933,11 @@ function renderDashboard(d){
   var asof = '';
   if (d.updatedAt) { var ud = new Date(d.updatedAt); if (!isNaN(ud)) asof = '<div class="dash__asof" style="padding:0 16px">Office TV data as of ' + esc(ud.toLocaleString('en-US', { timeZone: 'America/New_York', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })) + '</div>'; }
   host.innerHTML = out + asof;
-  /* async extras: field photos + weather where the crews are */
+  /* async extras: field photos, scores, bid logos, weather */
+  pinThemeColor();
   loadDashPhotos();
+  loadSports();
+  paintBidLogos();
   var city = '';
   for (var i = 0; i < sched.length; i++) { var m2 = String(sched[i].location || '').match(/,\s*([A-Za-z .]+),\s*FL/); if (m2) { city = m2[1].trim(); break; } }
   loadDashWeather(city, d.news || []);
