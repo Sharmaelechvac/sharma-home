@@ -47,6 +47,13 @@
      "title": "Finance",
      "rows": [
       {
+       "u": "https://sharmaelechvac.github.io/sharma-crm/",
+       "i": "i-users",
+       "g": false,
+       "n": "CRM",
+       "d": "Clients · Quotes · Jobs · Invoices"
+      },
+      {
        "u": "https://sharmaelechvac.github.io/sharma-ar/",
        "i": "i-dollar",
        "g": false,
