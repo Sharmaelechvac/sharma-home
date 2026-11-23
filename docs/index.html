@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="robots" content="noindex, nofollow, noarchive">
   <meta name="theme-color" content="#264387">
+<meta name="theme-color" content="#264387" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#264387" media="(prefers-color-scheme: dark)">
   <meta name="color-scheme" content="light">
   <script>(function(){try{if(localStorage.getItem("sk-scheme")==="dark"){var d=document.documentElement;d.setAttribute("data-scheme","dark");var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=d.getAttribute("data-theme")==="track"?"#1C1C1E":"#264387"}}catch(e){}})()</script>
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -26,8 +28,8 @@
   <link rel="apple-touch-startup-image" href="splash/splash-1290x2796.png" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
   <link rel="apple-touch-startup-image" href="splash/splash-1320x2868.png" media="(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
   <link rel="stylesheet" href="https://sharma-kit.sharma-crew.workers.dev/sharma-kit.css">
-  <link rel="stylesheet" href="macos.css?v=2026-11-22.33">
-  <link rel="stylesheet" href="push.css?v=2026-11-22.33">
+  <link rel="stylesheet" href="macos.css?v=2026-11-22.34">
+  <link rel="stylesheet" href="push.css?v=2026-11-22.34">
   <script src="https://sharma-kit.sharma-crew.workers.dev/sharma-kit.js" defer></script>
   <title>SHARMA360</title>
   <meta property="og:title" content="SHARMA360 · Sharma Electric &amp; HVAC">
@@ -640,6 +642,7 @@ html.locked #lock{display:flex;position:fixed;inset:0;z-index:9999;background:#2
     --safe-bottom: env(safe-area-inset-bottom, 0px);
     --safe-top-fallback: 0px;
     --safe-top-used: max(env(safe-area-inset-top, 0px), var(--safe-top-fallback, 0px));
+    --edge-gap: 0px;
     --dash-radius: 20px;
     --dash-shadow: 0 8px 28px rgba(16, 24, 40, 0.08), 0 1px 2px rgba(16, 24, 40, 0.04);
   }
@@ -654,6 +657,18 @@ html.locked #lock{display:flex;position:fixed;inset:0;z-index:9999;background:#2
      if that value is 0 in the home-screen app or in Safari. Header is
      fixed, fully opaque navy, no blur or fade, logo row below the inset.
      Rollback: 99d4ad2 (.31). */
+  /* .34 (2026-11-22 7:11 PM ET, Sanjay: still blurred, saved to Home Screen
+     and opened as a web app). Real root cause: since iOS 26, a Home Screen web
+     app gets a system blur over a strip about 36pt tall just under the clock
+     and battery. It sits above the page, and no page code can turn it off
+     (native apps hide it; web pages can't). Our logo row started right under
+     the clock, inside that strip. Fix: in the Home Screen app only, add a
+     32px solid navy clear strip under the clock so the logo row sits below
+     the blur. The blur then only covers flat navy, which looks the same.
+     Rollback: 8934e7f (.33). */
+  @media (display-mode: standalone) { :root { --edge-gap: 32px; } }
+  html.ios-app { --edge-gap: 32px; }
+  @media (min-width: 960px) { :root, html.ios-app { --edge-gap: 0px; } }
   html { background: #264387; }
   @media (max-width: 959px) {
     html { background: #264387 !important; }
@@ -678,7 +693,7 @@ html.locked #lock{display:flex;position:fixed;inset:0;z-index:9999;background:#2
       -webkit-mask-image: none !important;
       mask-image: none !important;
       padding-top: env(safe-area-inset-top, 0px) !important;
-      padding-top: max(env(safe-area-inset-top, 0px), var(--safe-top-fallback, 0px)) !important;
+      padding-top: calc(max(env(safe-area-inset-top, 0px), var(--safe-top-fallback, 0px)) + var(--edge-gap, 0px)) !important;
       padding-bottom: 0 !important;
       box-sizing: content-box !important;
     }
@@ -728,7 +743,7 @@ html.locked #lock{display:flex;position:fixed;inset:0;z-index:9999;background:#2
       position: fixed;
       left: 0; right: 0; top: 0;
       height: env(safe-area-inset-top, 0px);
-      height: max(env(safe-area-inset-top, 0px), var(--safe-top-fallback, 0px));
+      height: calc(max(env(safe-area-inset-top, 0px), var(--safe-top-fallback, 0px)) + var(--edge-gap, 0px));
       background: #264387;
       z-index: 90;
       pointer-events: none;
@@ -744,13 +759,13 @@ html.locked #lock{display:flex;position:fixed;inset:0;z-index:9999;background:#2
       right: 0;
       top: 0;
       height: env(safe-area-inset-top, 0px);
-      height: max(env(safe-area-inset-top, 0px), var(--safe-top-fallback, 0px));
+      height: calc(max(env(safe-area-inset-top, 0px), var(--safe-top-fallback, 0px)) + var(--edge-gap, 0px));
       background: #264387;
       pointer-events: none;
       z-index: 2;
     }
     .sk-stackview {
-      top: calc(max(env(safe-area-inset-top, 0px), var(--safe-top-fallback, 0px)) + var(--sk-header-h, 52px) + 3px) !important;
+      top: calc(max(env(safe-area-inset-top, 0px), var(--safe-top-fallback, 0px)) + var(--edge-gap, 0px) + var(--sk-header-h, 52px) + 3px) !important;
     }
     body { background: #F2F4F8; }
     html[data-scheme="dark"] body { background: #000000; }
@@ -1286,7 +1301,16 @@ html.locked #lock{display:flex;position:fixed;inset:0;z-index:9999;background:#2
   function apply(){
     try {
       if (!ios()) return;
+      var app = window.navigator.standalone === true || (window.matchMedia && matchMedia("(display-mode: standalone)").matches);
+      document.documentElement.classList.toggle("ios-app", !!app);
       var top = readEnv();
+      /* If iOS already starts the page below the clock (the screen is taller
+         than the page by about a status bar), add no extra top space. */
+      var portrait = (window.innerHeight || 0) > (window.innerWidth || 0);
+      if (app && portrait && top < 20 && screen.height && (screen.height - window.innerHeight) >= 30) {
+        document.documentElement.style.setProperty("--safe-top-fallback", "0px");
+        return;
+      }
       if (top >= 20) {
         document.documentElement.style.setProperty("--safe-top-fallback", "0px");
         return;
@@ -2561,7 +2585,7 @@ if (document.documentElement.classList.contains('locked')) { if (window.SK && SK
 else if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', window.__bootHome);
 else window.__bootHome();
 </script>
-<script src="refresh.js?v=2026-11-22.33"></script>
+<script src="refresh.js?v=2026-11-22.34"></script>
 <script src="push.js" defer></script>
 <script>if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) { addEventListener("load", function(){ navigator.serviceWorker.register("sw.js?kit=https://sharma-kit.sharma-crew.workers.dev", { scope: "/sharma-home/" }).catch(function(){}); }); }</script>
 <script>
