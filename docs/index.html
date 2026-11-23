@@ -3,6 +3,40 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, viewport-fit=cover">
+<script>
+/* .36 viewport guard (Sanjay's real phone: page 880 wide on a 440 screen, zoom 0.50).
+   iOS sometimes lays a Home Screen app out at double width and shows it half
+   size (a known iOS bug, also when the app wakes from sleep). The page can't
+   stop iOS doing it, but it can notice and nudge iOS back to the real screen
+   width: briefly pin the width to the screen size, then restore. */
+(function(){
+  var BASE = 'width=device-width, initial-scale=1, minimum-scale=1, viewport-fit=cover';
+  var fixes = 0, last = 0, locked = false;
+  function meta(){ return document.querySelector('meta[name="viewport"]'); }
+  function sw(){ return Math.min(screen.width || 0, screen.height || 0); }
+  function landscape(){ return Math.abs(window.orientation || 0) === 90; }
+  function bad(){
+    var w = sw(); if (!w) return false;
+    var vv = window.visualViewport;
+    if (vv && vv.scale < 0.9) return true;
+    if (!landscape() && (window.innerWidth || 0) > w * 1.15) return true;
+    return false;
+  }
+  function pinned(){ return 'width=' + sw() + ', initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover'; }
+  function fix(){
+    var m = meta(); if (!m || Date.now() - last < 500) return;
+    last = Date.now(); fixes++; window.__vpFixes = fixes;
+    m.setAttribute('content', pinned());
+    if (fixes >= 3) { locked = true; return; }      /* keeps the exact width if it keeps happening */
+    setTimeout(function(){ if (!locked) m.setAttribute('content', BASE); setTimeout(check, 400); }, 140);
+  }
+  function check(){ try { if (bad() && fixes < 8) fix(); } catch (e) {} }
+  window.__vpCheck = check;
+  [0, 150, 500, 1200, 2500, 5000].forEach(function(ms){ setTimeout(check, ms); });
+  ['pageshow','resize','orientationchange','focus'].forEach(function(ev){ window.addEventListener(ev, function(){ setTimeout(check, 100); setTimeout(check, 700); }); });
+  document.addEventListener('visibilitychange', function(){ if (!document.hidden) { setTimeout(check, 100); setTimeout(check, 700); setTimeout(check, 1800); } });
+})();
+</script>
   <meta name="robots" content="noindex, nofollow, noarchive">
   <meta name="theme-color" content="#264387">
 <meta name="theme-color" content="#264387" media="(prefers-color-scheme: light)">
@@ -28,8 +62,8 @@
   <link rel="apple-touch-startup-image" href="splash/splash-1290x2796.png" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
   <link rel="apple-touch-startup-image" href="splash/splash-1320x2868.png" media="(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
   <link rel="stylesheet" href="https://sharma-kit.sharma-crew.workers.dev/sharma-kit.css">
-  <link rel="stylesheet" href="macos.css?v=2026-11-22.35">
-  <link rel="stylesheet" href="push.css?v=2026-11-22.35">
+  <link rel="stylesheet" href="macos.css?v=2026-11-22.36">
+  <link rel="stylesheet" href="push.css?v=2026-11-22.36">
   <script src="https://sharma-kit.sharma-crew.workers.dev/sharma-kit.js" defer></script>
   <title>SHARMA360</title>
   <meta property="og:title" content="SHARMA360 · Sharma Electric &amp; HVAC">
@@ -301,7 +335,7 @@
     .nw-live__text { font-size: 15px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity 0.35s ease; }
     .nw-live__text.is-fading { opacity: 0; }
     /* Topic chips: sticky rail, filter in place */
-    .nw-chips { position: sticky; top: 0; z-index: 5; display: flex; gap: 8px; overflow-x: auto; padding: 14px 2px 10px; margin: 0 -2px; background: var(--page); scrollbar-width: none; -webkit-mask-image: linear-gradient(90deg, #000 92%, transparent); mask-image: linear-gradient(90deg, #000 92%, transparent); }
+    .nw-chips { position: sticky; top: 0; z-index: 5; display: flex; gap: 8px; overflow-x: auto; padding: 14px 2px 10px; margin: 0; max-width: 100%; contain: paint; background: var(--page); scrollbar-width: none; -webkit-mask-image: linear-gradient(90deg, #000 92%, transparent); mask-image: linear-gradient(90deg, #000 92%, transparent); }
     .nw-chips::-webkit-scrollbar { display: none; }
     .nw-chip { flex: 0 0 auto; height: 36px; padding: 0 16px; border-radius: 999px; border: 1px solid #D8DCE6; background: #fff; color: var(--navy); font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; touch-action: manipulation; box-shadow: 0 1px 4px rgba(16,24,40,0.06); }
     .nw-chip[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: #fff; box-shadow: 0 4px 12px rgba(26,47,97,0.30); }
@@ -395,7 +429,7 @@
     .tvsub { display: block; font-size: 18px; color: #b9c4de; margin-top: 1px; }
     .tvchip { flex: 0 0 auto; font-size: 16px; font-weight: 700; color: #0a1430; background: #6fd08c; border-radius: 999px; padding: 4px 12px; margin-top: 2px; }
     .tvempty { font-size: 20px; color: #b9c4de; padding: 8px 0 12px; }
-    .tvticker { margin-top: 16px; background: #000; border-radius: 10px; padding: 13px 0; overflow: hidden; white-space: nowrap; }
+    .tvticker { margin-top: 16px; background: #000; border-radius: 10px; padding: 13px 0; overflow: hidden; contain: paint; max-width: 100%; white-space: nowrap; }
     .tvticker__label { display: inline-block; font-size: 18px; font-weight: 700; letter-spacing: 0.08em; color: var(--gold); padding: 0 14px; text-transform: uppercase; }
     .tvticker__in { display: inline-block; font-size: 19px; color: #fff; padding-left: 100%; animation: tvscroll 60s linear infinite; }
     @keyframes tvscroll { to { transform: translateX(-100%); } }
@@ -672,10 +706,15 @@ html.locked #lock{display:flex;position:fixed;inset:0;z-index:9999;background:#2
      .35 (7:17 PM, real screenshot): header was 442px wide on a 430px phone
      (iOS zooms the Home Screen app out); now fits. No zoom-out allowed.
      Bottom bar fills the home-bar area even if iOS reports it as 0.
-     Screen check line in About. Rollback: ca7b0b2 (.34). */
+     Screen check line in About. Rollback: ca7b0b2 (.34).
+     .36 (7:25 PM): real phone showed page 880 wide on a 440 screen (zoom 0.50),
+     so the page now watches for that and snaps back to the screen width;
+     wide scrolling strips are fenced in. Rollback: f8eb2f3 (.35). */
   @media (display-mode: standalone) { :root { --edge-gap: 32px; } }
   html.ios-app { --edge-gap: 32px; }
   @media (min-width: 960px) { :root, html.ios-app { --edge-gap: 0px; } }
+  html, body { max-width: 100%; }
+  #app, .sk-stackview, .sk-page { max-width: 100%; overflow-x: hidden; overflow-x: clip; }
   html { background: #264387; }
   @media (max-width: 959px) {
     html { background: #264387 !important; }
@@ -1387,7 +1426,7 @@ else{document.getElementById('lockerr').textContent='Wrong passcode';document.ge
       <div class="sk-row"><div class="sk-row__body"><div class="sk-row__title">SHARMA360</div><div class="sk-row__sub">Every Sharma app — for Sanjay only</div></div></div>
       <div class="sk-row"><div class="sk-row__body"><div class="sk-row__title">Licenses</div><div class="sk-row__sub">EC13013924 · CAC1823596</div></div></div>
       <div class="sk-row"><div class="sk-row__body"><div class="sk-row__title">Version</div><div class="sk-row__sub" id="about-version">…</div></div></div>
-      <div class="sk-row"><div class="sk-row__body"><div class="sk-row__title">Screen check</div><div class="sk-row__sub" id="about-screen">…</div></div></div>
+      <div class="sk-row"><div class="sk-row__body"><div class="sk-row__title">Screen check</div><div class="sk-row__sub" id="about-screen" style="white-space:normal;overflow:visible;text-overflow:clip;word-break:break-word">…</div></div></div>
       <div class="sk-row"><div class="sk-row__body"><div class="sk-row__title">Kept current by Jarvis</div><div class="sk-row__sub">Sita Ram · Personal — do not share</div></div></div>
     </div>
     <div class="<redacted>"><span>Install</span></div>
@@ -1438,7 +1477,6 @@ var TILE_ICONS = {
   'My Day': 'icons/apps/my-day-192.png?v=3', 'Office TV': 'icons/apps/office-tv-192.png?v=3',
   'Sharma News': 'icons/apps/news-192.png?v=3', 'Legal Briefing': 'icons/apps/legal-192.png?v=3',
   'Sanjay’s Hub': 'icons/apps/hub-192.png?v=3',
-  'CRM': 'icons/apps/crm-192.png?v=3',
   'Sharma Finance': 'icons/apps/finance-192.png?v=3', 'Material Pricing': 'icons/apps/materials-192.png?v=3',
   'Permit Tracker': 'icons/apps/permits-192.png?v=3', 'Collections': 'icons/apps/collections-192.png?v=3',
   'Bids': 'icons/apps/bids-leads-192.png?v=3', 'Bid Tracker': 'icons/apps/bids-leads-192.png?v=3', 'Builder Follow-up': 'icons/apps/follow-up-192.png?v=3',
@@ -2165,6 +2203,15 @@ function renderDashboard(d){
   /* async extras: field photos, scores, bid logos, weather */
   pinThemeColor();
   try { var av = document.getElementById('about-version'); if (av && window.SharmaRefresh) av.textContent = window.SharmaRefresh.version; } catch (e) {}
+  function widest() {
+    try {
+      var W = innerWidth, best = null;
+      document.querySelectorAll('body *').forEach(function (e) {
+        if (e.closest('.tvticker, .nw-chips')) return; var r = e.getBoundingClientRect(); if (r.width > 0 && r.right > W + 1 && (!best || r.right > best.r)) best = { r: Math.round(r.right), n: e.tagName.toLowerCase() + (e.className && typeof e.className === 'string' ? '.' + e.className.split(' ')[0] : '') };
+      });
+      return best ? ' · widest ' + best.n + ' ' + best.r : '';
+    } catch (e) { return ''; }
+  }
   function screenCheck() {
     try {
       var el = document.getElementById('about-screen'); if (!el) return;
@@ -2175,7 +2222,7 @@ function renderDashboard(d){
       el.textContent = 'page ' + innerWidth + '×' + innerHeight + ' · screen ' + screen.width + '×' + screen.height +
         ' · top ' + parseInt(pt) + '/' + (cs.getPropertyValue('--safe-top-fallback').trim() || '0') +
         ' · bottom ' + parseInt(pb) + '/' + (cs.getPropertyValue('--safe-bottom-fallback').trim() || '0') +
-        ' · zoom ' + (vv ? vv.scale.toFixed(2) : '?') + ' · ' + (app ? 'app' : 'browser');
+        ' · zoom ' + (vv ? vv.scale.toFixed(2) : '?') + ' · ' + (app ? 'app' : 'browser') + ' · fixes ' + (window.__vpFixes || 0) + widest();
     } catch (e) {}
   }
   screenCheck(); document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('.js-about')) setTimeout(screenCheck, 50); });
@@ -2623,7 +2670,7 @@ if (document.documentElement.classList.contains('locked')) { if (window.SK && SK
 else if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', window.__bootHome);
 else window.__bootHome();
 </script>
-<script src="refresh.js?v=2026-11-22.35"></script>
+<script src="refresh.js?v=2026-11-22.36"></script>
 <script src="push.js" defer></script>
 <script>if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) { addEventListener("load", function(){ navigator.serviceWorker.register("sw.js?kit=https://sharma-kit.sharma-crew.workers.dev", { scope: "/sharma-home/" }).catch(function(){}); }); }</script>
 <script>
