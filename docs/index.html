@@ -1135,6 +1135,14 @@ html.locked #lock{display:flex;position:fixed;inset:0;z-index:9999;background:#2
     }
     #dash .sportsec.is-open .sportsec__panel { grid-template-rows: 1fr; }
     #dash .sportsec__panel-inner { overflow: hidden; min-height: 0; }
+    #dash .sportsall {
+      display: flex; align-items: center; justify-content: space-between;
+      background: #ffffff; border-radius: var(--dash-radius); box-shadow: var(--dash-shadow);
+      padding: 14px 16px; margin-top: 10px;
+      color: var(--navy); font-size: 16px; font-weight: 700; text-decoration: none;
+    }
+    #dash .sportsall:active { opacity: 0.55; }
+    #dash .sportsall__chev { font-size: 22px; line-height: 1; color: var(--gray); }
     @media (prefers-reduced-motion: reduce) {
       #dash .sportsec__panel, #dash .sportsec__chev { transition: none; }
     }
@@ -1955,7 +1963,8 @@ function sportSectionHtml(league){
 }
 function sportsHtml(d){
   window._dashSportsNews = d;
-  return sportSectionHtml('NBA') + sportSectionHtml('NFL');
+  return sportSectionHtml('NBA') + sportSectionHtml('NFL')
+    + '<a class="sportsall" href="sports.html"><span>All NBA &amp; NFL games</span><span class="sportsall__chev" aria-hidden="true">&#8250;</span></a>';
 }
 function setSportCount(host, n){
   var sec = host && host.closest('.sportsec');
