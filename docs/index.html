@@ -1415,7 +1415,7 @@ else{document.getElementById('lockerr').textContent='Wrong passcode';document.ge
 </script>
 <header class="sk-header"><div class="sk-header__bar">
   <div class="sk-header__lead"><span class="sk-header__logo"><img src="assets/sharma360-logo-reversed.png?v=2026-11-25.10" alt="SHARMA360" style="height:32px;width:auto;display:block"></span></div>
-  <div class="sk-header__title">SHARMA360</div>
+  <div class="sk-header__title"></div>
   <div class="sk-header__trail"></div>
 </div></header>
 <div class="sk-offline"></div>
@@ -1611,8 +1611,8 @@ function allRows(){ var out = []; if (!DATA) return out; DATA.tabs.forEach(funct
 
 function buildApps(page){
   PAGES.apps = page;
-  page.setHeader({ title: 'SHARMA360', trail: TRAIL_BTN });
-  page.html('<div class="wrap wrap--tiles"><div class="sk-pagehead"><div><h1 class="sk-title">SHARMA360</h1><p class="sk-note">Every Sharma app — for Sanjay only</p></div>' + viewSegHtml() + '</div>'
+  page.setHeader({ title: '', trail: TRAIL_BTN });
+  page.html('<div class="wrap wrap--tiles"><div class="sk-pagehead"><div><img src="assets/sharma360-logo-clear.png?v=2026-11-25.10" alt="SHARMA360" style="height:60px;width:auto;display:block;margin:4px 0 2px"><p class="sk-note">Every Sharma app — for Sanjay only</p></div>' + viewSegHtml() + '</div>'
     + '<label class="sk-search"><svg class="sk-icon"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Search apps…" autocomplete="off"><button type="button" class="sk-search__clear" aria-label="Clear"><svg class="sk-icon"><use href="#i-close"/></svg></button></label>'
     + '<div id="appsHome" class="' + appsHomeClass() + '">' + appsHomeHtml() + '</div><div class="sk-empty hidden" id="appsNomatch"><div class="sk-empty__icon"><svg class="sk-icon"><use href="#i-search"/></svg></div><p class="sk-empty__title">No Results</p><p class="sk-empty__text" id="appsNomatchText">No app matches that search.</p></div>'
     + '<footer>Sharma Electric &amp; HVAC · Lic. EC13013924 · CAC1823596<br>Kept current by Jarvis</footer></div>');
@@ -2647,7 +2647,7 @@ window.__bootHome = function(){
   if (booted) return; booted = true;
   if (window.SK && SK.scheme) { var ap = document.getElementById('appearance'); if (ap) SK.scheme.mountToggle(ap); }
   if (!window.SK || !SK.stack) { fallbackRender(); return; }
-  nav = SK.stack('#app', { lead: LOGO_HTML, title: 'SHARMA360' });
+  nav = SK.stack('#app', { lead: LOGO_HTML, title: '' });
   route();
   loadData();
   /* TV mode is a wall display: keep its clock honest and its board fresh
