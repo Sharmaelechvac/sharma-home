@@ -51,7 +51,7 @@
        "i": "i-users",
        "g": false,
        "n": "CRM",
-       "d": "Clients · Quotes · Jobs · Invoices"
+       "d": "Clients \u00b7 Quotes \u00b7 Jobs \u00b7 Invoices"
       },
       {
        "u": "https://sharmaelechvac.github.io/sharma-ar/",
@@ -73,7 +73,7 @@
    "folders": [
     {
      "name": "Office",
-     "count": "3 apps",
+     "count": "4 apps",
      "rows": [
       {
        "u": "https://sharmaelechvac.github.io/sharma-bids/",
@@ -81,6 +81,13 @@
        "g": false,
        "n": "Bids",
        "d": "Commercial + residential bids \u00b7 Mark Cuban"
+      },
+      {
+       "u": "https://sharmaelechvac.github.io/sharma-pending-bids/",
+       "i": "i-doc",
+       "g": false,
+       "n": "Pending Bids",
+       "d": "Takeoff bid sheets \u00b7 exportable PDF"
       },
       {
        "u": "https://sharmaelechvac.github.io/sharma-lead-finder/",
@@ -425,7 +432,7 @@
        "i": "i-bolt",
        "g": false,
        "n": "Smart Switches",
-       "d": "9700 Blandford · Crestron tracker"
+       "d": "9700 Blandford \u00b7 Crestron tracker"
       },
       {
        "u": "https://sharmaelechvac.github.io/sharmatrack-dnr/mukherjee/",
