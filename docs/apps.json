@@ -107,7 +107,7 @@
     },
     {
      "name": "Field \u2014 SHARMATRACK",
-     "count": "10 apps",
+     "count": "11 apps",
      "rows": [
       {
        "u": "https://sharmaelechvac.github.io/sharmatrack/owner/",
@@ -115,6 +115,13 @@
        "g": true,
        "n": "Owner Edition",
        "d": "All clients & jobs \u2014 one page"
+      },
+      {
+       "u": "https://sharmaelechvac.github.io/sharma-drawings/",
+       "i": "i-doc",
+       "g": false,
+       "n": "Drawings",
+       "d": "Plan sets by job \u00b7 Elec + HVAC"
       },
       {
        "u": "https://sharmaelechvac.github.io/sharmatrack-crew",
